@@ -140,6 +140,7 @@ class MultipleValue extends React.PureComponent {
     console.log(typeof(config))
     console.log(config)
     console.log("Data Information")
+    console.log(typeof(data))
     console.log(data)
     
     return ( 
