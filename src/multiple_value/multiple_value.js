@@ -164,7 +164,6 @@ class MultipleValue extends React.PureComponent {
 
     const dataSorted = sortArrayObjs(data,"group_number","group_item_number");
     const uniqueGroups = [...new Set(dataSorted.map((o) => o.group_number))];
-    const uniqueGroupsCount = uniqueGroups.length ?? 1;
     
     return ( 
       <DataPointsWrapper
@@ -172,7 +171,7 @@ class MultipleValue extends React.PureComponent {
         font={config['grouping_font']}
         style={{fontSize: `${this.state.fontSize}em`}}
       >
-      {uniqueGroups.map((group, index) => {
+      {uniqueGroups.map((group) => {
         let dataSortedSub = dataSorted.filter(dataPoint => dataPoint.group_number === group)
         return(
           <>
