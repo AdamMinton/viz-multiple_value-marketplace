@@ -17,9 +17,7 @@ const DataPointsWrapper = styled.div`
 const DataPointGroupGroup = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
-  margin: 10px;
-  height: 100%;
+  align-items: flex-start;
 `
 
 const dataPointGroupDirectionDict = {
