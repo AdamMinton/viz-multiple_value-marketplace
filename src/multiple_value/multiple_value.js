@@ -19,6 +19,17 @@ const dataPointGroupDirectionDict = {
   'right': 'row'
 }
 
+const DataPointGroupGroup = styled.div`
+margin: 20px 5px;
+text-align: center;
+width: 100%;
+display: flex;
+flex-shrink: auto;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+`
+
 const DataPointGroup = styled.div`
   margin: 20px 5px;
   text-align: center;
@@ -168,6 +179,8 @@ class MultipleValue extends React.PureComponent {
                     layout={this.getLayout()}
                   >
                     {dataPoint.formattedValue}
+                  </DataPointValue>
+                  <DataPointValue>
                     {dataPoint.groupNumber}
                   </DataPointValue>
                 </DataPoint>

@@ -145,7 +145,7 @@ looker.plugins.visualizations.add({
           order: 10 * index + 6
         }
         options[`group_number_${dataPoint.name}`] = {
-          type: 'string',
+          type: 'number',
           label: `${dataPoint.label} - Group Number`,
           section: 'Style',
           default: "",
