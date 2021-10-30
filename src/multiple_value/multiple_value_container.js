@@ -84,7 +84,8 @@ looker.plugins.visualizations.add({
         value: firstRow[measure.name].value,
         link: firstRow[measure.name].links,
         valueFormat: config[`value_format`],
-        formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(firstRow[measure.name]) : SSF.format(config[`value_format_${measure.name}`], firstRow[measure.name].value)
+        formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(firstRow[measure.name]) : SSF.format(config[`value_format_${measure.name}`], firstRow[measure.name].value),
+        groupNumber: config[`group_number`]
       })
     });
 
@@ -138,10 +139,17 @@ looker.plugins.visualizations.add({
         }
         options[`value_format_${dataPoint.name}`] = {
           type: 'string',
-          label: `${dataPoint.label} - Value Format ID2`,
+          label: `${dataPoint.label} - Value Format`,
           section: 'Style',
           default: "",
           order: 10 * index + 6
+        }
+        options[`group_number_${dataPoint.name}`] = {
+          type: 'string',
+          label: `${dataPoint.label} - Group Number`,
+          section: 'Style',
+          default: "",
+          order: 10 * index + 7
         }
       }
       // Comparison - all data points other than the first

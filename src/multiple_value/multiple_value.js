@@ -168,6 +168,7 @@ class MultipleValue extends React.PureComponent {
                     layout={this.getLayout()}
                   >
                     {dataPoint.formattedValue}
+                    {dataPoint.groupNumber}
                   </DataPointValue>
                 </DataPoint>
                 {!compDataPoint ? null : (
