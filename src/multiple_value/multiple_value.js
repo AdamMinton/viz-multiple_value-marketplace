@@ -142,21 +142,13 @@ class MultipleValue extends React.PureComponent {
 
   render() {
     const {config, data} = this.props;
-
     const visualSettings = ['group_number','group_item_number'];
-    console.log("Config Information");
-    console.log(typeof(config));
-    console.log(config);
 
     data.forEach(function(element,index,array){
       visualSettings.forEach(function(setting) {
         array[index][`${setting}`] = config[`${setting}_${element.name}`]
       })
     })
-
-    console.log("Data Information");
-    console.log(typeof(data));
-    console.log(data);
 
     const sortArrayObjs = function(arr,prop1,prop2) {
       let sort1 = [...arr].sort((a,b) => {
@@ -170,22 +162,9 @@ class MultipleValue extends React.PureComponent {
       return sort1;
     };
 
-    const dataSorted = sortArrayObjs(data,"group_number","group_item_number")
-
-    console.log("Data Sorted Information");
-    console.log(typeof(dataSorted));
-    console.log(dataSorted);
-
-    const minGroup = dataSorted.reduce((min, p) => p.group_number < min ? p.group_number : min, data[0].group_number);
-    const maxGroup = data.reduce((max, p) => p.group_number > max ? p.group_number : max, data[0].group_number);
-    console.log(minGroup);
-    console.log(maxGroup);
-
+    const dataSorted = sortArrayObjs(data,"group_number","group_item_number");
     const uniqueGroups = [...new Set(dataSorted.map((o) => o.group_number))];
     const uniqueGroupsCount = uniqueGroups.length ?? 1;
-    console.log(uniqueGroups);
-    console.log(uniqueGroupsCount);
-    //data.forEach(element => );
     
     return ( 
       <DataPointsWrapper
