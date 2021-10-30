@@ -12,6 +12,6 @@ constant: VIS_ID {
 
 visualization: {
   id: "@{VIS_ID}"
-  url: "https://cdn.jsdelivr.net/gh/AdamMinton/viz-multiple_value-marketplace@alm_testing_2/multiple_value.js"
+  url: "https://raw.githubusercontent.com/AdamMinton/viz-multiple_value-marketplace/alm_testing_2/multiple_value.js"
   label: "@{VIS_LABEL}"
 }
