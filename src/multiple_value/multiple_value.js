@@ -161,25 +161,25 @@ class MultipleValue extends React.PureComponent {
             return (
               <>
               <DataPointGroup 
-                comparisonPlacement={compDataPoint && config[`comparison_label_placement_${compDataPoint.name}`]} 
-                key={`group_${dataPoint.name}`} 
+                comparisonPlacement={compDataPoint && config[`comparison_label_placement.${compDataPoint.name}`]} 
+                key={`group.${dataPoint.name}`} 
                 layout={this.getLayout()}
               >
-                <DataPoint titlePlacement={config[`title_placement_${dataPoint.name}`]}>
-                  {config[`show_title_${dataPoint.name}`] === false ? null : (
-                    <DataPointTitle color={config[`style_${dataPoint.name}`]}>
-                      {config[`title_override_${dataPoint.name}`] || dataPoint.label}
+                <DataPoint titlePlacement={config[`title_placement.${dataPoint.name}`]}>
+                  {config[`show_title.${dataPoint.name}`] === false ? null : (
+                    <DataPointTitle color={config[`style.${dataPoint.name}`]}>
+                      {config[`title_override.${dataPoint.name}`] || dataPoint.label}
                     </DataPointTitle>
                   )}
                   <DataPointValue 
-                    color={config[`style_${dataPoint.name}`]}
+                    color={config[`style.${dataPoint.name}`]}
                     onClick={() => { this.handleClick(dataPoint, event) }}
                     layout={this.getLayout()}
                   >
                     {dataPoint.formattedValue}
                   </DataPointValue>
                   <DataPointValue>
-                    {config[`group_number_${dataPoint.name}`]}
+                    {config[`group_number.${dataPoint.name}`]}
                   </DataPointValue>
                 </DataPoint>
                 {!compDataPoint ? null : (

@@ -84,7 +84,7 @@ looker.plugins.visualizations.add({
         value: firstRow[measure.name].value,
         link: firstRow[measure.name].links,
         valueFormat: config[`value_format`],
-        formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(firstRow[measure.name]) : SSF.format(config[`value_format_${measure.name}`], firstRow[measure.name].value),
+        formattedValue: config[`value_format.${measure.name}`] === "" || config[`value_format.${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(firstRow[measure.name]) : SSF.format(config[`value_format.${measure.name}`], firstRow[measure.name].value),
         groupNumber: config[`group_number`],
         groupItemNumber: config[`group_item_number`]
       })
@@ -103,8 +103,8 @@ looker.plugins.visualizations.add({
           order: 1,
         }
       }
-      if (config[`show_comparison_${dataPoint.name}`] !== true) {
-        options[`style_${dataPoint.name}`] = {
+      if (config[`show_comparison.${dataPoint.name}`] !== true) {
+        options[`style.${dataPoint.name}`] = {
           type: `string`,
           label: `${dataPoint.label} - Color`,
           display: `color`,
@@ -112,21 +112,21 @@ looker.plugins.visualizations.add({
           section: 'Style',
           order: 10 * index + 3,
         }
-        options[`show_title_${dataPoint.name}`] = {
+        options[`show_title.${dataPoint.name}`] = {
           type: 'boolean',
           label: `${dataPoint.label} - Show Title`,
           default: true,
           section: 'Style',
           order: 10 * index + 2,
         }
-        options[`title_override_${dataPoint.name}`] = {
+        options[`title_override.${dataPoint.name}`] = {
           type: 'string',
           label: `${dataPoint.label} - Title`,
           section: 'Style',
           placeholder: dataPoint.label,
           order: 10 * index + 4,
         }
-        options[`title_placement_${dataPoint.name}`] = {
+        options[`title_placement.${dataPoint.name}`] = {
           type: 'string',
           label: `${dataPoint.label} - Title Placement`,
           section: 'Style',
@@ -138,21 +138,21 @@ looker.plugins.visualizations.add({
           default: 'above',
           order: 10 * index + 5,
         }
-        options[`value_format_${dataPoint.name}`] = {
+        options[`value_format.${dataPoint.name}`] = {
           type: 'string',
           label: `${dataPoint.label} - Value Format`,
           section: 'Style',
           default: "",
           order: 10 * index + 6
         }
-        options[`group_number_${dataPoint.name}`] = {
+        options[`group_number.${dataPoint.name}`] = {
           type: 'number',
           label: `${dataPoint.label} - Group`,
           section: 'Style',
           default: null,
           order: 10 * index + 7
         }
-        options[`group_item_number_${dataPoint.name}`] = {
+        options[`group_item_number.${dataPoint.name}`] = {
           type: 'number',
           label: `${dataPoint.label} - Group Item`,
           section: 'Style',
@@ -162,7 +162,7 @@ looker.plugins.visualizations.add({
       }
       // Comparison - all data points other than the first
       if (index >= 1) {
-        options[`show_comparison_${dataPoint.name}`] = {
+        options[`show_comparison.${dataPoint.name}`] = {
           type: 'boolean',
           label: `${dataPoint.label} - Show as comparison`,
           section: 'Comparison',
@@ -170,8 +170,8 @@ looker.plugins.visualizations.add({
           order: 10 * index,
         }
 
-        if (config[`show_comparison_${dataPoint.name}`] === true) {
-          options[`comparison_style_${dataPoint.name}`] = {
+        if (config[`show_comparison.${dataPoint.name}`] === true) {
+          options[`comparison_style.${dataPoint.name}`] = {
             type: 'string',
             display: 'radio',
             label: `${dataPoint.label} - Style`,
@@ -185,15 +185,15 @@ looker.plugins.visualizations.add({
             default: 'value',
             order: 10 * index + 1,
           }
-          options[`comparison_show_label_${dataPoint.name}`] = {
+          options[`comparison_show_label.${dataPoint.name}`] = {
             type: 'boolean',
             label: `${dataPoint.label} - Show Label`,
             section: 'Comparison',
             default: true,
             order: 10 * index + 3,
           }
-          if (config[`comparison_style_${dataPoint.name}`] === "percentage_change") {
-            options[`pos_is_bad_${dataPoint.name}`] = {
+          if (config[`comparison_style.${dataPoint.name}`] === "percentage_change") {
+            options[`pos_is_bad.${dataPoint.name}`] = {
               type: 'boolean',
               label: `Positive Values are Bad`,
               section: 'Comparison',
@@ -201,15 +201,15 @@ looker.plugins.visualizations.add({
               order: 10 * index + 2,
             }
           }
-          if (config[`comparison_show_label_${dataPoint.name}`]) {
-            options[`comparison_label_${dataPoint.name}`] = {
+          if (config[`comparison_show_label.${dataPoint.name}`]) {
+            options[`comparison_label.${dataPoint.name}`] = {
               type: 'string',
               label: `${dataPoint.label} - Label`,
               placeholder: dataPoint.label,
               section: 'Comparison',
               order: 10 * index + 4,
             }
-            options[`comparison_label_placement_${dataPoint.name}`] = {
+            options[`comparison_label_placement.${dataPoint.name}`] = {
               type: 'string',
               label: `${dataPoint.label} - Label Placement`,
               display: 'select',
@@ -223,9 +223,9 @@ looker.plugins.visualizations.add({
               section: 'Comparison',
               order: 10 * index + 5,
             }
-            if (config[`comparison_style_${dataPoint.name}`] === "value" ||
-                config[`comparison_style_${dataPoint.name}`] === "calculate_progress_perc") {
-              options[`comp_value_format_${dataPoint.name}`] = {
+            if (config[`comparison_style.${dataPoint.name}`] === "value" ||
+                config[`comparison_style.${dataPoint.name}`] === "calculate_progress_perc") {
+              options[`comp_value_format.${dataPoint.name}`] = {
                 type: 'string',
                 label: `Comparison Value Format`,
                 placeholder: "Spreadsheet-style format code",
@@ -251,7 +251,7 @@ looker.plugins.visualizations.add({
     let valuesToComparisonsMap = {}
     let lastDataPointIndex = -1
     const fullValues = dataPoints.filter((dataPoint, index) => {
-      if (config[`show_comparison_${dataPoint.name}`] !== true) {
+      if (config[`show_comparison.${dataPoint.name}`] !== true) {
         lastDataPointIndex++
         return true
       } else {
