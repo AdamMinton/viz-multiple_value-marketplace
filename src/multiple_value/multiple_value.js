@@ -190,7 +190,8 @@ class MultipleValue extends React.PureComponent {
       {uniqueGroups.map((group, index) => {
         let dataSortedSub = dataSorted.filter(dataPoint => dataPoint.group_number === group)
         return(
-          dataSortedSub
+          <DataPointsGroup>
+          {dataSortedSub
           .map((dataPoint, index) => {
             const compDataPoint = dataPoint.comparison
             let progressPerc
@@ -235,7 +236,8 @@ class MultipleValue extends React.PureComponent {
               }
               </>
             )
-          })
+          }) }
+          </DataPointsGroup>
         )
         })
       }
