@@ -150,6 +150,8 @@ class MultipleValue extends React.PureComponent {
 
     //Sort each group
     //data.sort(CustomSort);
+    console.log(data);
+    console.log(data[1]);
     console.log(config[`group_number_${data[1].name}`])
     
     return (
