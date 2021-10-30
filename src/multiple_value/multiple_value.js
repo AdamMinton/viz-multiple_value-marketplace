@@ -187,7 +187,8 @@ class MultipleValue extends React.PureComponent {
         font={config['grouping_font']}
         style={{fontSize: `${this.state.fontSize}em`}}
       >
-        {data
+        {uniqueGroups.map((group, index) => {
+        data
           .map((dataPoint, index) => {
             const compDataPoint = dataPoint.comparison
             let progressPerc
@@ -233,7 +234,9 @@ class MultipleValue extends React.PureComponent {
               </>
             )
           })
+        
         }
+        )}
       </DataPointsWrapper>
     )
 
