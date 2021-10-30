@@ -84,9 +84,9 @@ looker.plugins.visualizations.add({
         value: firstRow[measure.name].value,
         link: firstRow[measure.name].links,
         valueFormat: config[`value_format`],
-        formattedValue: config[`value_format.${measure.name}`] === "" || config[`value_format.${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(firstRow[measure.name]) : SSF.format(config[`value_format.${measure.name}`], firstRow[measure.name].value),
         groupNumber: config[`group_number`],
-        groupItemNumber: config[`group_item_number`]
+        groupItemNumber: config[`group_item_number`],
+        formattedValue: config[`value_format.${measure.name}`] === "" || config[`value_format.${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(firstRow[measure.name]) : SSF.format(config[`value_format.${measure.name}`], firstRow[measure.name].value),
       })
     });
 

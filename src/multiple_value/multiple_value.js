@@ -142,6 +142,8 @@ class MultipleValue extends React.PureComponent {
     console.log("Data Information")
     console.log(typeof(data))
     console.log(data)
+
+    
     
     return ( 
       <DataPointsWrapper
