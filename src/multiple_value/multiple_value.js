@@ -191,7 +191,11 @@ class MultipleValue extends React.PureComponent {
         let dataSortedSub = dataSorted.filter(dataPoint => dataPoint.group_number === group)
         return(
           <>
-          <DataPointsGroup layout={this.getLayout()}>
+          <DataPointsWrapper 
+            layout={this.getLayout()}
+            font={config['grouping_font']}
+            style={{fontSize: `${this.state.fontSize}em`}}
+          >
           {dataSortedSub
             .map((dataPoint, index) => {
               const compDataPoint = dataPoint.comparison
@@ -239,7 +243,7 @@ class MultipleValue extends React.PureComponent {
               )
             }) 
           }
-          </DataPointsGroup>
+          </DataPointsWrapper>
           </>
         )
       })
