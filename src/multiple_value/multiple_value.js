@@ -152,6 +152,24 @@ class MultipleValue extends React.PureComponent {
     console.log(typeof(data));
     console.log(data);
 
+    const sortArrayObjs = function(arr,prop1,prop2) {
+      let sort1 = [...arr].sort((a,b) => {
+        if (a[prop1] === b[prop1]) {
+          if (a[prop2] === b[prop2]) return 0;
+          return (a[prop2] < b[prop2]) ? -1 : 1;
+        } else {
+          return (a[prop1] < b[prop1]) ? -1 : 1;
+        }
+      });
+      return sort1;
+    };
+
+    const data_sorted = sortArrayObjs(data,"group_number","group_item_number")
+
+    console.log("Data Sorted Information");
+    console.log(typeof(data_sorted));
+    console.log(data_sorted);
+
     //data.forEach(element => );
     
     return ( 
