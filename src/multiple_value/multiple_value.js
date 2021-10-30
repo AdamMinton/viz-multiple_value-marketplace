@@ -136,7 +136,7 @@ class MultipleValue extends React.PureComponent {
   render() {
     const {config, data} = this.props;
     
-    data.sort((a, b) => (a.groupNumber > b.groupNumber) ? 1 : -1)
+    data.sort(function(a,b){return a.groupNumber - b.groupNumber});
 
     return (
       <DataPointsWrapper
