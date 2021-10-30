@@ -135,8 +135,20 @@ class MultipleValue extends React.PureComponent {
 
   render() {
     const {config, data} = this.props;
-    
-    data.sort(function(a,b){return a.groupNumber - b.groupNumber});
+
+    function dynamicSort(property) {
+      var sortOrder = 1;
+      if(property[0] === "-") {
+          sortOrder = -1;
+          property = property.substr(1);
+      }
+      return function (a,b) {
+          var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+          return result * sortOrder;
+      }
+    }
+
+    data.sort(dynamicSort("groupNumber"))
 
     return (
       <DataPointsWrapper

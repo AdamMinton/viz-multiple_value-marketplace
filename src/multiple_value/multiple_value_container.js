@@ -85,7 +85,8 @@ looker.plugins.visualizations.add({
         link: firstRow[measure.name].links,
         valueFormat: config[`value_format`],
         formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(firstRow[measure.name]) : SSF.format(config[`value_format_${measure.name}`], firstRow[measure.name].value),
-        groupNumber: config[`group_number`]
+        groupNumber: config[`group_number`],
+        groupItemNumber: config[`group_item_number`]
       })
     });
 
@@ -146,9 +147,16 @@ looker.plugins.visualizations.add({
         }
         options[`group_number_${dataPoint.name}`] = {
           type: 'number',
-          label: `${dataPoint.label} - Group Number`,
+          label: `${dataPoint.label} - Group`,
           section: 'Style',
-          default: 1,
+          default: null,
+          order: 10 * index + 7
+        }
+        options[`group_item_number_${dataPoint.name}`] = {
+          type: 'number',
+          label: `${dataPoint.label} - Group Item`,
+          section: 'Style',
+          default: null,
           order: 10 * index + 7
         }
       }
