@@ -188,8 +188,9 @@ class MultipleValue extends React.PureComponent {
         style={{fontSize: `${this.state.fontSize}em`}}
       >
       {uniqueGroups.map((group, index) => {
+        dataSortedSub = dataSorted.filter(dataPoint => dataPoint.group_number === group)
         return(
-        data
+          dataSortedSub
           .map((dataPoint, index) => {
             const compDataPoint = dataPoint.comparison
             let progressPerc
