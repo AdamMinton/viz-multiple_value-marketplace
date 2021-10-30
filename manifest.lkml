@@ -15,3 +15,7 @@ visualization: {
   file: "multiple_value.js"
   label: "@{VIS_LABEL}"
 }
+
+constant: VERSION {
+  value: "v0.0.1"
+}
