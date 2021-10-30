@@ -170,6 +170,10 @@ class MultipleValue extends React.PureComponent {
     console.log(typeof(data_sorted));
     console.log(data_sorted);
 
+    const minGroup = data_sorted.reduce((min, p) => p.group_number < min ? p.group_number : min, data[0].group_number);
+    const maxGroup = data.reduce((max, p) => p.group_number > max ? p.group_number : max, data[0].group_number);
+    console.log(minGroup);
+    console.log(maxGroup);
     //data.forEach(element => );
     
     return ( 
@@ -206,9 +210,6 @@ class MultipleValue extends React.PureComponent {
                     layout={this.getLayout()}
                   >
                     {dataPoint.formattedValue}
-                  </DataPointValue>
-                  <DataPointValue>
-                    {config[`group_number_${dataPoint.name}`]}
                   </DataPointValue>
                 </DataPoint>
                 {!compDataPoint ? null : (

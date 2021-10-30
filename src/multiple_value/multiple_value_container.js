@@ -155,7 +155,7 @@ looker.plugins.visualizations.add({
           label: `${dataPoint.label} - Group Item`,
           section: 'Style',
           default: null,
-          order: 10 * index + 7
+          order: 10 * index + 8
         }
       }
       // Comparison - all data points other than the first
