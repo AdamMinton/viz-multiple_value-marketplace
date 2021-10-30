@@ -148,7 +148,7 @@ looker.plugins.visualizations.add({
           type: 'number',
           label: `${dataPoint.label} - Group Number`,
           section: 'Style',
-          default: "1",
+          default: 1,
           order: 10 * index + 7
         }
       }

@@ -6,7 +6,8 @@ import { ComparisonDataPoint } from './ComparisonDataPoint'
 const DataPointsWrapper = styled.div`
   font-family: "Google Sans", "Roboto", "Noto Sans JP", "Noto Sans", "Noto Sans CJK KR", Helvetica, Arial, sans-serif;
   display: flex;
-  flex-direction: ${props => props.layout === 'horizontal' ? 'row' : 'column'};
+  // flex-direction: ${props => props.layout === 'horizontal' ? 'row' : 'column'};
+  flex-direction: column;
   align-items: center;
   margin: 10px;
   height: 100%;
@@ -19,24 +20,14 @@ const dataPointGroupDirectionDict = {
   'right': 'row'
 }
 
-const DataPointGroupGroup = styled.div`
-margin: 20px 5px;
-text-align: center;
-width: 100%;
-display: flex;
-flex-shrink: auto;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-`
-
 const DataPointGroup = styled.div`
   margin: 20px 5px;
   text-align: center;
   width: 100%;
   display: flex;
   flex-shrink: ${props => props.layout === 'horizontal' ? 'auto' : 0 };
-  flex-direction: ${props => props.comparisonPlacement ? dataPointGroupDirectionDict[props.comparisonPlacement] : 'column'};
+  //flex-direction: ${props => props.comparisonPlacement ? dataPointGroupDirectionDict[props.comparisonPlacement] : 'column'};
+  flex-direction: row;
   align-items: center;
   justify-content: center;
 `
@@ -144,6 +135,8 @@ class MultipleValue extends React.PureComponent {
 
   render() {
     const {config, data} = this.props;
+    
+    data.sort((a, b) => (a.groupNumber > b.groupNumber) ? 1 : -1)
 
     return (
       <DataPointsWrapper
