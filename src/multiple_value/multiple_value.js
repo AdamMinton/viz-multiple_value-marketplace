@@ -135,7 +135,7 @@ class MultipleValue extends React.PureComponent {
 
   render() {
     const {config, data} = this.props;
-    console.log("hello world")
+    console.log("hello world");
     function CustomSort(a, b) {
       var Item1 = a['groupNumber'];
       var Item2 = b['groupNumber'];
@@ -143,6 +143,7 @@ class MultipleValue extends React.PureComponent {
           return (Item1 - Item2);
       }
       else{
+          console.log(a);
           return (a.groupItemNumber.localeCompare(b.groupItemNumber, undefined, {numeric: true}));
       }
     }
