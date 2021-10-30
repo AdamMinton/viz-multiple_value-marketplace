@@ -138,18 +138,19 @@ class MultipleValue extends React.PureComponent {
 
     console.log(config)
     console.log(data)
+    console.log(dataPoint)
     //console.log("hello world");
-    function CustomSort(a, b) {
-      var Item1 = a['groupNumber'];
-      var Item2 = b['groupNumber'];
-      if(Item1 != Item2){
-          return (Item1 - Item2);
-      }
-      else{
-          console.log(a);
-          return (a.groupItemNumber.localeCompare(b.groupItemNumber, undefined, {numeric: true}));
-      }
-    }
+    // function CustomSort(a, b) {
+    //   var Item1 = a['groupNumber'];
+    //   var Item2 = b['groupNumber'];
+    //   if(Item1 != Item2){
+    //       return (Item1 - Item2);
+    //   }
+    //   else{
+    //       console.log(a);
+    //       return (a.groupItemNumber.localeCompare(b.groupItemNumber, undefined, {numeric: true}));
+    //   }
+    // }
 
     //Sort each group
     //data.sort(CustomSort);
