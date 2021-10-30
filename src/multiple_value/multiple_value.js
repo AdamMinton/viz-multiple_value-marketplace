@@ -164,19 +164,21 @@ class MultipleValue extends React.PureComponent {
       return sort1;
     };
 
-    const data_sorted = sortArrayObjs(data,"group_number","group_item_number")
+    const dataSorted = sortArrayObjs(data,"group_number","group_item_number")
 
     console.log("Data Sorted Information");
-    console.log(typeof(data_sorted));
-    console.log(data_sorted);
+    console.log(typeof(dataSorted));
+    console.log(dataSorted);
 
-    const minGroup = data_sorted.reduce((min, p) => p.group_number < min ? p.group_number : min, data[0].group_number);
+    const minGroup = dataSorted.reduce((min, p) => p.group_number < min ? p.group_number : min, data[0].group_number);
     const maxGroup = data.reduce((max, p) => p.group_number > max ? p.group_number : max, data[0].group_number);
     console.log(minGroup);
     console.log(maxGroup);
 
-    const groupCount = data_sorted.filter((v, i, a) => a.group_number.indexOf(v) === i);
-    console.log(groupCount.length ?? 1);
+    const uniqueGroups = [...new Set(dataSorted.map((o) => o.group_number))];
+    const uniqueGroupsCount = uniqueGroups.length ?? 1;
+    console.log(uniqueGroups);
+    console.log(uniqueGroupsCount);
     //data.forEach(element => );
     
     return ( 
