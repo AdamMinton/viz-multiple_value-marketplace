@@ -181,7 +181,7 @@ class MultipleValue extends React.PureComponent {
                     {dataPoint.formattedValue}
                   </DataPointValue>
                   <DataPointValue>
-                    {dataPoint.groupNumber}
+                    {config[`group_number_${dataPoint.name}`]}
                   </DataPointValue>
                 </DataPoint>
                 {!compDataPoint ? null : (
