@@ -174,6 +174,9 @@ class MultipleValue extends React.PureComponent {
     const maxGroup = data.reduce((max, p) => p.group_number > max ? p.group_number : max, data[0].group_number);
     console.log(minGroup);
     console.log(maxGroup);
+
+    const groupCount = data_sorted.filter((v, i, a) => a.group_number.indexOf(v) === i);
+    console.log(groupCount.length ?? 1);
     //data.forEach(element => );
     
     return ( 
