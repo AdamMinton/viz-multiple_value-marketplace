@@ -147,8 +147,10 @@ class MultipleValue extends React.PureComponent {
           return result * sortOrder;
       }
     }
-
+    
     data.sort(dynamicSort("groupNumber"))
+
+    console.log(data)
 
     return (
       <DataPointsWrapper
