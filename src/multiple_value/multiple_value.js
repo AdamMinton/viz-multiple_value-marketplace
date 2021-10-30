@@ -9,7 +9,7 @@ const DataPointsWrapper = styled.div`
   display: flex;
   // flex-direction: ${props => props.layout === 'horizontal' ? 'row' : 'column'};
   flex-direction: column;
-  align-items: center;
+  align-items: space-evenly;
   margin: 10px;
   height: 100%;
 `
