@@ -188,7 +188,7 @@ class MultipleValue extends React.PureComponent {
         style={{fontSize: `${this.state.fontSize}em`}}
       >
         {data
-          .map((dataPoint, index) => {
+          .forEach((dataPoint, index) => {
             const compDataPoint = dataPoint.comparison
             let progressPerc
             let percChange
