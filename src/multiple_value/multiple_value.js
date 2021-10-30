@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { ComparisonDataPoint } from './ComparisonDataPoint'
+import { forEach } from 'lodash'
 
 const DataPointsWrapper = styled.div`
   font-family: "Google Sans", "Roboto", "Noto Sans JP", "Noto Sans", "Noto Sans CJK KR", Helvetica, Arial, sans-serif;
@@ -136,14 +137,22 @@ class MultipleValue extends React.PureComponent {
   render() {
     const {config, data} = this.props;
 
-    console.log("Config Information")
-    console.log(typeof(config))
-    console.log(config)
-    console.log("Data Information")
-    console.log(typeof(data))
-    console.log(data)
+    const visualSettings = ['group_number','group_item_number'];
+    console.log("Config Information");
+    console.log(typeof(config));
+    console.log(config);
 
-    
+    data.forEach(function(element,index,array){
+      visualSettings.forEach(function(setting) {
+        array[index][`${setting}`] = config[`${setting}_${element.name}`]
+      })
+    })
+
+    console.log("Data Information");
+    console.log(typeof(data));
+    console.log(data);
+
+    //data.forEach(element => );
     
     return ( 
       <DataPointsWrapper
@@ -163,25 +172,25 @@ class MultipleValue extends React.PureComponent {
             return (
               <>
               <DataPointGroup 
-                comparisonPlacement={compDataPoint && config[`comparison_label_placement.${compDataPoint.name}`]} 
-                key={`group.${dataPoint.name}`} 
+                comparisonPlacement={compDataPoint && config[`comparison_label_placement_${compDataPoint.name}`]} 
+                key={`group_${dataPoint.name}`} 
                 layout={this.getLayout()}
               >
-                <DataPoint titlePlacement={config[`title_placement.${dataPoint.name}`]}>
-                  {config[`show_title.${dataPoint.name}`] === false ? null : (
-                    <DataPointTitle color={config[`style.${dataPoint.name}`]}>
-                      {config[`title_override.${dataPoint.name}`] || dataPoint.label}
+                <DataPoint titlePlacement={config[`title_placement_${dataPoint.name}`]}>
+                  {config[`show_title_${dataPoint.name}`] === false ? null : (
+                    <DataPointTitle color={config[`style_${dataPoint.name}`]}>
+                      {config[`title_override_${dataPoint.name}`] || dataPoint.label}
                     </DataPointTitle>
                   )}
                   <DataPointValue 
-                    color={config[`style.${dataPoint.name}`]}
+                    color={config[`style_${dataPoint.name}`]}
                     onClick={() => { this.handleClick(dataPoint, event) }}
                     layout={this.getLayout()}
                   >
                     {dataPoint.formattedValue}
                   </DataPointValue>
                   <DataPointValue>
-                    {config[`group_number.${dataPoint.name}`]}
+                    {config[`group_number_${dataPoint.name}`]}
                   </DataPointValue>
                 </DataPoint>
                 {!compDataPoint ? null : (

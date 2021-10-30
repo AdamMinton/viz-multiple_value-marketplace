@@ -119,7 +119,7 @@ export const ComparisonDataPoint: React.FC<{
 
   return (
     <ComparisonDataPointGroup>
-      {config[`comparison_style.${compDataPoint.name}`] !==
+      {config[`comparison_style_${compDataPoint.name}`] !==
       "percentage_change" ? null : (
         <ComparisonPercentageChange
           data-value={percChange}
@@ -128,40 +128,40 @@ export const ComparisonDataPoint: React.FC<{
           }}
         >
           {percChange >= 0 ? (
-            <UpArrow pos={config[`pos_is_bad.${compDataPoint.name}`]} />
+            <UpArrow pos={config[`pos_is_bad_${compDataPoint.name}`]} />
           ) : (
-            <DownArrow pos={config[`pos_is_bad.${compDataPoint.name}`]} />
+            <DownArrow pos={config[`pos_is_bad_${compDataPoint.name}`]} />
           )}
           {percChange}%
         </ComparisonPercentageChange>
       )}
 
-      {config[`comparison_style.${compDataPoint.name}`] !== "value" ? null : (
+      {config[`comparison_style_${compDataPoint.name}`] !== "value" ? null : (
         <ComparisonSimpleValue
           onClick={() => {
             handleClick(compDataPoint, event);
           }}
         >
-          {config[`comp_value_format.${compDataPoint.name}`] === ""
+          {config[`comp_value_format_${compDataPoint.name}`] === ""
             ? compDataPoint.formattedValue
             : tryFormatting(
-                config[`comp_value_format.${compDataPoint.name}`],
+                config[`comp_value_format_${compDataPoint.name}`],
                 compDataPoint.value,
                 compDataPoint.formattedValue
               )}
         </ComparisonSimpleValue>
       )}
 
-      {config[`comparison_style.${compDataPoint.name}`] !==
+      {config[`comparison_style_${compDataPoint.name}`] !==
         "calculate_progress" &&
-      config[`comparison_style.${compDataPoint.name}`] !==
+      config[`comparison_style_${compDataPoint.name}`] !==
         "calculate_progress_perc" ? null : (
-        <ComparisonProgressBar background={config[`style.${dataPoint.name}`]}>
+        <ComparisonProgressBar background={config[`style_${dataPoint.name}`]}>
           <ComparisonProgressBarFilled
-            background={config[`style.${dataPoint.name}`]}
+            background={config[`style_${dataPoint.name}`]}
             pct={() => Math.min(progressPerc || 0, 100)}
           />
-          {config[`comparison_show_label.${compDataPoint.name}`] ===
+          {config[`comparison_show_label_${compDataPoint.name}`] ===
           false ? null : (
             <ComparisonProgressBarLabel>
               <div
@@ -169,21 +169,21 @@ export const ComparisonDataPoint: React.FC<{
                   handleClick(compDataPoint, event);
                 }}
               >
-                {config[`comparison_style.${compDataPoint.name}`] ===
+                {config[`comparison_style_${compDataPoint.name}`] ===
                 "calculate_progress" ? null : (
                   <>
                     {`${progressPerc}% of ${
-                      config[`comp_value_format.${compDataPoint.name}`] === ""
+                      config[`comp_value_format_${compDataPoint.name}`] === ""
                         ? compDataPoint.formattedValue
                         : tryFormatting(
-                            config[`comp_value_format.${compDataPoint.name}`],
+                            config[`comp_value_format_${compDataPoint.name}`],
                             compDataPoint.value,
                             compDataPoint.formattedValue
                           )
                     } `}
                   </>
                 )}
-                {config[`comparison_label.${compDataPoint.name}`] ||
+                {config[`comparison_label_${compDataPoint.name}`] ||
                   compDataPoint.label}
               </div>
             </ComparisonProgressBarLabel>
@@ -191,13 +191,13 @@ export const ComparisonDataPoint: React.FC<{
         </ComparisonProgressBar>
       )}
 
-      {config[`comparison_show_label.${compDataPoint.name}`] === false ||
-      config[`comparison_style.${compDataPoint.name}`] ===
+      {config[`comparison_show_label_${compDataPoint.name}`] === false ||
+      config[`comparison_style_${compDataPoint.name}`] ===
         "calculate_progress" ||
-      config[`comparison_style.${compDataPoint.name}`] ===
+      config[`comparison_style_${compDataPoint.name}`] ===
         "calculate_progress_perc"
         ? null
-        : config[`comparison_label.${compDataPoint.name}`] ||
+        : config[`comparison_label_${compDataPoint.name}`] ||
           compDataPoint.label}
     </ComparisonDataPointGroup>
   );
