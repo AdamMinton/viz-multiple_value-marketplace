@@ -135,7 +135,10 @@ class MultipleValue extends React.PureComponent {
 
   render() {
     const {config, data} = this.props;
-    console.log("hello world");
+
+    console.log(config)
+    console.log(data)
+    //console.log("hello world");
     function CustomSort(a, b) {
       var Item1 = a['groupNumber'];
       var Item2 = b['groupNumber'];
@@ -150,11 +153,7 @@ class MultipleValue extends React.PureComponent {
 
     //Sort each group
     //data.sort(CustomSort);
-    console.log(data);
-    console.log(data[1]);
-    console.log(config[`group_number_${data[1].name}`])
-    
-    return (
+    return ( 
       <DataPointsWrapper
         layout={this.getLayout()}
         font={config['grouping_font']}
