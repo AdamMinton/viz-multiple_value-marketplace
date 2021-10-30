@@ -14,6 +14,14 @@ const DataPointsWrapper = styled.div`
   height: 100%;
 `
 
+const DataPointGroupGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px;
+  height: 100%;
+`
+
 const dataPointGroupDirectionDict = {
   'below': 'column',
   'above': 'column-reverse',
@@ -191,9 +199,8 @@ class MultipleValue extends React.PureComponent {
         let dataSortedSub = dataSorted.filter(dataPoint => dataPoint.group_number === group)
         return(
           <>
-          <DataPointsWrapper 
+          <DataPointGroupGroup 
             layout={this.getLayout()}
-            font={config['grouping_font']}
             style={{fontSize: `${this.state.fontSize}em`}}
           >
           {dataSortedSub
@@ -243,7 +250,7 @@ class MultipleValue extends React.PureComponent {
               )
             }) 
           }
-          </DataPointsWrapper>
+          </DataPointGroupGroup>
           </>
         )
       })
