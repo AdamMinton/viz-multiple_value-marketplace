@@ -17,5 +17,5 @@ visualization: {
 }
 
 constant: VERSION {
-  value: "v0.0.1"
+  value: "v0.0.2"
 }

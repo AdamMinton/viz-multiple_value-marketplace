@@ -138,7 +138,7 @@ looker.plugins.visualizations.add({
         }
         options[`value_format_${dataPoint.name}`] = {
           type: 'string',
-          label: `${dataPoint.label} - Value Format ID`,
+          label: `${dataPoint.label} - Value Format ID2`,
           section: 'Style',
           default: "",
           order: 10 * index + 6
