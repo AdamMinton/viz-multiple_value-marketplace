@@ -51,6 +51,17 @@ const DataPoint = styled.div`
   flex: 1;
 `
 
+const BorderNone = {
+  border: `none`,
+}
+
+const BorderTile = {
+  border: `none`,
+  borderRadius: `6px`,
+  background: `rgb(255, 255, 255)`,
+  boxShadow: `rgba(0, 0, 0, 0.11) 0px 2px 12px, rgba(0, 0, 0, 0.04) 0px 1px 4px`,
+}
+
 const DataPointTitle = styled.div`
   font-weight: 100;
   color: ${props => props.color};
@@ -195,7 +206,7 @@ class MultipleValue extends React.PureComponent {
                   key={`group_${dataPoint.name}`} 
                   layout={this.getLayout()}
                 >
-                  <DataPoint titlePlacement={config[`title_placement_${dataPoint.name}`]}>
+                  <DataPoint titlePlacement={config[`title_placement_${dataPoint.name}`]} style={config[`border_${dataPoint.name}`] === 'None' ? BorderNone :BorderTile}>
                     {config[`show_title_${dataPoint.name}`] === false ? null : (
                       <DataPointTitle color={config[`style_${dataPoint.name}`]}>
                         {config[`title_override_${dataPoint.name}`] || dataPoint.label}

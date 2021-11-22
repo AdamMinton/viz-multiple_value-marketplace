@@ -16,7 +16,7 @@ const baseOptions = {
   orientation: {
     label: "Orientation",
     type: 'string',
-    section: 'Style',
+    section: 'Grouping',
     display: 'select',
     values: [
       {'Auto': 'auto'},
@@ -143,17 +143,29 @@ looker.plugins.visualizations.add({
           default: "",
           order: 10 * index + 6
         }
+        options[`border_${dataPoint.name}`] = {
+          type: 'string',
+          display: 'select',
+          values: [
+            {'Individual Tiles': 'Tile'},
+            {'None': 'None'},
+          ],
+          label: `${dataPoint.label} - Border`,
+          section: 'Style',
+          default: "None",
+          order: 10 * index + 7
+        }
         options[`group_number_${dataPoint.name}`] = {
           type: 'number',
           label: `${dataPoint.label} - Group`,
-          section: 'Style',
+          section: 'Grouping',
           default: null,
           order: 10 * index + 7
         }
         options[`group_item_number_${dataPoint.name}`] = {
           type: 'number',
           label: `${dataPoint.label} - Group Item`,
-          section: 'Style',
+          section: 'Grouping',
           default: null,
           order: 10 * index + 8
         }
