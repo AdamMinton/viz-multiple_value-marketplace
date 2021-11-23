@@ -21,7 +21,7 @@ const DataPointGroupGroup = styled.div`
 `
 
 const DataPointGroup = styled.div`
-  margin: 10px;
+  margin: 10px;  
   text-align: center;
   width: 100%;
   height: 100%;
@@ -31,11 +31,11 @@ const DataPointGroup = styled.div`
   align-items: center;
   justify-content: center;
 `
-
+//
 const HoriztonalDivider = styled.hr`
-  border-top-width: thick; 
-  border-top-style: solid;
-  width: 100%
+  border-bottom-width: thick; 
+  border-bottom-style: solid;
+  width: 100%;
 `
 
 const DataPoint = styled.div`
@@ -201,7 +201,7 @@ class MultipleValue extends React.PureComponent {
                 <>
                 {number === 0 && `group_name_${dataPoint.name}` ? 
                 <DataPointGroup style={{fontWeight:'bold'}}> 
-                  {checkURL(config[`group_name_${dataPoint.name}`]) ? <img src={config[`group_name_${dataPoint.name}`]} style={config.orientation === 'horizontal' ? {width:'100px'}: {} }></img> : <h2>{config[`group_name_${dataPoint.name}`]}</h2>}
+                  {checkURL(config[`group_name_${dataPoint.name}`]) ? <img src={config[`group_name_${dataPoint.name}`]} style={{width:config[`image_width_${dataPoint.name}`]+'px',height:config[`image_height_${dataPoint.name}`]+'px'}}></img> : <h2>{config[`group_name_${dataPoint.name}`]}</h2>}
                 </DataPointGroup>
                 : '' }
                 

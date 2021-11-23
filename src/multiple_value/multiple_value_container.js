@@ -4,6 +4,11 @@ import isEqual from 'lodash/isEqual'
 import MultipleValue from './multiple_value'
 import SSF from "ssf";
 
+function checkURL(url) {
+  url = url ?? ''
+  return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+}
+
 const baseOptions = {
   font_size_main: {
     label: "Font Size",
@@ -181,6 +186,22 @@ looker.plugins.visualizations.add({
           section: 'Grouping',
           default: null,
           order: 10 * index + 9
+        }
+        if (checkURL(config[`group_name_${dataPoint.name}`])) {
+          options[`image_height_${dataPoint.name}`] = {
+            type: `number`,
+            label: `${dataPoint.label} - Image Height`,
+            section: `Grouping`,
+            default: null,
+            order: 10 * index + 9 + 1
+          }
+          options[`image_width_${dataPoint.name}`] = {
+            type: `number`,
+            label: `${dataPoint.label} - Image Width`,
+            section: `Grouping`,
+            default: null,
+            order: 10 * index + 9 + 1
+          }
         }
       }
       // Comparison - all data points other than the first
