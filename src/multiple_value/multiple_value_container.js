@@ -175,6 +175,13 @@ looker.plugins.visualizations.add({
           default: null,
           order: 10 * index + 8
         }
+        options[`group_name_${dataPoint.name}`] = {
+          type: 'string',
+          label: `${dataPoint.label} - Group Name`,
+          section: 'Grouping',
+          default: null,
+          order: 10 * index + 9
+        }
       }
       // Comparison - all data points other than the first
       if (index >= 1) {

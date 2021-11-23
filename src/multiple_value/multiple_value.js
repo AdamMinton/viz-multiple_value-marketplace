@@ -24,8 +24,9 @@ const DataPointGroup = styled.div`
   margin: 10px;
   text-align: center;
   width: 100%;
+  height: 100%;
   display: flex;
-  flex-shrink: ${props => props.layout === 'horizontal' ? 'auto' : 0 };
+  flex-shrink: auto;
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -73,6 +74,10 @@ const DataPointValue = styled.div`
     text-decoration: underline;
   }
 `
+function checkURL(url) {
+  url = url ?? ''
+  return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+}
 
 class MultipleValue extends React.PureComponent {
   constructor(props) {
@@ -187,18 +192,25 @@ class MultipleValue extends React.PureComponent {
               const compDataPoint = dataPoint.comparison
               let progressPerc
               let percChange
+              let number = index
               if (compDataPoint) {
                 progressPerc = Math.round((dataPoint.value / compDataPoint.value) * 100)
                 percChange = progressPerc - 100
               }
               return (
                 <>
+                {number === 0 && `group_name_${dataPoint.name}` ? 
+                <DataPointGroup style={{fontWeight:'bold'}}> 
+                  {checkURL(config[`group_name_${dataPoint.name}`]) ? <img src={config[`group_name_${dataPoint.name}`]} style={config.orientation === 'horizontal' ? {width:'100px'}: {} }></img> : <h2>{config[`group_name_${dataPoint.name}`]}</h2>}
+                </DataPointGroup>
+                : '' }
+                
                 <DataPointGroup 
                   comparisonPlacement={compDataPoint && config[`comparison_label_placement_${compDataPoint.name}`]} 
                   key={`group_${dataPoint.name}`} 
                   layout={this.getLayout()}
                   style={length - 1 !== i && config.dividers && config.orientation === 'vertical' ? {borderRightColor:`${config.dividers_color}`,borderRightWidth: `thick`,borderRightStyle: `solid`} : {borderRight: ``} }
-                >
+                > 
                   <DataPoint titlePlacement={config[`title_placement_${dataPoint.name}`]} style={config[`border_${dataPoint.name}`] === 'None' ? BorderNone : BorderTile}>
                     {config[`show_title_${dataPoint.name}`] === false ? null : (
                       <DataPointTitle color={config[`style_${dataPoint.name}`]}>
