@@ -180,6 +180,7 @@ looker.plugins.visualizations.add({
           default: null,
           order: 10 * index + 8
         }
+        //BUG: Consider moving group names to the bottom and have them been unique on the group names set
         options[`group_name_${dataPoint.name}`] = {
           type: 'string',
           label: `${dataPoint.label} - Group Name`,
