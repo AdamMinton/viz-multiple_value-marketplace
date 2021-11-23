@@ -31,7 +31,7 @@ const DataPointGroup = styled.div`
   align-items: center;
   justify-content: center;
 `
-//
+//BUG: Need to fix it's positioning to observe margins
 const HoriztonalDivider = styled.hr`
   border-bottom-width: thick; 
   border-bottom-style: solid;
