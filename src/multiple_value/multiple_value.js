@@ -2,13 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { ComparisonDataPoint } from './ComparisonDataPoint'
-import { forEach } from 'lodash'
+import { forEach, sortedLastIndex } from 'lodash'
 
 const DataPointsWrapper = styled.div`
   font-family: "Google Sans", "Roboto", "Noto Sans JP", "Noto Sans", "Noto Sans CJK KR", Helvetica, Arial, sans-serif;
   display: flex;
-  // flex-direction: ${props => props.layout === 'horizontal' ? 'row' : 'column'};
-  flex-direction: column;
+  flex-direction: ${props => props.layout === 'horizontal' ? 'column' : 'row'};
   align-items: space-evenly;
   margin: 10px;
   height: 100%;
@@ -16,32 +15,26 @@ const DataPointsWrapper = styled.div`
 
 const DataPointGroupGroup = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: ${props => props.layout === 'horizontal' ? 'row' : 'column'};
   align-items: flex-start;
+  width: 100%;
 `
 
-const dataPointGroupDirectionDict = {
-  'below': 'column',
-  'above': 'column-reverse',
-  'left': 'row-reverse',
-  'right': 'row'
-}
-
 const DataPointGroup = styled.div`
-  margin: 20px 5px;
+  margin: 10px;
   text-align: center;
   width: 100%;
   display: flex;
   flex-shrink: ${props => props.layout === 'horizontal' ? 'auto' : 0 };
-  //flex-direction: ${props => props.comparisonPlacement ? dataPointGroupDirectionDict[props.comparisonPlacement] : 'column'};
   flex-direction: row;
   align-items: center;
   justify-content: center;
 `
-const Divider = styled.div`
-  background-color: #282828;
-  height: 35vh;
-  width: 1px;
+
+const HoriztonalDivider = styled.hr`
+  border-top-width: thick; 
+  border-top-style: solid;
+  width: 100%
 `
 
 const DataPoint = styled.div`
@@ -67,7 +60,6 @@ const DataPointTitle = styled.div`
   color: ${props => props.color};
   margin: 5px 0;
 `
-
 const DataPointValue = styled.div`
   font-size: 3em;
   font-weight: 100;
@@ -182,7 +174,7 @@ class MultipleValue extends React.PureComponent {
         font={config['grouping_font']}
         style={{fontSize: `${this.state.fontSize}em`}}
       >
-      {uniqueGroups.map((group) => {
+      {uniqueGroups.map((group,i,{length}) => {
         let dataSortedSub = dataSorted.filter(dataPoint => dataPoint.group_number === group)
         return(
           <>
@@ -205,8 +197,9 @@ class MultipleValue extends React.PureComponent {
                   comparisonPlacement={compDataPoint && config[`comparison_label_placement_${compDataPoint.name}`]} 
                   key={`group_${dataPoint.name}`} 
                   layout={this.getLayout()}
+                  style={length - 1 !== i && config.dividers && config.orientation === 'vertical' ? {borderRightColor:`${config.dividers_color}`,borderRightWidth: `thick`,borderRightStyle: `solid`} : {borderRight: ``} }
                 >
-                  <DataPoint titlePlacement={config[`title_placement_${dataPoint.name}`]} style={config[`border_${dataPoint.name}`] === 'None' ? BorderNone :BorderTile}>
+                  <DataPoint titlePlacement={config[`title_placement_${dataPoint.name}`]} style={config[`border_${dataPoint.name}`] === 'None' ? BorderNone : BorderTile}>
                     {config[`show_title_${dataPoint.name}`] === false ? null : (
                       <DataPointTitle color={config[`style_${dataPoint.name}`]}>
                         {config[`title_override_${dataPoint.name}`] || dataPoint.label}
@@ -230,14 +223,12 @@ class MultipleValue extends React.PureComponent {
                     handleClick={this.handleClick}
                   />)}
                 </DataPointGroup>
-                {config.dividers && config.orientation === 'horizontal' && index < (data.length - 1) &&
-                <Divider />
-                }
                 </>
               )
             }) 
           }
           </DataPointGroupGroup>
+          {length - 1 !== i && config.dividers && config.orientation === 'horizontal' ? <HoriztonalDivider style={{borderTopColor:`${config.dividers_color}`}} /> : ''}
           </>
         )
       })

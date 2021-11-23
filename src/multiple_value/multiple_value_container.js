@@ -92,14 +92,20 @@ looker.plugins.visualizations.add({
     
     dataPoints.forEach((dataPoint, index) => {
       //Style -- apply to all
-      if (config.orientation === "horizontal") {
-        options.dividers = {
-          type: 'boolean',
-          label: `Dividers between values?`,
-          default: false,
-          section: 'Style',
-          order: 1,
-        }
+      options.dividers = {
+        type: 'boolean',
+        label: `Dividers between values?`,
+        default: false,
+        section: 'Style',
+        order: 1,
+      }
+      options.dividers_color = {
+        type: 'string',
+        label: `Dividers Color`,
+        display: `color`,
+        default: 'black',
+        section: 'Style',
+        order: 1,
       }
       if (config[`show_comparison_${dataPoint.name}`] !== true) {
         options[`style_${dataPoint.name}`] = {
