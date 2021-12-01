@@ -65,7 +65,10 @@ const DataPointValue = styled.div`
   font-size: 3em;
   font-weight: 100;
   color: ${props => props.color};
-
+  order: ${props => props.order};
+  align-items: center;
+  justify-content: center;
+  display: flex;
   a.drillable-link {
     color: ${props => props.color};
     text-decoration: none;
@@ -78,7 +81,10 @@ const NewComparisonDataPoint  = styled.div`
 font-size: 2em;
 font-weight: 90;
 color: ${props => props.color};
-
+order: ${props => props.order};
+align-items: center;
+justify-content: center;
+display: flex;
 a.drillable-link {
   color: ${props => props.color};
   text-decoration: none;
@@ -226,7 +232,6 @@ class MultipleValue extends React.PureComponent {
                   difference = Math.round(compDataPoint.value - dataPoint.value)
                 }
               }
-              console.log(difference);
               return (
                 <>
                 {number === 0 && config[`group_name_${dataPoint.name}`] ? 
@@ -248,6 +253,7 @@ class MultipleValue extends React.PureComponent {
                       </DataPointTitle>
                     )}
                     <DataPointValue 
+                      order={config[`order_comparison_original_${dataPoint.name}`]}
                       color={config[`style_${dataPoint.name}`]}
                       onClick={() => { this.handleClick(dataPoint, event) }}
                       layout={this.getLayout()}
@@ -255,8 +261,9 @@ class MultipleValue extends React.PureComponent {
                       {dataPoint.formattedValue}
                     </DataPointValue>
                     <NewComparisonDataPoint
-                      onClick={() => { this.handleClick(compDataPoint, event) }}
+                      order={config[`order_comparison_value_${dataPoint.name}`]}
                       color={config[`style_${dataPoint.name}`]}
+                      onClick={() => { this.handleClick(compDataPoint, event) }}
                       layout={this.getLayout()}
                     >
                     {difference}

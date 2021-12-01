@@ -511,7 +511,7 @@ looker.plugins.visualizations.add({
       return dataPoint
     })
 
-    console.log(dataPoints);
+    //console.log(dataPoints);
 
     this.chart = ReactDOM.render(
       <MultipleValue
