@@ -209,17 +209,21 @@ class MultipleValue extends React.PureComponent {
               let difference
               let number = index
               if (compDataPoint) {
-                if (config[`difference_comparison_style_${dataPoint.name}`] === 'original' ) {
+                if (config[`difference_percentage_comparison_style_${dataPoint.name}`] === 'original' ) {
                   progressPerc = Math.round((dataPoint.value / compDataPoint.value) * 100)
                   percChange = progressPerc - 100
-                  //BUG: Need to add formatting or somehow figure the formatting from the formattedvalues
-                  difference = Math.round(compDataPoint.value - dataPoint.value)
                 }
                 else {
                   progressPerc = Math.round(((dataPoint.value / compDataPoint.value) - 1) * 100)
                   percChange = progressPerc - 100
-                  //BUG: Same as above
+                }
+                if (config[`difference_comparison_style_${dataPoint.name}`] === 'original' ) {
+                  //BUG: Need to add formatting or somehow figure the formatting from the formattedvalues
                   difference = Math.round(dataPoint.value - compDataPoint.value)
+                }
+                else {
+                  //BUG: Same as above
+                  difference = Math.round(compDataPoint.value - dataPoint.value)
                 }
               }
               console.log(difference);

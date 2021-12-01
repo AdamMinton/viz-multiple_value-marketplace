@@ -238,7 +238,7 @@ looker.plugins.visualizations.add({
           }
         }
       //}
-      // Comparison - all data points other than the first
+      // Comparison
       options[`show_comparison_${dataPoint.name}`] = {
         type: 'boolean',
         label: `${dataPoint.label} - Show a comparison`,
@@ -255,24 +255,12 @@ looker.plugins.visualizations.add({
           section: 'Comparison',
           order: 100 * (index + 1) + 1,
         }
-        options[`difference_comparison_style_${dataPoint.name}`] = {
-          type: 'string',
-          display: 'select',
-          label: `Difference Calculation`,
-          values: [
-            {'Percent Change from Original': 'change'},
-            {'Percent of Original': 'original'},
-          ],
-          section: 'Comparison',
-          default: 'change',
-          order: 100 * (index + 1) + 2,
-        }
         options[`show_comparison_original_${dataPoint.name}`] = {
           type: 'boolean',
           label: `Original`,
           section: 'Comparison',
           default: true,
-          order: 100 * (index + 1) + 3,
+          order: 100 * (index + 1) + 2,
           display_size: 'half'
         }
         options[`show_comparison_value_${dataPoint.name}`] = {
@@ -280,7 +268,7 @@ looker.plugins.visualizations.add({
           label: `Comparison`,
           section: 'Comparison',
           default: true,
-          order: 100 * (index + 1) + 4,
+          order: 100 * (index + 1) + 3,
           display_size: 'half'
         }
         options[`show_comparison_differnce_${dataPoint.name}`] = {
@@ -288,7 +276,7 @@ looker.plugins.visualizations.add({
           label: `Difference #`,
           section: 'Comparison',
           default: true,
-          order: 100 * (index + 1) + 5,
+          order: 100 * (index + 1) + 4,
           display_size: 'half'
         }
         options[`show_comparison_differnce_percentage_${dataPoint.name}`] = {
@@ -296,6 +284,32 @@ looker.plugins.visualizations.add({
           label: `Difference %`,
           section: 'Comparison',
           default: false,
+          order: 100 * (index + 1) + 5,
+          display_size: 'half'
+        }
+        options[`difference_comparison_style_${dataPoint.name}`] = {
+          type: 'string',
+          display: 'select',
+          label: `Difference # - Calc`,
+          values: [
+            {'Original - Comparison': 'original'},
+            {'Comparison - Original': 'comparison'},
+          ],
+          section: 'Comparison',
+          default: 'change',
+          order: 100 * (index + 1) + 6,
+          display_size: 'half'
+        }
+        options[`difference_percentage_comparison_style_${dataPoint.name}`] = {
+          type: 'string',
+          display: 'select',
+          label: `Difference % - Calc`,
+          values: [
+            {'Percent Change from Original': 'change'},
+            {'Percent of Original': 'original'},
+          ],
+          section: 'Comparison',
+          default: 'change',
           order: 100 * (index + 1) + 6,
           display_size: 'half'
         }
