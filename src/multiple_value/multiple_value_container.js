@@ -93,29 +93,11 @@ looker.plugins.visualizations.add({
       })
     });
 
-    //BUG: Need to figure out how to get from measure name and label into this format
-    const fields_to_select = [
-    {'Average Cost':'order_items.average_cost'},
-    {'Average Spend Per Customer':'order_items.average_spend_per_customer'},
-    {'Count of Orders':'order_items.count_of_orders'},
-    {'Count with Scatters':'order_items.count_with_scatter'},
-    {'Average Sale Price':'order_items.average_sale_price'},
-    {'Average Gross Revenue':'order_items.average_gross_revenue'},
-    {'Days since latest order':'order_items.days_since_lastest_order'},
-    {'Item Return Rate':'order_items.item_return_rate'},
-    {'Number of Items Returned':'order_items.number_of_items_returned'},
-    ]
-      //measures.map(measure => {
-      // console.log(measure.name);
-      // console.log(measure.label);
-      // let string = `'{${measure.name}':'${measure.label}'`
-      // console.log(string);
-      // let array = JSON.parse(string)
-      // console.log(array)
-      // return(
-      //   fields_to_select[`${measure.name}`] = `${measure.label}`
-      // )
-    //})
+    const fields_to_select = measures.map(measure => {
+      const b = {}
+      b[measure.label] = measure.name
+      return b
+    })
 
     const options = Object.assign({}, baseOptions)
     dataPoints.forEach((dataPoint, index) => {
@@ -232,7 +214,7 @@ looker.plugins.visualizations.add({
       // Comparison - all data points other than the first
       options[`show_comparison_${dataPoint.name}`] = {
         type: 'boolean',
-        label: `${dataPoint.label} - Show as comparison`,
+        label: `${dataPoint.label} - Show a comparison`,
         section: 'Comparison',
         default: false,
         order: 10 * index,
@@ -241,14 +223,14 @@ looker.plugins.visualizations.add({
         options[`field_to_compare_${dataPoint.name}`] = {
           type: 'string',
           display: 'select',
-          label: `${dataPoint.label} - Style`,
+          label: `${dataPoint.label} - Compare To`,
           values: fields_to_select,
           section: 'Comparison',
           order: 10 * index + 1,
         }
         options[`comparison_style_${dataPoint.name}`] = {
           type: 'string',
-          display: 'radio',
+          display: 'select',
           label: `${dataPoint.label} - Style`,
           values: [
             {'Show as Value': 'value'},
@@ -258,7 +240,7 @@ looker.plugins.visualizations.add({
           ],
           section: 'Comparison',
           default: 'value',
-          order: 10 * index + 1,
+          order: 10 * index + 2,
         }
         options[`comparison_show_label_${dataPoint.name}`] = {
           type: 'boolean',
@@ -273,7 +255,7 @@ looker.plugins.visualizations.add({
             label: `Positive Values are Bad`,
             section: 'Comparison',
             default: false,
-            order: 10 * index + 2,
+            order: 10 * index + 4,
           }
         }
         if (config[`comparison_show_label_${dataPoint.name}`]) {
