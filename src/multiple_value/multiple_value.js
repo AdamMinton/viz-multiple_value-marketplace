@@ -199,7 +199,7 @@ class MultipleValue extends React.PureComponent {
               }
               return (
                 <>
-                {number === 0 && `group_name_${dataPoint.name}` ? 
+                {number === 0 && config[`group_name_${dataPoint.name}`] ? 
                 <DataPointGroup style={{fontWeight:'bold'}}> 
                   {checkURL(config[`group_name_${dataPoint.name}`]) ? <img src={config[`group_name_${dataPoint.name}`]} style={{width:config[`image_width_${dataPoint.name}`]+'px',height:config[`image_height_${dataPoint.name}`]+'px'}}></img> : <h2>{config[`group_name_${dataPoint.name}`]}</h2>}
                 </DataPointGroup>
