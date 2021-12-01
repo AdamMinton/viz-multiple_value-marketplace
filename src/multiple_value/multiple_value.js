@@ -74,6 +74,20 @@ const DataPointValue = styled.div`
     text-decoration: underline;
   }
 `
+const NewComparisonDataPoint  = styled.div`
+font-size: 2em;
+font-weight: 90;
+color: ${props => props.color};
+
+a.drillable-link {
+  color: ${props => props.color};
+  text-decoration: none;
+}
+:hover {
+  text-decoration: underline;
+}
+`
+
 function checkURL(url) {
   url = url ?? ''
   return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
@@ -189,14 +203,26 @@ class MultipleValue extends React.PureComponent {
           >
           {dataSortedSub
             .map((dataPoint, index) => {
-              const compDataPoint = dataPoint.comparison
+              const compDataPoint = dataPoint.comparisonPoint
               let progressPerc
               let percChange
+              let difference
               let number = index
               if (compDataPoint) {
-                progressPerc = Math.round((dataPoint.value / compDataPoint.value) * 100)
-                percChange = progressPerc - 100
+                if (config[`difference_comparison_style_${dataPoint.name}`] === 'original' ) {
+                  progressPerc = Math.round((dataPoint.value / compDataPoint.value) * 100)
+                  percChange = progressPerc - 100
+                  //BUG: Need to add formatting or somehow figure the formatting from the formattedvalues
+                  difference = Math.round(compDataPoint.value - dataPoint.value)
+                }
+                else {
+                  progressPerc = Math.round(((dataPoint.value / compDataPoint.value) - 1) * 100)
+                  percChange = progressPerc - 100
+                  //BUG: Same as above
+                  difference = Math.round(dataPoint.value - compDataPoint.value)
+                }
               }
+              console.log(difference);
               return (
                 <>
                 {number === 0 && config[`group_name_${dataPoint.name}`] ? 
@@ -224,8 +250,15 @@ class MultipleValue extends React.PureComponent {
                     >
                       {dataPoint.formattedValue}
                     </DataPointValue>
+                    <NewComparisonDataPoint
+                      onClick={() => { this.handleClick(compDataPoint, event) }}
+                      color={config[`style_${dataPoint.name}`]}
+                      layout={this.getLayout()}
+                    >
+                    {difference}
+                    </NewComparisonDataPoint>
                   </DataPoint>
-                  {!compDataPoint ? null : (
+                  {/* {!compDataPoint ? null : (
                   <ComparisonDataPoint 
                     config={config}
                     compDataPoint={compDataPoint}
@@ -233,7 +266,7 @@ class MultipleValue extends React.PureComponent {
                     percChange={percChange}
                     progressPerc={progressPerc}
                     handleClick={this.handleClick}
-                  />)}
+                  />)} */}
                 </DataPointGroup>
                 </>
               )
