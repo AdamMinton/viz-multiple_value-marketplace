@@ -483,10 +483,26 @@ looker.plugins.visualizations.add({
     //   return fullValue;
     // })
 
+    //Adds the comparisonPoint for when comparison has been enabled
+    const fullValues = dataPoints.map((dataPoint,index) => {
+      if (config[`show_comparison_${dataPoint.name}`] == true) {
+        let found = false
+        for (let i = 0 ; i < dataPoints.length && !found; i++) {
+          if (dataPoints[i].name == config[`field_to_compare_${dataPoint.name}`]) {
+            dataPoint.comparisonPoint = dataPoints[i]
+            found = true
+          }
+        }
+      }
+      return dataPoint
+    })
+
+    console.log(dataPoints);
+
     this.chart = ReactDOM.render(
       <MultipleValue
         config={config}
-        data={dataPoints}
+        data={fullValues}
       />,
       element
     );
