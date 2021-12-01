@@ -294,6 +294,7 @@ looker.plugins.visualizations.add({
           values: [
             {'Original - Comparison': 'original'},
             {'Comparison - Original': 'comparison'},
+            {'Display Only': 'no_calculation'},
           ],
           section: 'Comparison',
           default: 'change',
@@ -307,6 +308,7 @@ looker.plugins.visualizations.add({
           values: [
             {'Percent Change from Original': 'change'},
             {'Percent of Original': 'original'},
+            {'Display Only': 'no_calculation'},
           ],
           section: 'Comparison',
           default: 'change',
