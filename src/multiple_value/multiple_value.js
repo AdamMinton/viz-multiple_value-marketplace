@@ -68,7 +68,7 @@ const DataPointValue = styled.div`
   order: ${props => props.order};
   align-items: center;
   justify-content: center;
-  display: flex;
+  display: ${props => props.visibility ? 'flex' : 'none'};
   a.drillable-link {
     color: ${props => props.color};
     text-decoration: none;
@@ -84,7 +84,7 @@ color: ${props => props.color};
 order: ${props => props.order};
 align-items: center;
 justify-content: center;
-display: flex;
+display: ${props => props.visibility ? 'flex' : 'none'};
 a.drillable-link {
   color: ${props => props.color};
   text-decoration: none;
@@ -92,6 +92,24 @@ a.drillable-link {
 :hover {
   text-decoration: underline;
 }
+`
+const DifferenceDataPoint  = styled.div`
+font-size: 2em;
+font-weight: 90;
+color: ${props => props.color};
+order: ${props => props.order};
+align-items: center;
+justify-content: center;
+display: ${props => props.visibility ? 'flex' : 'none'};
+`
+const DifferencePercentageDataPoint  = styled.div`
+font-size: 2em;
+font-weight: 90;
+color: ${props => props.color};
+order: ${props => props.order};
+align-items: center;
+justify-content: center;
+display: ${props => props.visibility ? 'flex' : 'none'};
 `
 
 function checkURL(url) {
@@ -224,7 +242,7 @@ class MultipleValue extends React.PureComponent {
                   percChange = progressPerc - 100
                 }
                 if (config[`difference_comparison_style_${dataPoint.name}`] === 'original' ) {
-                  //BUG: Need to add formatting or somehow figure the formatting from the formattedvalues
+                  //BUG: Need to add formatting or somehow figure the formatting from the formatted values
                   difference = Math.round(dataPoint.value - compDataPoint.value)
                 }
                 else {
@@ -257,17 +275,41 @@ class MultipleValue extends React.PureComponent {
                       color={config[`style_${dataPoint.name}`]}
                       onClick={() => { this.handleClick(dataPoint, event) }}
                       layout={this.getLayout()}
+                      visibility={config[`show_comparison_original_${dataPoint.name}`] ?? true} 
                     >
                       {dataPoint.formattedValue}
                     </DataPointValue>
+                    {compDataPoint ? 
                     <NewComparisonDataPoint
                       order={config[`order_comparison_value_${dataPoint.name}`]}
                       color={config[`style_${dataPoint.name}`]}
                       onClick={() => { this.handleClick(compDataPoint, event) }}
                       layout={this.getLayout()}
+                      visibility={config[`show_comparison_value_${dataPoint.name}`]}
                     >
-                    {difference}
+                    {compDataPoint.formattedValue}
                     </NewComparisonDataPoint>
+                    : '' }
+                    {compDataPoint ? 
+                    <DifferenceDataPoint 
+                      order={config[`order_comparison_differnce_${dataPoint.name}`]}
+                      color={config[`style_${dataPoint.name}`]}
+                      layout={this.getLayout()}
+                      visibility={config[`show_comparison_differnce_${dataPoint.name}`] ?? true} 
+                    >
+                      {difference}
+                    </DifferenceDataPoint>
+                     : '' }
+                     {compDataPoint ? 
+                    <DifferencePercentageDataPoint 
+                      order={config[`order_comparison_differnce_percentage_${dataPoint.name}`]}
+                      color={config[`style_${dataPoint.name}`]}
+                      layout={this.getLayout()}
+                      visibility={config[`show_comparison_differnce_percentage_${dataPoint.name}`] ?? true} 
+                    >
+                      {percChange}
+                    </DifferencePercentageDataPoint>
+                     : '' }
                   </DataPoint>
                   {/* {!compDataPoint ? null : (
                   <ComparisonDataPoint 
