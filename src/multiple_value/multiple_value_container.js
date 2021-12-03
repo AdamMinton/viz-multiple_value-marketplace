@@ -271,15 +271,15 @@ looker.plugins.visualizations.add({
           order: 100 * (index + 1) + 3,
           display_size: 'half'
         }
-        options[`show_comparison_differnce_${dataPoint.name}`] = {
+        options[`show_comparison_difference_${dataPoint.name}`] = {
           type: 'boolean',
           label: `Difference #`,
           section: 'Comparison',
-          default: true,
+          default: false,
           order: 100 * (index + 1) + 4,
           display_size: 'half'
         }
-        options[`show_comparison_differnce_percentage_${dataPoint.name}`] = {
+        options[`show_comparison_difference_percentage_${dataPoint.name}`] = {
           type: 'boolean',
           label: `Difference %`,
           section: 'Comparison',
@@ -287,93 +287,109 @@ looker.plugins.visualizations.add({
           order: 100 * (index + 1) + 5,
           display_size: 'half'
         }
-        options[`difference_comparison_style_${dataPoint.name}`] = {
-          type: 'string',
-          display: 'select',
-          label: `Difference # - Calc`,
-          values: [
-            {'Original - Comparison': 'original'},
-            {'Comparison - Original': 'comparison'},
-            {'Display Only': 'no_calculation'},
-          ],
-          section: 'Comparison',
-          default: 'change',
-          order: 100 * (index + 1) + 6,
-          display_size: 'half'
+        if (config[`show_comparison_difference_${dataPoint.name}`] === true) {
+          options[`difference_comparison_style_${dataPoint.name}`] = {
+            type: 'string',
+            display: 'select',
+            label: `Difference # - Calc`,
+            values: [
+              {'Original - Comparison': 'original'},
+              {'Comparison - Original': 'comparison'},
+              {'Display Only': 'no_calculation'},
+            ],
+            section: 'Comparison',
+            default: 'original',
+            order: 100 * (index + 1) + 6,
+            display_size: 'half'
+          }
         }
-        options[`difference_percentage_comparison_style_${dataPoint.name}`] = {
-          type: 'string',
-          display: 'select',
-          label: `Difference % - Calc`,
-          values: [
-            {'Percent Change from Original': 'change'},
-            {'Percent of Original': 'original'},
-            {'Display Only': 'no_calculation'},
-          ],
-          section: 'Comparison',
-          default: 'change',
-          order: 100 * (index + 1) + 6,
-          display_size: 'half'
+        if (config[`show_comparison_difference_percentage_${dataPoint.name}`] === true) {
+          options[`difference_percentage_comparison_style_${dataPoint.name}`] = {
+            type: 'string',
+            display: 'select',
+            label: `Difference % - Calc`,
+            values: [
+              {'Percent Change from Original': 'change'},
+              {'Percent of Original': 'original'},
+              {'Display Only': 'no_calculation'},
+            ],
+            section: 'Comparison',
+            default: 'change',
+            order: 100 * (index + 1) + 6,
+            display_size: 'half'
+          }
         }
-        options[`style_comparison_differnce_${dataPoint.name}`] = {
-          type: 'string',
-          display: 'select',
-          label: `Difference # - Style`,
-          values: [
-            {'Show as Value': 'value'},
-            {'Show as Value with Icon': 'icon'},
-            {'Show as Value with Bar': 'bar'},
-          ],
-          section: 'Comparison',
-          default: 'value',
-          order: 100 * (index + 1) + 7,
-          display_size: 'half'
+        if (config[`show_comparison_difference_${dataPoint.name}`] === true) {
+          options[`style_comparison_difference_${dataPoint.name}`] = {
+            type: 'string',
+            display: 'select',
+            label: `Difference # - Style`,
+            values: [
+              {'Show as Value': 'value'},
+              {'Show as Value with Icon': 'icon'},
+              {'Show as Value with Bar': 'bar'},
+            ],
+            section: 'Comparison',
+            default: 'value',
+            order: 100 * (index + 1) + 7,
+            display_size: 'half'
+          }
         }
-        options[`style_comparison_differnce_percentage_${dataPoint.name}`] = {
-          type: 'string',
-          display: 'select',
-          label: `Difference % - Style`,
-          values: [
-            {'Show as Value': 'value'},
-            {'Show as Value with Icon': 'icon'},
-            {'Show as Value with Bar': 'bar'},
-          ],
-          section: 'Comparison',
-          default: 'value',
-          order: 100 * (index + 1) + 8,
-          display_size: 'half'
+        if (config[`show_comparison_difference_percentage_${dataPoint.name}`] === true) {
+          options[`style_comparison_difference_percentage_${dataPoint.name}`] = {
+            type: 'string',
+            display: 'select',
+            label: `Difference % - Style`,
+            values: [
+              {'Show as Value': 'value'},
+              {'Show as Value with Icon': 'icon'},
+              {'Show as Value with Bar': 'bar'},
+            ],
+            section: 'Comparison',
+            default: 'value',
+            order: 100 * (index + 1) + 8,
+            display_size: 'half'
+          }
         }
-        options[`show_comparison_value_label_${dataPoint.name}`] = {
-          type: 'boolean',
-          label: `Original - Label`,
-          section: 'Comparison',
-          default: true,
-          order: 100 * (index + 1) + 9,
-          display_size: 'half'
+        if (config[`show_comparison_original_${dataPoint.name}`] === true) {
+          options[`show_comparison_value_label_${dataPoint.name}`] = {
+            type: 'boolean',
+            label: `Original - Label`,
+            section: 'Comparison',
+            default: false,
+            order: 100 * (index + 1) + 9,
+            display_size: 'half'
+          }
         }
-        options[`show_comparison_difference_label_${dataPoint.name}`] = {
-          type: 'boolean',
-          label: `Comparison - Label`,
-          section: 'Comparison',
-          default: true,
-          order: 100 * (index + 1) + 10,
-          display_size: 'half'
+        if (config[`show_comparison_value_${dataPoint.name}`] === true) {
+          options[`show_comparison_difference_label_${dataPoint.name}`] = {
+            type: 'boolean',
+            label: `Comparison - Label`,
+            section: 'Comparison',
+            default: false,
+            order: 100 * (index + 1) + 10,
+            display_size: 'half'
+          }
         }
-        options[`comparison_value_label_${dataPoint.name}`] = {
-          type: 'string',
-          label: `Original - Label`,
-          placeholder: dataPoint.label,
-          section: 'Comparison',
-          order: 100 * (index + 1) + 11,
-          display_size: 'half'
+        if (config[`show_comparison_value_label_${dataPoint.name}`] === true) {
+          options[`comparison_value_label_${dataPoint.name}`] = {
+            type: 'string',
+            label: `Original - Label`,
+            placeholder: dataPoint.label,
+            section: 'Comparison',
+            order: 100 * (index + 1) + 11,
+            display_size: 'half'
+          }
         }
-        options[`comparison_difference_label_${dataPoint.name}`] = {
-          type: 'string',
-          label: `Comparison - Label`,
-          placeholder: dataPoint.label,
-          section: 'Comparison',
-          order: 100 * (index + 1) + 12,
-          display_size: 'half'
+        if (config[`show_comparison_difference_label_${dataPoint.name}`] === true) {
+          options[`comparison_difference_label_${dataPoint.name}`] = {
+            type: 'string',
+            label: `Comparison - Label`,
+            placeholder: dataPoint.label,
+            section: 'Comparison',
+            order: 100 * (index + 1) + 12,
+            display_size: 'half'
+          }
         }
         options[`pos_is_bad_${dataPoint.name}`] = {
           type: 'boolean',
@@ -414,8 +430,8 @@ looker.plugins.visualizations.add({
             display_size: 'third'
           }
         }
-        if (config[`show_comparison_differnce_${dataPoint.name}`] === true) {
-          options[`order_comparison_differnce_${dataPoint.name}`] = {
+        if (config[`show_comparison_difference_${dataPoint.name}`] === true) {
+          options[`order_comparison_difference_${dataPoint.name}`] = {
             type: 'number',
             label: `Order - Difference #`,
             section: 'Comparison',
@@ -424,8 +440,8 @@ looker.plugins.visualizations.add({
             display_size: 'third'
           }
         }
-        if (config[`show_comparison_differnce_percentage_${dataPoint.name}`] === true) {
-          options[`order_comparison_differnce_percentage_${dataPoint.name}`] = {
+        if (config[`show_comparison_difference_percentage_${dataPoint.name}`] === true) {
+          options[`order_comparison_difference_percentage_${dataPoint.name}`] = {
             type: 'number',
             label: `Order - Difference %`,
             section: 'Comparison',

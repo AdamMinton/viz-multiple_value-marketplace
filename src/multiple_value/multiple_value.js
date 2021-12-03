@@ -292,20 +292,20 @@ class MultipleValue extends React.PureComponent {
                     : '' }
                     {compDataPoint ? 
                     <DifferenceDataPoint 
-                      order={config[`order_comparison_differnce_${dataPoint.name}`]}
+                      order={config[`order_comparison_difference_${dataPoint.name}`]}
                       color={config[`style_${dataPoint.name}`]}
                       layout={this.getLayout()}
-                      visibility={config[`show_comparison_differnce_${dataPoint.name}`] ?? true} 
+                      visibility={config[`show_comparison_difference_${dataPoint.name}`] ?? true} 
                     >
                       {difference}
                     </DifferenceDataPoint>
                      : '' }
                      {compDataPoint ? 
                     <DifferencePercentageDataPoint 
-                      order={config[`order_comparison_differnce_percentage_${dataPoint.name}`]}
+                      order={config[`order_comparison_difference_percentage_${dataPoint.name}`]}
                       color={config[`style_${dataPoint.name}`]}
                       layout={this.getLayout()}
-                      visibility={config[`show_comparison_differnce_percentage_${dataPoint.name}`] ?? true} 
+                      visibility={config[`show_comparison_difference_percentage_${dataPoint.name}`] ?? true} 
                     >
                       {percChange}
                     </DifferencePercentageDataPoint>
