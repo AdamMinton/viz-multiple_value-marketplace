@@ -407,7 +407,7 @@ looker.plugins.visualizations.add({
             {'Stack Horizontally': 'horizontal'},
           ],
           section: 'Comparison',
-          default: 'horizontal',
+          default: 'vertical',
           order: 100 * (index + 1) + 14,
         }
         if (config[`show_comparison_original_${dataPoint.name}`] === true) {

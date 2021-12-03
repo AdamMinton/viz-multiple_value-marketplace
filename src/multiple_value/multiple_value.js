@@ -61,6 +61,11 @@ const DataPointTitle = styled.div`
   color: ${props => props.color};
   margin: 5px 0;
 `
+const DataPointArrangement = styled.div`
+display: flex;  
+flex-direction: ${props => props.direction === 'horizontal' ? 'row' : 'column'};
+`
+
 const DataPointValue = styled.div`
   font-size: 3em;
   font-weight: 100;
@@ -270,46 +275,50 @@ class MultipleValue extends React.PureComponent {
                         {config[`title_override_${dataPoint.name}`] || dataPoint.label}
                       </DataPointTitle>
                     )}
-                    <DataPointValue 
-                      order={config[`order_comparison_original_${dataPoint.name}`]}
-                      color={config[`style_${dataPoint.name}`]}
-                      onClick={() => { this.handleClick(dataPoint, event) }}
-                      layout={this.getLayout()}
-                      visibility={config[`show_comparison_original_${dataPoint.name}`] ?? true} 
-                    >
-                      {dataPoint.formattedValue}
-                    </DataPointValue>
-                    {compDataPoint ? 
-                    <NewComparisonDataPoint
-                      order={config[`order_comparison_value_${dataPoint.name}`]}
-                      color={config[`style_${dataPoint.name}`]}
-                      onClick={() => { this.handleClick(compDataPoint, event) }}
-                      layout={this.getLayout()}
-                      visibility={config[`show_comparison_value_${dataPoint.name}`]}
-                    >
-                    {compDataPoint.formattedValue}
-                    </NewComparisonDataPoint>
-                    : '' }
-                    {compDataPoint ? 
-                    <DifferenceDataPoint 
-                      order={config[`order_comparison_difference_${dataPoint.name}`]}
-                      color={config[`style_${dataPoint.name}`]}
-                      layout={this.getLayout()}
-                      visibility={config[`show_comparison_difference_${dataPoint.name}`] ?? true} 
-                    >
-                      {difference}
-                    </DifferenceDataPoint>
-                     : '' }
-                     {compDataPoint ? 
-                    <DifferencePercentageDataPoint 
-                      order={config[`order_comparison_difference_percentage_${dataPoint.name}`]}
-                      color={config[`style_${dataPoint.name}`]}
-                      layout={this.getLayout()}
-                      visibility={config[`show_comparison_difference_percentage_${dataPoint.name}`] ?? true} 
-                    >
-                      {percChange}
-                    </DifferencePercentageDataPoint>
-                     : '' }
+                    <DataPointArrangement
+                      direction={config[`comparison_style_${dataPoint.name}`]} 
+                      > 
+                      <DataPointValue 
+                        order={config[`order_comparison_original_${dataPoint.name}`]}
+                        color={config[`style_${dataPoint.name}`]}
+                        onClick={() => { this.handleClick(dataPoint, event) }}
+                        layout={this.getLayout()}
+                        visibility={config[`show_comparison_original_${dataPoint.name}`] ?? true} 
+                      >
+                        {dataPoint.formattedValue}
+                      </DataPointValue>
+                      {compDataPoint ? 
+                      <NewComparisonDataPoint
+                        order={config[`order_comparison_value_${dataPoint.name}`]}
+                        color={config[`style_${dataPoint.name}`]}
+                        onClick={() => { this.handleClick(compDataPoint, event) }}
+                        layout={this.getLayout()}
+                        visibility={config[`show_comparison_value_${dataPoint.name}`]}
+                      >
+                      {compDataPoint.formattedValue}
+                      </NewComparisonDataPoint>
+                      : '' }
+                      {compDataPoint ? 
+                      <DifferenceDataPoint 
+                        order={config[`order_comparison_difference_${dataPoint.name}`]}
+                        color={config[`style_${dataPoint.name}`]}
+                        layout={this.getLayout()}
+                        visibility={config[`show_comparison_difference_${dataPoint.name}`] ?? true} 
+                      >
+                        {difference}
+                      </DifferenceDataPoint>
+                      : '' }
+                      {compDataPoint ? 
+                      <DifferencePercentageDataPoint 
+                        order={config[`order_comparison_difference_percentage_${dataPoint.name}`]}
+                        color={config[`style_${dataPoint.name}`]}
+                        layout={this.getLayout()}
+                        visibility={config[`show_comparison_difference_percentage_${dataPoint.name}`] ?? true} 
+                      >
+                        {percChange}
+                      </DifferencePercentageDataPoint>
+                      : '' }
+                     </DataPointArrangement>
                   </DataPoint>
                   {/* {!compDataPoint ? null : (
                   <ComparisonDataPoint 
