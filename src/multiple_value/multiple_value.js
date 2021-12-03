@@ -62,15 +62,26 @@ const DataPointTitle = styled.div`
   margin: 5px 0;
 `
 const DataPointArrangement = styled.div`
-display: flex;  
-flex-direction: ${props => props.direction === 'horizontal' ? 'row' : 'column'};
+  display: flex;  
+  flex-direction: ${props => props.direction === 'horizontal' ? 'row' : 'column'};
+`
+
+const DataPointContainer = styled.div`
+  display: flex;  
+  flex-direction: column;
+  order: ${props => props.order};
+  color: grey
+`
+
+const DataPointLabel = styled.div`
+  font-size: 1em;  
+  font-weight: 90;
 `
 
 const DataPointValue = styled.div`
   font-size: 3em;
   font-weight: 100;
   color: ${props => props.color};
-  order: ${props => props.order};
   align-items: center;
   justify-content: center;
   display: ${props => props.visibility ? 'flex' : 'none'};
@@ -82,11 +93,22 @@ const DataPointValue = styled.div`
     text-decoration: underline;
   }
 `
+const ComparisonDataPointContainer = styled.div`
+  display: flex;  
+  flex-direction: column;
+  order: ${props => props.order};
+  color: grey
+`
+
+const ComparisonDataPointLabel = styled.div`
+  font-size: 1em;  
+  font-weight: 90;
+`
+
 const NewComparisonDataPoint  = styled.div`
-font-size: 2em;
+font-size: 3em;
 font-weight: 90;
 color: ${props => props.color};
-order: ${props => props.order};
 align-items: center;
 justify-content: center;
 display: ${props => props.visibility ? 'flex' : 'none'};
@@ -278,25 +300,37 @@ class MultipleValue extends React.PureComponent {
                     <DataPointArrangement
                       direction={config[`comparison_style_${dataPoint.name}`]} 
                       > 
-                      <DataPointValue 
+                      <DataPointContainer
                         order={config[`order_comparison_original_${dataPoint.name}`]}
-                        color={config[`style_${dataPoint.name}`]}
-                        onClick={() => { this.handleClick(dataPoint, event) }}
-                        layout={this.getLayout()}
-                        visibility={config[`show_comparison_original_${dataPoint.name}`] ?? true} 
                       >
-                        {dataPoint.formattedValue}
-                      </DataPointValue>
+                        <DataPointValue 
+                          color={config[`style_${dataPoint.name}`]}
+                          onClick={() => { this.handleClick(dataPoint, event) }}
+                          layout={this.getLayout()}
+                          visibility={config[`show_comparison_original_${dataPoint.name}`] ?? true} 
+                        >
+                          {dataPoint.formattedValue}
+                        </DataPointValue>
+                        <DataPointLabel>
+                            {config[`comparison_value_label_${dataPoint.name}`]}
+                        </DataPointLabel>
+                      </DataPointContainer>
                       {compDataPoint ? 
-                      <NewComparisonDataPoint
-                        order={config[`order_comparison_value_${dataPoint.name}`]}
-                        color={config[`style_${dataPoint.name}`]}
-                        onClick={() => { this.handleClick(compDataPoint, event) }}
-                        layout={this.getLayout()}
-                        visibility={config[`show_comparison_value_${dataPoint.name}`]}
-                      >
-                      {compDataPoint.formattedValue}
-                      </NewComparisonDataPoint>
+                        <ComparisonDataPointContainer
+                          order={config[`order_comparison_value_${dataPoint.name}`]}
+                        >
+                          <NewComparisonDataPoint
+                            color={config[`style_${dataPoint.name}`]}
+                            onClick={() => { this.handleClick(compDataPoint, event) }}
+                            layout={this.getLayout()}
+                            visibility={config[`show_comparison_value_${dataPoint.name}`]}
+                          >
+                          {compDataPoint.formattedValue}
+                          </NewComparisonDataPoint>
+                          <ComparisonDataPointLabel>
+                            {config[`comparison_difference_label_${dataPoint.name}`]}
+                          </ComparisonDataPointLabel>
+                        </ComparisonDataPointContainer>
                       : '' }
                       {compDataPoint ? 
                       <DifferenceDataPoint 
