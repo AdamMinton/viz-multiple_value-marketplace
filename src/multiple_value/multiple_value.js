@@ -18,6 +18,7 @@ const DataPointGroupGroup = styled.div`
   flex-direction: ${props => props.layout === 'horizontal' ? 'row' : 'column'};
   align-items: flex-start;
   width: 100%;
+  height: 100%
 `
 
 const DataPointGroup = styled.div`
@@ -372,7 +373,7 @@ class MultipleValue extends React.PureComponent {
                         layout={this.getLayout()}
                         visibility={config[`show_comparison_difference_percentage_${dataPoint.name}`] ?? true} 
                       >
-                        {percChange}
+                        {percChange}%
                       </DifferencePercentageDataPoint>
                       : '' }
                      </DataPointArrangement>
