@@ -52,7 +52,7 @@ const baseOptions = {
     label: "Symbol - Pos",
     type: 'string',
     section: 'Style',
-    default: "",
+    default: "▲",
     order: 4,
     display_size: 'third'
   },
@@ -60,7 +60,7 @@ const baseOptions = {
     label: "Symbol - Zero",
     type: 'string',
     section: 'Style',
-    default: "",
+    default: "―",
     order: 4,
     display_size: 'third'
   },
@@ -68,7 +68,7 @@ const baseOptions = {
     label: "Symbol - Neg",
     type: 'string',
     section: 'Style',
-    default: "",
+    default: "▼",
     order: 4,
     display_size: 'third'
   },

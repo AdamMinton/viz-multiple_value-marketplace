@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { ComparisonDataPoint } from './ComparisonDataPoint'
-import { forEach, sortedLastIndex } from 'lodash'
+//import { ComparisonDataPoint } from './ComparisonDataPoint'
+//import { forEach, sortedLastIndex } from 'lodash'
 
 const DataPointsWrapper = styled.div`
   font-family: "Google Sans", "Roboto", "Noto Sans JP", "Noto Sans", "Noto Sans CJK KR", Helvetica, Arial, sans-serif;
@@ -138,6 +138,28 @@ align-items: center;
 justify-content: center;
 display: ${props => props.visibility ? 'flex' : 'none'};
 `
+
+const UpArrow = styled.div.attrs()`
+  pos: ${props => props.pos}
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 10px solid ${(props) => (props.pos ? "red" : "green")};
+  margin-right: 5px;
+`;
+
+const DownArrow = styled.div.attrs()`
+  pos: ${props => props.pos}  
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 10px solid ${(props) => (props.pos ? "green" : "red")};
+  margin-right: 5px;
+`;
 
 function checkURL(url) {
   url = url ?? ''
@@ -339,7 +361,8 @@ class MultipleValue extends React.PureComponent {
                         layout={this.getLayout()}
                         visibility={config[`show_comparison_difference_${dataPoint.name}`] ?? true} 
                       >
-                        {difference}
+                        {difference} 
+                        {config[`style_comparison_difference_${dataPoint.name}`] === 'icon' ? difference < 0 ? config[`pos_is_bad_${dataPoint.name}`] ? `${config.symbol_positive}` : `${config.symbol_negative}` : difference === 0 ? `${config.symbol_zero}` : config[`pos_is_bad_${dataPoint.name}`] ? `${config.symbol_negative}` : `${config.symbol_positive}`: '' }
                       </DifferenceDataPoint>
                       : '' }
                       {compDataPoint ? 
