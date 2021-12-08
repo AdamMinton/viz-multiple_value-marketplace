@@ -65,6 +65,7 @@ const DataPointTitle = styled.div`
 const DataPointArrangement = styled.div`
   display: flex;  
   flex-direction: ${props => props.direction === 'horizontal' ? 'row' : 'column'};
+  justify-content: center;
 `
 
 const DataPointContainer = styled.div`
@@ -98,7 +99,7 @@ const ComparisonDataPointContainer = styled.div`
   display: flex;  
   flex-direction: column;
   order: ${props => props.order};
-  color: grey
+  color: grey;
 `
 
 const ComparisonDataPointLabel = styled.div`
@@ -338,7 +339,7 @@ class MultipleValue extends React.PureComponent {
                             {config[`comparison_value_label_${dataPoint.name}`]}
                         </DataPointLabel>
                       </DataPointContainer>
-                      {compDataPoint ? 
+                      {compDataPoint && config[`show_comparison_value_${dataPoint.name}`] ? 
                         <ComparisonDataPointContainer
                           order={config[`order_comparison_value_${dataPoint.name}`]}
                         >
@@ -355,7 +356,7 @@ class MultipleValue extends React.PureComponent {
                           </ComparisonDataPointLabel>
                         </ComparisonDataPointContainer>
                       : '' }
-                      {compDataPoint ? 
+                      {compDataPoint && config[`show_comparison_difference_${dataPoint.name}`] ? 
                       <DifferenceDataPoint 
                         order={config[`order_comparison_difference_${dataPoint.name}`]}
                         color={config[`style_${dataPoint.name}`]}
@@ -366,7 +367,7 @@ class MultipleValue extends React.PureComponent {
                         {config[`style_comparison_difference_${dataPoint.name}`] === 'icon' ? difference < 0 ? config[`pos_is_bad_${dataPoint.name}`] ? `${config.symbol_positive}` : `${config.symbol_negative}` : difference === 0 ? `${config.symbol_zero}` : config[`pos_is_bad_${dataPoint.name}`] ? `${config.symbol_negative}` : `${config.symbol_positive}`: '' }
                       </DifferenceDataPoint>
                       : '' }
-                      {compDataPoint ? 
+                      {compDataPoint && config[`show_comparison_difference_percentage_${dataPoint.name}`] ? 
                       <DifferencePercentageDataPoint 
                         order={config[`order_comparison_difference_percentage_${dataPoint.name}`]}
                         color={config[`style_${dataPoint.name}`]}
