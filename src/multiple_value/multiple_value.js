@@ -304,12 +304,15 @@ class MultipleValue extends React.PureComponent {
               }
               return (
                 <>
+                {/* This is for the group labels */}
                 {number === 0 && config[`group_name_${dataPoint.name}`] ? 
-                <DataPointGroup style={{fontWeight:'bold'}}> 
+                <DataPointGroup 
+                  style={{fontWeight:'bold'}}
+                  visibility={true}> 
                   {checkURL(config[`group_name_${dataPoint.name}`]) ? <img src={config[`group_name_${dataPoint.name}`]} style={{width:config[`image_width_${dataPoint.name}`]+'px',height:config[`image_height_${dataPoint.name}`]+'px'}}></img> : <h2>{config[`group_name_${dataPoint.name}`]}</h2>}
                 </DataPointGroup>
                 : '' }
-                
+                {/* This is for the datapoints */}
                 <DataPointGroup 
                   comparisonPlacement={compDataPoint && config[`comparison_label_placement_${compDataPoint.name}`]} 
                   key={`group_${dataPoint.name}`} 
