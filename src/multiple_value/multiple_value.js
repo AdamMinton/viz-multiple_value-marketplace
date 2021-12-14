@@ -313,6 +313,7 @@ class MultipleValue extends React.PureComponent {
                 </DataPointGroup>
                 : '' }
                 {/* This is for the datapoints */}
+                {/* BUG: Unsure how to get align items stretch and center */}
                 <DataPointGroup 
                   comparisonPlacement={compDataPoint && config[`comparison_label_placement_${compDataPoint.name}`]} 
                   key={`group_${dataPoint.name}`} 
