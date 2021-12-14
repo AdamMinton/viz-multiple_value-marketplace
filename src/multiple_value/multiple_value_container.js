@@ -48,11 +48,11 @@ const baseOptions = {
     order: 3,
     display_size: 'normal'
   },
-  symbol_positive: {
-    label: "Symbol - Pos",
+  symbol_negative: {
+    label: "Symbol - Neg",
     type: 'string',
     section: 'Style',
-    default: "▲",
+    default: "▼",
     order: 4,
     display_size: 'third'
   },
@@ -61,15 +61,42 @@ const baseOptions = {
     type: 'string',
     section: 'Style',
     default: "―",
-    order: 4,
+    order: 5,
     display_size: 'third'
   },
-  symbol_negative: {
-    label: "Symbol - Neg",
+  symbol_positive: {
+    label: "Symbol - Pos",
     type: 'string',
     section: 'Style',
-    default: "▼",
-    order: 4,
+    default: "▲",
+    order: 6,
+    display_size: 'third'
+  },
+  color_negative: {
+    label: "Color - Neg",
+    type: 'string',
+    display: `color`,
+    default: "Red",
+    section: 'Style',
+    order: 7,
+    display_size: 'third'
+  },
+  color_zero: {
+    label: "Color - Zero",
+    type: 'string',
+    display: `color`,
+    default: "Black",
+    section: 'Style',
+    order: 8,
+    display_size: 'third'
+  },
+  color_positive: {
+    label: "Color - Pos",
+    type: 'string',
+    display: `color`,
+    default: 'Green',
+    section: 'Style',
+    order: 9,
     display_size: 'third'
   },
 }
@@ -142,6 +169,13 @@ looker.plugins.visualizations.add({
     const options = Object.assign({}, baseOptions)
     dataPoints.forEach((dataPoint, index) => {
       //if (config[`show_comparison_${dataPoint.name}`] !== true) {
+        options[`show_${dataPoint.name}`] = {
+          type: `boolean`,
+          label: `${dataPoint.label} - Show Tile`,
+          default: true,
+          section: 'Style',
+          order: 100 * (index + 1) + 4,
+        }
         options[`style_${dataPoint.name}`] = {
           type: `string`,
           label: `${dataPoint.label} - Color`,

@@ -31,6 +31,7 @@ const DataPointGroup = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  display: ${props => props.visibility ? 'flex' : 'none'};
 `
 //BUG: Need to fix it's positioning to observe margins and color
 const HoriztonalDivider = styled.hr`
@@ -314,6 +315,7 @@ class MultipleValue extends React.PureComponent {
                   key={`group_${dataPoint.name}`} 
                   layout={this.getLayout()}
                   style={length - 1 !== i && config.dividers && config.orientation === 'vertical' ? {borderRightColor:`${config.dividers_color}`,borderRightWidth: `thick`,borderRightStyle: `solid`} : {borderRight: ``} }
+                  visibility={config[`show_${dataPoint.name}`]}
                 > 
                   <DataPoint titlePlacement={config[`title_placement_${dataPoint.name}`]} style={config[`border_${dataPoint.name}`] === 'None' ? BorderNone : BorderTile}>
                     {config[`show_title_${dataPoint.name}`] === false ? null : (
