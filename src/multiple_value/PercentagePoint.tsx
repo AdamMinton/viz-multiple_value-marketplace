@@ -20,8 +20,23 @@ export const PercentagePoint: React.FC<{
   config: any;
   mainPoint: any;
   order: any;
-  percentage: any;
-}> = ({ config, mainPoint, order, percentage }) => {
+  comparisonPoint: any;
+}> = ({ config, mainPoint, order, comparisonPoint }) => {
+  let progressPerc;
+  let percentage;
+  if (
+    config[`difference_percentage_comparison_style_${mainPoint.name}`] ===
+    "original"
+  ) {
+    progressPerc = Math.round((mainPoint.value / comparisonPoint.value) * 100);
+    percentage = progressPerc - 100;
+  } else {
+    progressPerc = Math.round(
+      (mainPoint.value / comparisonPoint.value - 1) * 100
+    );
+    percentage = progressPerc - 100;
+  }
+
   return (
     <Percentage
       order={config[`order_comparison_difference_percentage_${mainPoint.name}`]}

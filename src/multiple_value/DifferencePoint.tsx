@@ -20,8 +20,17 @@ export const DifferencePoint: React.FC<{
   config: any;
   mainPoint: any;
   order: any;
-  diff: any;
-}> = ({ config, mainPoint, order, diff }) => {
+  comparisonPoint: any;
+}> = ({ config, mainPoint, order, comparisonPoint }) => {
+  let diff;
+  if (config[`difference_comparison_style_${mainPoint.name}`] === "original") {
+    //BUG: Need to add formatting or somehow figure the formatting from the formatted values
+    diff = Math.round(mainPoint.value - comparisonPoint.value);
+  } else {
+    //BUG: Same as above
+    diff = Math.round(comparisonPoint.value - mainPoint.value);
+  }
+
   return (
     <Difference
       order={order}

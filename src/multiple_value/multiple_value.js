@@ -24,7 +24,20 @@ const DataPointGroupGroup = styled.div`
   height: 100%
 `
 
-const DataPointGroup = styled.div`
+const TileGroup = styled.div`
+  margin: 10px;  
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-shrink: auto;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  display: ${props => props.visibility ? 'flex' : 'none'};
+`
+
+const TileGroupTitle = styled.div`
   margin: 10px;  
   text-align: center;
   width: 100%;
@@ -43,7 +56,7 @@ const HoriztonalDivider = styled.hr`
   width: 100%;
 `
 
-const DataPoint = styled.div`
+const Tile = styled.div`
   display: flex;
   flex-shrink: ${props => props.layout === 'horizontal' ? 'auto' : 0 };
   flex-direction: ${props => props.titlePlacement === 'above' ? 'column' : 'column-reverse'};
@@ -61,12 +74,13 @@ const BorderTile = {
   boxShadow: `rgba(0, 0, 0, 0.11) 0px 2px 12px, rgba(0, 0, 0, 0.04) 0px 1px 4px`,
 }
 
-const DataPointTitle = styled.div`
+const TileTitle = styled.div`
   font-weight: 100;
   color: ${props => props.color};
   margin: 5px 0;
 `
-const DataPointArrangement = styled.div`
+
+const TileArrangement = styled.div`
   display: flex;  
   flex-direction: ${props => props.direction === 'horizontal' ? 'row' : 'column'};
   justify-content: center;
@@ -153,15 +167,10 @@ class MultipleValue extends React.PureComponent {
   recalculateSizing = () => {
     const EM = 16;
     const groupingLayout = window.innerWidth >= 768 ? 'horizontal' : 'vertical';
-
     let CONFIG = this.props.config;
-    
-    
     var font_check = CONFIG.font_size_main
     var font_size = (font_check !== "" && typeof font_check !== 'undefined' ? CONFIG.font_size_main : this.calculateFontSize());
     font_size = font_size / EM;
-
-
     this.setState({
       fontSize: font_size,
       groupingLayout
@@ -210,59 +219,38 @@ class MultipleValue extends React.PureComponent {
           {dataSortedSub
             .map((dataPoint, index) => {
               const compDataPoint = dataPoint.comparisonPoint
-              let progressPerc
-              let percChange
-              let difference
               let number = index
-              if (compDataPoint) {
-                if (config[`difference_percentage_comparison_style_${dataPoint.name}`] === 'original' ) {
-                  progressPerc = Math.round((dataPoint.value / compDataPoint.value) * 100)
-                  percChange = progressPerc - 100
-                }
-                else {
-                  progressPerc = Math.round(((dataPoint.value / compDataPoint.value) - 1) * 100)
-                  percChange = progressPerc - 100
-                }
-                if (config[`difference_comparison_style_${dataPoint.name}`] === 'original' ) {
-                  //BUG: Need to add formatting or somehow figure the formatting from the formatted values
-                  difference = Math.round(dataPoint.value - compDataPoint.value)
-                }
-                else {
-                  //BUG: Same as above
-                  difference = Math.round(compDataPoint.value - dataPoint.value)
-                }
-              }
               return (
                 <>
                 {/* This is for the group labels */}
                 {number === 0 && config[`group_name_${dataPoint.name}`] ? 
-                <DataPointGroup 
+                <TileGroupTitle 
                   style={{fontWeight:'bold'}}
                   visibility={true}> 
                   {checkURL(config[`group_name_${dataPoint.name}`]) ? <img src={config[`group_name_${dataPoint.name}`]} style={{width:config[`image_width_${dataPoint.name}`]+'px',height:config[`image_height_${dataPoint.name}`]+'px'}}></img> : <h2>{config[`group_name_${dataPoint.name}`]}</h2>}
-                </DataPointGroup>
+                </TileGroupTitle>
                 : '' }
                 {/* This is for the datapoints */}
                 {/* BUG: Unsure how to get align items stretch and center */}
-                <DataPointGroup 
+                <TileGroup 
                   comparisonPlacement={compDataPoint && config[`comparison_label_placement_${compDataPoint.name}`]} 
                   key={`group_${dataPoint.name}`} 
                   layout={this.getLayout()}
                   style={length - 1 !== i && config.dividers && config.orientation === 'vertical' ? {borderRightColor:`${config.dividers_color}`,borderRightWidth: `thick`,borderRightStyle: `solid`} : {borderRight: ``} }
                   visibility={config[`show_${dataPoint.name}`]}
                 > 
-                  <DataPoint 
+                  <Tile 
                     titlePlacement={config[`title_placement_${dataPoint.name}`]} 
                     style={config[`border_${dataPoint.name}`] === 'None' ? BorderNone : BorderTile}
                   >
                     {config[`show_title_${dataPoint.name}`] === false ? null : (
-                      <DataPointTitle 
+                      <TileTitle 
                       color={config[`style_${dataPoint.name}`]}
                       >
                         {config[`title_override_${dataPoint.name}`] || dataPoint.label}
-                      </DataPointTitle>
+                      </TileTitle>
                     )}
-                    <DataPointArrangement
+                    <TileArrangement
                       direction={config[`comparison_style_${dataPoint.name}`]}> 
                       {(<MainPoint 
                           config={config}
@@ -283,7 +271,7 @@ class MultipleValue extends React.PureComponent {
                           config={config}
                           mainPoint={dataPoint}
                           order={config[`order_comparison_difference_${dataPoint.name}`]}
-                          diff={difference}
+                          comparisonPoint={compDataPoint}
                         />)
                       : '' }
                       {compDataPoint && config[`show_comparison_difference_percentage_${dataPoint.name}`] ? 
@@ -291,12 +279,12 @@ class MultipleValue extends React.PureComponent {
                           config={config}
                           mainPoint={dataPoint}
                           order={config[`order_comparison_difference_${dataPoint.name}`]}
-                          percentage={percChange}
+                          comparisonPoint={compDataPoint}
                         />)
                       : '' }
-                     </DataPointArrangement>
-                  </DataPoint>
-                </DataPointGroup>
+                     </TileArrangement>
+                  </Tile>
+                </TileGroup>
                 </>
               )
             }) 
