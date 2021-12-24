@@ -3,6 +3,9 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 //import { ComparisonDataPoint } from './ComparisonDataPoint'
 //import { forEach, sortedLastIndex } from 'lodash'
+import { MainPoint } from './MainPoint'
+import { DifferencePoint } from './DifferencePoint'
+import { PercentagePoint } from './PercentagePoint'
 
 const DataPointsWrapper = styled.div`
   font-family: "Google Sans", "Roboto", "Noto Sans JP", "Noto Sans", "Noto Sans CJK KR", Helvetica, Arial, sans-serif;
@@ -67,79 +70,6 @@ const DataPointArrangement = styled.div`
   display: flex;  
   flex-direction: ${props => props.direction === 'horizontal' ? 'row' : 'column'};
   justify-content: center;
-`
-
-const DataPointContainer = styled.div`
-  display: flex;  
-  flex-direction: column;
-  order: ${props => props.order};
-  color: grey
-`
-
-const DataPointLabel = styled.div`
-  font-size: 1em;  
-  font-weight: 90;
-`
-
-const DataPointValue = styled.div`
-  font-size: 3em;
-  font-weight: 100;
-  color: ${props => props.color};
-  align-items: center;
-  justify-content: center;
-  display: ${props => props.visibility ? 'flex' : 'none'};
-  a.drillable-link {
-    color: ${props => props.color};
-    text-decoration: none;
-  }
-  :hover {
-    text-decoration: underline;
-  }
-`
-const ComparisonDataPointContainer = styled.div`
-  display: flex;  
-  flex-direction: column;
-  order: ${props => props.order};
-  color: grey;
-`
-
-const ComparisonDataPointLabel = styled.div`
-  font-size: 1em;  
-  font-weight: 90;
-`
-
-const NewComparisonDataPoint  = styled.div`
-font-size: 3em;
-font-weight: 90;
-color: ${props => props.color};
-align-items: center;
-justify-content: center;
-display: ${props => props.visibility ? 'flex' : 'none'};
-a.drillable-link {
-  color: ${props => props.color};
-  text-decoration: none;
-}
-:hover {
-  text-decoration: underline;
-}
-`
-const DifferenceDataPoint  = styled.div`
-font-size: 2em;
-font-weight: 90;
-color: ${props => props.color};
-order: ${props => props.order};
-align-items: center;
-justify-content: center;
-display: ${props => props.visibility ? 'flex' : 'none'};
-`
-const DifferencePercentageDataPoint  = styled.div`
-font-size: 2em;
-font-weight: 90;
-color: ${props => props.color};
-order: ${props => props.order};
-align-items: center;
-justify-content: center;
-display: ${props => props.visibility ? 'flex' : 'none'};
 `
 
 const UpArrow = styled.div.attrs()`
@@ -321,79 +251,51 @@ class MultipleValue extends React.PureComponent {
                   style={length - 1 !== i && config.dividers && config.orientation === 'vertical' ? {borderRightColor:`${config.dividers_color}`,borderRightWidth: `thick`,borderRightStyle: `solid`} : {borderRight: ``} }
                   visibility={config[`show_${dataPoint.name}`]}
                 > 
-                  <DataPoint titlePlacement={config[`title_placement_${dataPoint.name}`]} style={config[`border_${dataPoint.name}`] === 'None' ? BorderNone : BorderTile}>
+                  <DataPoint 
+                    titlePlacement={config[`title_placement_${dataPoint.name}`]} 
+                    style={config[`border_${dataPoint.name}`] === 'None' ? BorderNone : BorderTile}
+                  >
                     {config[`show_title_${dataPoint.name}`] === false ? null : (
-                      <DataPointTitle color={config[`style_${dataPoint.name}`]}>
+                      <DataPointTitle 
+                      color={config[`style_${dataPoint.name}`]}
+                      >
                         {config[`title_override_${dataPoint.name}`] || dataPoint.label}
                       </DataPointTitle>
                     )}
                     <DataPointArrangement
-                      direction={config[`comparison_style_${dataPoint.name}`]} 
-                      > 
-                      <DataPointContainer
-                        order={config[`order_comparison_original_${dataPoint.name}`]}
-                      >
-                        <DataPointValue 
-                          color={config[`style_${dataPoint.name}`]}
-                          onClick={() => { this.handleClick(dataPoint, event) }}
-                          layout={this.getLayout()}
-                          visibility={config[`show_comparison_original_${dataPoint.name}`] ?? true} 
-                        >
-                          {dataPoint.formattedValue}
-                        </DataPointValue>
-                        <DataPointLabel>
-                            {config[`comparison_value_label_${dataPoint.name}`]}
-                        </DataPointLabel>
-                      </DataPointContainer>
+                      direction={config[`comparison_style_${dataPoint.name}`]}> 
+                      {(<MainPoint 
+                          config={config}
+                          mainPoint={dataPoint}
+                          order={config[`order_comparison_original_${dataPoint.name}`]}
+                          handleClick={this.handleClick}
+                        />)} 
                       {compDataPoint && config[`show_comparison_value_${dataPoint.name}`] ? 
-                        <ComparisonDataPointContainer
+                        (<MainPoint 
+                          config={config}
+                          mainPoint={compDataPoint}
                           order={config[`order_comparison_value_${dataPoint.name}`]}
-                        >
-                          <NewComparisonDataPoint
-                            color={config[`style_${dataPoint.name}`]}
-                            onClick={() => { this.handleClick(compDataPoint, event) }}
-                            layout={this.getLayout()}
-                            visibility={config[`show_comparison_value_${dataPoint.name}`]}
-                          >
-                          {compDataPoint.formattedValue}
-                          </NewComparisonDataPoint>
-                          <ComparisonDataPointLabel>
-                            {config[`comparison_difference_label_${dataPoint.name}`]}
-                          </ComparisonDataPointLabel>
-                        </ComparisonDataPointContainer>
+                          handleClick={this.handleClick}
+                        />)
                       : '' }
                       {compDataPoint && config[`show_comparison_difference_${dataPoint.name}`] ? 
-                      <DifferenceDataPoint 
-                        order={config[`order_comparison_difference_${dataPoint.name}`]}
-                        color={config[`style_${dataPoint.name}`]}
-                        layout={this.getLayout()}
-                        visibility={config[`show_comparison_difference_${dataPoint.name}`] ?? true} 
-                      >
-                        {difference} 
-                        {config[`style_comparison_difference_${dataPoint.name}`] === 'icon' ? difference < 0 ? config[`pos_is_bad_${dataPoint.name}`] ? `${config.symbol_positive}` : `${config.symbol_negative}` : difference === 0 ? `${config.symbol_zero}` : config[`pos_is_bad_${dataPoint.name}`] ? `${config.symbol_negative}` : `${config.symbol_positive}`: '' }
-                      </DifferenceDataPoint>
+                        (<DifferencePoint
+                          config={config}
+                          mainPoint={dataPoint}
+                          order={config[`order_comparison_difference_${dataPoint.name}`]}
+                          diff={difference}
+                        />)
                       : '' }
                       {compDataPoint && config[`show_comparison_difference_percentage_${dataPoint.name}`] ? 
-                      <DifferencePercentageDataPoint 
-                        order={config[`order_comparison_difference_percentage_${dataPoint.name}`]}
-                        color={config[`style_${dataPoint.name}`]}
-                        layout={this.getLayout()}
-                        visibility={config[`show_comparison_difference_percentage_${dataPoint.name}`] ?? true} 
-                      >
-                        {percChange}%
-                      </DifferencePercentageDataPoint>
+                        (<PercentagePoint
+                          config={config}
+                          mainPoint={dataPoint}
+                          order={config[`order_comparison_difference_${dataPoint.name}`]}
+                          percentage={percChange}
+                        />)
                       : '' }
                      </DataPointArrangement>
                   </DataPoint>
-                  {/* {!compDataPoint ? null : (
-                  <ComparisonDataPoint 
-                    config={config}
-                    compDataPoint={compDataPoint}
-                    dataPoint={dataPoint}
-                    percChange={percChange}
-                    progressPerc={progressPerc}
-                    handleClick={this.handleClick}
-                  />)} */}
                 </DataPointGroup>
                 </>
               )
