@@ -256,6 +256,7 @@ class MultipleValue extends React.PureComponent {
                           config={config}
                           mainPoint={dataPoint}
                           order={config[`order_comparison_original_${dataPoint.name}`]}
+                          label={config[`comparison_value_label_${dataPoint.name}`]}
                           handleClick={this.handleClick}
                         />)} 
                       {compDataPoint && config[`show_comparison_value_${dataPoint.name}`] ? 
@@ -263,6 +264,7 @@ class MultipleValue extends React.PureComponent {
                           config={config}
                           mainPoint={compDataPoint}
                           order={config[`order_comparison_value_${dataPoint.name}`]}
+                          label={config[`comparison_difference_label_${dataPoint.name}`]}
                           handleClick={this.handleClick}
                         />)
                       : '' }

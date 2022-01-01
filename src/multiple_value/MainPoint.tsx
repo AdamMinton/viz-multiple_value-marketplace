@@ -40,8 +40,9 @@ export const MainPoint: React.FC<{
   config: any;
   mainPoint: any;
   order: any;
+  label: any;
   handleClick: (i: any, j: any) => {};
-}> = ({ config, mainPoint, order, handleClick }) => {
+}> = ({ config, mainPoint, order, label, handleClick }) => {
   return (
     <Point order={order}>
       <Main
@@ -56,7 +57,8 @@ export const MainPoint: React.FC<{
         {mainPoint.formattedValue}
       </Main>
       <MainLabel>
-        {config[`comparison_value_label_${mainPoint.name}`]}
+        {label}
+        {/* {config[`comparison_value_label_${mainPoint.name}`]} */}
       </MainLabel>
     </Point>
   );
