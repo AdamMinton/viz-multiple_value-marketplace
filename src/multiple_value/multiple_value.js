@@ -6,13 +6,14 @@ import styled from 'styled-components'
 import { MainPoint } from './MainPoint'
 import { DifferencePoint } from './DifferencePoint'
 import { PercentagePoint } from './PercentagePoint'
+import { ComparisonPoint } from './ComparisonPoint'
 
 const DataPointsWrapper = styled.div`
   font-family: "Google Sans", "Roboto", "Noto Sans JP", "Noto Sans", "Noto Sans CJK KR", Helvetica, Arial, sans-serif;
   display: flex;
   flex-direction: ${props => props.layout === 'horizontal' ? 'column' : 'row'};
   align-items: space-evenly;
-  margin: 10px;
+  margin: .6250em;
   height: 100%;
 `
 
@@ -25,7 +26,7 @@ const DataPointGroupGroup = styled.div`
 `
 
 const TileGroup = styled.div`
-  margin: 10px;  
+  margin: .6250em;  
   text-align: center;
   width: 100%;
   height: 100%;
@@ -38,7 +39,7 @@ const TileGroup = styled.div`
 `
 
 const TileGroupTitle = styled.div`
-  margin: 10px;  
+  margin: .6250em;
   text-align: center;
   width: 100%;
   height: 100%;
@@ -268,16 +269,9 @@ class MultipleValue extends React.PureComponent {
                           handleClick={this.handleClick}
                         />)
                       : '' }
-                      {compDataPoint && config[`show_comparison_difference_${dataPoint.name}`] ? 
-                        (<DifferencePoint
-                          config={config}
-                          mainPoint={dataPoint}
-                          order={config[`order_comparison_difference_${dataPoint.name}`]}
-                          comparisonPoint={compDataPoint}
-                        />)
-                      : '' }
-                      {compDataPoint && config[`show_comparison_difference_percentage_${dataPoint.name}`] ? 
-                        (<PercentagePoint
+                      {compDataPoint && (config[`show_comparison_difference_${dataPoint.name}`]
+                      || config[`show_comparison_difference_percentage_${dataPoint.name}`]) ? 
+                        (<ComparisonPoint
                           config={config}
                           mainPoint={dataPoint}
                           order={config[`order_comparison_difference_${dataPoint.name}`]}

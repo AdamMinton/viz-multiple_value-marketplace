@@ -10,6 +10,7 @@ const Point = styled.div.attrs({
   flex-direction: column;
   order: ${(props) => props.order};
   color: grey;
+  padding: 0.625em;
 `;
 
 // color: (props: any) => props.color, why is this not needed
@@ -21,6 +22,7 @@ const Main = styled.div.attrs({
   color: ${(props) => props.color};
   align-items: center;
   justify-content: center;
+  padding: 1em;
   display: ${(props) => (props.visibility ? "flex" : "none")};
   a.drillable-link {
     color: ${(props) => props.color};

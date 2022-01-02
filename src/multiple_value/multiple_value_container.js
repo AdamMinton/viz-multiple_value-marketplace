@@ -474,16 +474,6 @@ looker.plugins.visualizations.add({
             display_size: 'third'
           }
         }
-        if (config[`show_comparison_difference_percentage_${dataPoint.name}`] === true) {
-          options[`order_comparison_difference_percentage_${dataPoint.name}`] = {
-            type: 'number',
-            label: `Order - Difference %`,
-            section: 'Comparison',
-            default: 4,
-            order: 100 * (index + 1) + 18,
-            display_size: 'third'
-          }
-        }
         // if (config[`comparison_show_label_${dataPoint.name}`]) {
         //   options[`comparison_label_${dataPoint.name}`] = {
         //     type: 'string',

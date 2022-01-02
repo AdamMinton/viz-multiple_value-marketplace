@@ -14,6 +14,7 @@ const Difference = styled.div.attrs({
   align-items: center;
   justify-content: center;
   display: ${(props) => (props.visibility ? "flex" : "none")};
+  padding: 1em;
 `;
 
 export const DifferencePoint: React.FC<{
