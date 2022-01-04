@@ -466,10 +466,10 @@ looker.plugins.visualizations.add({
             display_size: 'third'
           }
         }
-        if (config[`show_comparison_difference_${dataPoint.name}`] === true) {
+        if (config[`show_comparison_difference_${dataPoint.name}`] === true || config[`show_comparison_difference_percentage_${dataPoint.name}`] === true) {
           options[`order_comparison_difference_${dataPoint.name}`] = {
             type: 'number',
-            label: `Order - Difference #`,
+            label: `Order - Difference`,
             section: 'Comparison',
             default: 3,
             order: 100 * (index + 1) + 17,
