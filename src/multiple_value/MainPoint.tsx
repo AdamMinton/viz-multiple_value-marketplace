@@ -11,6 +11,7 @@ const Point = styled.div.attrs({
   order: ${(props) => props.order};
   color: grey;
   padding: 0.3em;
+  justify-content: center;
 `;
 
 // color: (props: any) => props.color, why is this not needed

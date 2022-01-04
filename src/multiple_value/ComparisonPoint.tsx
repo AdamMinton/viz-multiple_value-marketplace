@@ -36,6 +36,34 @@ const Comparison = styled.div.attrs({
   padding: 0.3em;
 `;
 
+function Color(
+  color_neg: string,
+  color_zero: string,
+  color_pos: string,
+  pos_is_bad: boolean,
+  diff: number
+) {
+  let color = color_zero;
+  if (pos_is_bad) {
+    if (diff < 0) {
+      color = color_pos;
+    } else if ((diff = 0)) {
+      color = color_zero;
+    } else {
+      color = color_neg;
+    }
+  } else {
+    if (diff < 0) {
+      color = color_neg;
+    } else if ((diff = 0)) {
+      color = color_zero;
+    } else {
+      color = color_pos;
+    }
+  }
+  return color;
+}
+
 export const ComparisonPoint: React.FC<{
   config: any;
   order: any;
@@ -78,26 +106,36 @@ export const ComparisonPoint: React.FC<{
       }
     >
       <Difference
-        color={config[`style_${mainPoint.name}`]}
+        color={Color(
+          config[`color_negative`],
+          config[`color_zero`],
+          config[`color_positive`],
+          config[`pos_is_bad_${mainPoint.name}`],
+          diff
+        )}
         visibility={
           config[`show_comparison_difference_${mainPoint.name}`] ?? true
         }
       >
-        {diff}
         {config[`style_comparison_difference_${mainPoint.name}`] === "icon"
           ? diff < 0
-            ? config[`pos_is_bad_${mainPoint.name}`]
-              ? `${config.symbol_positive}`
-              : `${config.symbol_negative}`
+            ? `${config.symbol_negative}`
             : diff === 0
             ? `${config.symbol_zero}`
-            : config[`pos_is_bad_${mainPoint.name}`]
-            ? `${config.symbol_negative}`
-            : `${config.symbol_positive}`
+            : diff > 0
+            ? `${config.symbol_positive}`
+            : ""
           : ""}
+        {diff}
       </Difference>
       <Percentage
-        color={config[`style_${mainPoint.name}`]}
+        color={Color(
+          config[`color_negative`],
+          config[`color_zero`],
+          config[`color_positive`],
+          config[`pos_is_bad_${mainPoint.name}`],
+          diff
+        )}
         visibility={
           config[`show_comparison_difference_percentage_${mainPoint.name}`] ??
           true
