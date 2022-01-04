@@ -2,6 +2,7 @@ import React, { PureComponent, useState } from "react";
 import styled from "styled-components";
 import SSF from "ssf";
 import { AnyStyledComponent } from "styled-components";
+import numeral from "numeral";
 
 const Percentage = styled.div.attrs({
   visibility: (props: any) => props.visibility,
@@ -76,6 +77,10 @@ function tryFormatting(
   }
 }
 
+function largeNumber(value: number) {
+  return numeral(value).format("0.0a");
+}
+
 export const ComparisonPoint: React.FC<{
   config: any;
   order: any;
@@ -111,11 +116,11 @@ export const ComparisonPoint: React.FC<{
       config[`difference_percentage_comparison_style_${mainPoint.name}`] ===
       "original"
     ) {
-      progressPerc = mainPoint.value / comparisonPoint.value;
-      percentage = progressPerc - 100;
+      percentage = mainPoint.value / comparisonPoint.value;
+      progressPerc = percentage - 1;
     } else {
       progressPerc = mainPoint.value / comparisonPoint.value - 1;
-      percentage = progressPerc - 100;
+      percentage = progressPerc;
     }
     percentageFormatted = tryFormatting("#,##0%", percentage, "N/A");
   }
@@ -150,7 +155,7 @@ export const ComparisonPoint: React.FC<{
             ? `${config.symbol_positive}`
             : ""
           : ""}
-        {diffFormatted}
+        {config.large_number ? largeNumber(diff) : diffFormatted}
       </Difference>
       <Percentage
         color={Color(
@@ -158,7 +163,7 @@ export const ComparisonPoint: React.FC<{
           config[`color_zero`],
           config[`color_positive`],
           config[`pos_is_bad_${mainPoint.name}`],
-          percentage
+          progressPerc
         )}
         visibility={
           config[`show_comparison_difference_percentage_${mainPoint.name}`] ??
@@ -167,11 +172,11 @@ export const ComparisonPoint: React.FC<{
       >
         {config[`style_comparison_difference_percentage_${mainPoint.name}`] ===
         "icon"
-          ? percentage < 0
+          ? progressPerc < 0
             ? `${config.symbol_negative}`
-            : percentage === 0
+            : progressPerc === 0
             ? `${config.symbol_zero}`
-            : percentage > 0
+            : progressPerc > 0
             ? `${config.symbol_positive}`
             : ""
           : ""}

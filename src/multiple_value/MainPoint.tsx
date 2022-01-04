@@ -2,6 +2,7 @@ import React, { PureComponent, useState } from "react";
 import styled from "styled-components";
 import SSF from "ssf";
 import { AnyStyledComponent } from "styled-components";
+import numeral from "numeral";
 
 const Point = styled.div.attrs({
   order: (props: any) => props.order,
@@ -51,6 +52,10 @@ function tryFormatting(
   }
 }
 
+function largeNumber(value: number) {
+  return numeral(value).format("0.0a");
+}
+
 export const MainPoint: React.FC<{
   config: any;
   mainPoint: any;
@@ -70,7 +75,9 @@ export const MainPoint: React.FC<{
         }
       >
         {config[`value_format_${mainPoint.name}`] == ""
-          ? mainPoint.formattedValue
+          ? config.large_number
+            ? largeNumber(mainPoint.value)
+            : mainPoint.formattedValue
           : tryFormatting(
               config[`value_format_${mainPoint.name}`],
               mainPoint.value,

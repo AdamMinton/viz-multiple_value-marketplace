@@ -45,8 +45,16 @@ const baseOptions = {
     section: 'Style',
     default: "",
     order: 3,
-    display_size: 'normal',
+    display_size: 'full',
     placeholder: "16px",
+  },
+  large_number: {
+    label: "Large Number",
+    type: 'boolean',
+    section: 'Style',
+    default: "false",
+    order: 3,
+    display_size: 'full',
   },
   symbol_negative: {
     label: "Symbol - Neg",
@@ -344,7 +352,7 @@ looker.plugins.visualizations.add({
             label: `Difference % - Calc`,
             values: [
               {'Percent Change from Original': 'change'},
-              {'Percent of Original': 'original'},
+              {'Percent of Comparison': 'original'},
               {'Display Only': 'no_calculation'},
             ],
             section: 'Comparison',
