@@ -17,7 +17,6 @@ const baseOptions = {
     section: 'Style',
     display: 'select',
     values: [
-      {'Auto': 'auto'},
       {'Vertical': 'vertical'},
       {'Horizontal': 'horizontal'}
     ],
