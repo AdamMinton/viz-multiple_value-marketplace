@@ -41,21 +41,21 @@ function Color(
   color_zero: string,
   color_pos: string,
   pos_is_bad: boolean,
-  diff: number
+  comparison_number: number
 ) {
   let color = color_zero;
   if (pos_is_bad) {
-    if (diff < 0) {
+    if (comparison_number < 0) {
       color = color_pos;
-    } else if ((diff = 0)) {
+    } else if ((comparison_number = 0)) {
       color = color_zero;
     } else {
       color = color_neg;
     }
   } else {
-    if (diff < 0) {
+    if (comparison_number < 0) {
       color = color_neg;
-    } else if ((diff = 0)) {
+    } else if ((comparison_number = 0)) {
       color = color_zero;
     } else {
       color = color_pos;
@@ -134,13 +134,23 @@ export const ComparisonPoint: React.FC<{
           config[`color_zero`],
           config[`color_positive`],
           config[`pos_is_bad_${mainPoint.name}`],
-          diff
+          percentage
         )}
         visibility={
           config[`show_comparison_difference_percentage_${mainPoint.name}`] ??
           true
         }
       >
+        {config[`style_comparison_difference_percentage_${mainPoint.name}`] ===
+        "icon"
+          ? percentage < 0
+            ? `${config.symbol_negative}`
+            : percentage === 0
+            ? `${config.symbol_zero}`
+            : percentage > 0
+            ? `${config.symbol_positive}`
+            : ""
+          : ""}
         {percentage}%
       </Percentage>
     </Comparison>
