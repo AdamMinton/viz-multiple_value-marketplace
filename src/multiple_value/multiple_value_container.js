@@ -352,6 +352,16 @@ looker.plugins.visualizations.add({
             display_size: 'half'
           }
         }
+        if (config[`difference_comparison_style_${dataPoint.name}`] === 'no_calculation') {
+          options[`difference_comparison_display_${dataPoint.name}`] = {
+            type: 'string',
+            display: 'select',
+            label: `Difference # - Display`,
+            values: fields_to_select,
+            section: 'Comparison',
+            order: 100 * (index + 1) + 7,
+          }
+        }
         if (config[`show_comparison_difference_${dataPoint.name}`] === true) {
           options[`style_comparison_difference_${dataPoint.name}`] = {
             type: 'string',
@@ -363,8 +373,18 @@ looker.plugins.visualizations.add({
             ],
             section: 'Comparison',
             default: 'value',
-            order: 100 * (index + 1) + 7,
+            order: 100 * (index + 1) + 8,
             display_size: 'half'
+          }
+        }
+        if (config[`difference_percentage_comparison_style_${dataPoint.name}`] === 'no_calculation') {
+          options[`difference_percentage_comparison_display_${dataPoint.name}`] = {
+            type: 'string',
+            display: 'select',
+            label: `Difference % - Display`,
+            values: fields_to_select,
+            section: 'Comparison',
+            order: 100 * (index + 1) + 7,
           }
         }
         if (config[`show_comparison_difference_percentage_${dataPoint.name}`] === true) {
@@ -382,52 +402,28 @@ looker.plugins.visualizations.add({
             display_size: 'half'
           }
         }
-        if (config[`show_comparison_original_${dataPoint.name}`] === true) {
-          options[`show_comparison_value_label_${dataPoint.name}`] = {
-            type: 'boolean',
-            label: `Original - Label`,
-            section: 'Comparison',
-            default: false,
-            order: 100 * (index + 1) + 9,
-            display_size: 'half'
-          }
-        }
-        if (config[`show_comparison_value_${dataPoint.name}`] === true) {
-          options[`show_comparison_difference_label_${dataPoint.name}`] = {
-            type: 'boolean',
-            label: `Comparison - Label`,
-            section: 'Comparison',
-            default: false,
-            order: 100 * (index + 1) + 10,
-            display_size: 'half'
-          }
-        }
-        if (config[`show_comparison_value_label_${dataPoint.name}`] === true) {
-          options[`comparison_value_label_${dataPoint.name}`] = {
-            type: 'string',
-            label: `Original - Label`,
-            placeholder: dataPoint.label,
-            section: 'Comparison',
-            order: 100 * (index + 1) + 11,
-            display_size: 'half'
-          }
-        }
-        if (config[`show_comparison_difference_label_${dataPoint.name}`] === true) {
-          options[`comparison_difference_label_${dataPoint.name}`] = {
-            type: 'string',
-            label: `Comparison - Label`,
-            placeholder: dataPoint.label,
-            section: 'Comparison',
-            order: 100 * (index + 1) + 12,
-            display_size: 'half'
-          }
-        }
         options[`pos_is_bad_${dataPoint.name}`] = {
           type: 'boolean',
           label: `Positive Values are Bad`,
           section: 'Comparison',
           default: false,
-          order: 100 * (index + 1) + 13,
+          order: 100 * (index + 1) + 10,
+        }
+        options[`comparison_value_label_${dataPoint.name}`] = {
+          type: 'string',
+          label: `Original - Label`,
+          placeholder: dataPoint.label,
+          section: 'Comparison',
+          order: 100 * (index + 1) + 11,
+          display_size: 'half'
+        }
+        options[`comparison_difference_label_${dataPoint.name}`] = {
+          type: 'string',
+          label: `Comparison - Label`,
+          placeholder: dataPoint.label,
+          section: 'Comparison',
+          order: 100 * (index + 1) + 12,
+          display_size: 'half'
         }
         options[`comparison_style_${dataPoint.name}`] = {
           type: 'string',
@@ -543,6 +539,24 @@ looker.plugins.visualizations.add({
         for (let i = 0 ; i < dataPoints.length && !found; i++) {
           if (dataPoints[i].name == config[`field_to_compare_${dataPoint.name}`]) {
             dataPoint.comparisonPoint = dataPoints[i]
+            found = true
+          }
+        }
+      }
+      if (config[`difference_comparison_display_${dataPoint.name}`]) {
+        let found = false
+        for (let i = 0 ; i < dataPoints.length && !found; i++) {
+          if (dataPoints[i].name == config[`difference_comparison_display_${dataPoint.name}`]) {
+            dataPoint.differencePoint = dataPoints[i]
+            found = true
+          }
+        }
+      }
+      if (config[`difference_percentage_comparison_display_${dataPoint.name}`]) {
+        let found = false
+        for (let i = 0 ; i < dataPoints.length && !found; i++) {
+          if (dataPoints[i].name == config[`difference_percentage_comparison_display_${dataPoint.name}`]) {
+            dataPoint.differencePercentagePoint = dataPoints[i]
             found = true
           }
         }

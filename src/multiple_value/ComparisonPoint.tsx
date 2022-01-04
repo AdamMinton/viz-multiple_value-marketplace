@@ -64,6 +64,18 @@ function Color(
   return color;
 }
 
+function tryFormatting(
+  formatString: string,
+  value: number,
+  defaultString: string
+) {
+  try {
+    return SSF.format(formatString, value);
+  } catch (err) {
+    return defaultString;
+  }
+}
+
 export const ComparisonPoint: React.FC<{
   config: any;
   order: any;
@@ -72,28 +84,40 @@ export const ComparisonPoint: React.FC<{
 }> = ({ config, order, mainPoint, comparisonPoint }) => {
   // Difference
   let diff;
-  if (config[`difference_comparison_style_${mainPoint.name}`] === "original") {
-    //BUG: Need to add formatting or somehow figure the formatting from the formatted values
-    diff = Math.round(mainPoint.value - comparisonPoint.value);
+  let diffFormatted;
+  if (mainPoint.differencePoint) {
+    diff = mainPoint.differencePoint.value;
+    diffFormatted = mainPoint.differencePoint.formattedValue;
   } else {
-    //BUG: Same as above
-    diff = Math.round(comparisonPoint.value - mainPoint.value);
+    if (
+      config[`difference_comparison_style_${mainPoint.name}`] === "original"
+    ) {
+      diff = mainPoint.value - comparisonPoint.value;
+    } else {
+      diff = comparisonPoint.value - mainPoint.value;
+    }
+    diffFormatted = tryFormatting("#,##0;-#,##0;0", diff, "N/A");
   }
 
   // Percentage
   let progressPerc;
   let percentage;
-  if (
-    config[`difference_percentage_comparison_style_${mainPoint.name}`] ===
-    "original"
-  ) {
-    progressPerc = Math.round((mainPoint.value / comparisonPoint.value) * 100);
-    percentage = progressPerc - 100;
+  let percentageFormatted;
+  if (mainPoint.differencePercentagePoint) {
+    percentage = mainPoint.differencePercentagePoint.value;
+    percentageFormatted = mainPoint.differencePercentagePoint.formattedValue;
   } else {
-    progressPerc = Math.round(
-      (mainPoint.value / comparisonPoint.value - 1) * 100
-    );
-    percentage = progressPerc - 100;
+    if (
+      config[`difference_percentage_comparison_style_${mainPoint.name}`] ===
+      "original"
+    ) {
+      progressPerc = mainPoint.value / comparisonPoint.value;
+      percentage = progressPerc - 100;
+    } else {
+      progressPerc = mainPoint.value / comparisonPoint.value - 1;
+      percentage = progressPerc - 100;
+    }
+    percentageFormatted = tryFormatting("#,##0%", percentage, "N/A");
   }
 
   return (
@@ -126,7 +150,7 @@ export const ComparisonPoint: React.FC<{
             ? `${config.symbol_positive}`
             : ""
           : ""}
-        {diff}
+        {diffFormatted}
       </Difference>
       <Percentage
         color={Color(
@@ -151,7 +175,7 @@ export const ComparisonPoint: React.FC<{
             ? `${config.symbol_positive}`
             : ""
           : ""}
-        {percentage}%
+        {percentageFormatted}
       </Percentage>
     </Comparison>
   );

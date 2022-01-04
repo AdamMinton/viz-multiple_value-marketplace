@@ -222,6 +222,7 @@ class MultipleValue extends React.PureComponent {
           {dataSortedSub
             .map((dataPoint, index) => {
               const compDataPoint = dataPoint.comparisonPoint
+              const diffDataPoint = dataPoint.differencePoint
               let number = index
               return (
                 <>
