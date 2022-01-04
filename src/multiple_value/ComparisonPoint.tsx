@@ -33,6 +33,7 @@ const Comparison = styled.div.attrs({
   flex-direction: column;
   display: ${(props) => (props.visibility ? "flex" : "none")};
   line-height: 1.5em;
+  padding: 0.3em;
 `;
 
 export const ComparisonPoint: React.FC<{

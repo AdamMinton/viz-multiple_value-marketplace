@@ -10,7 +10,7 @@ const Point = styled.div.attrs({
   flex-direction: column;
   order: ${(props) => props.order};
   color: grey;
-  padding: 0.25em;
+  padding: 0.3em;
 `;
 
 // color: (props: any) => props.color, why is this not needed
