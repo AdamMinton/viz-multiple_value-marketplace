@@ -476,40 +476,6 @@ looker.plugins.visualizations.add({
             display_size: 'third'
           }
         }
-        // if (config[`comparison_show_label_${dataPoint.name}`]) {
-        //   options[`comparison_label_${dataPoint.name}`] = {
-        //     type: 'string',
-        //     label: `${dataPoint.label} - Label`,
-        //     placeholder: dataPoint.label,
-        //     section: 'Comparison',
-        //     order: 10 * index + 99,
-        //   }
-        //   options[`comparison_label_placement_${dataPoint.name}`] = {
-        //     type: 'string',
-        //     label: `${dataPoint.label} - Label Placement`,
-        //     display: 'select',
-        //     values: [
-        //       {'Above': 'above'},
-        //       {'Below': 'below'},
-        //       {'Left': 'left'},
-        //       {'Right': 'right'},
-        //     ],
-        //     default: 'below',
-        //     section: 'Comparison',
-        //     order: 10 * index + 99,
-        //   }
-          // if (config[`comparison_style_${dataPoint.name}`] === "value" ||
-          //     config[`comparison_style_${dataPoint.name}`] === "calculate_progress_perc") {
-          //   options[`comp_value_format_${dataPoint.name}`] = {
-          //     type: 'string',
-          //     label: `Comparison Value Format`,
-          //     placeholder: "Spreadsheet-style format code",
-          //     section: 'Comparison',
-          //     default: "",
-          //     order: 10 * index + 6
-          //   }
-          // }
-        //}
       }
     })
   
