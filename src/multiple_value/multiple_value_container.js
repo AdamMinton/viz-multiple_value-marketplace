@@ -45,7 +45,8 @@ const baseOptions = {
     section: 'Style',
     default: "",
     order: 3,
-    display_size: 'normal'
+    display_size: 'normal',
+    placeholder: "16px",
   },
   symbol_negative: {
     label: "Symbol - Neg",

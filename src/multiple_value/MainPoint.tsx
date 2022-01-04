@@ -39,6 +39,18 @@ const MainLabel = styled.div`
   text-align: center;
 `;
 
+function tryFormatting(
+  formatString: string,
+  value: number,
+  defaultString: string
+) {
+  try {
+    return SSF.format(formatString, value);
+  } catch (err) {
+    return defaultString;
+  }
+}
+
 export const MainPoint: React.FC<{
   config: any;
   mainPoint: any;
@@ -57,7 +69,13 @@ export const MainPoint: React.FC<{
           config[`show_comparison_original_${mainPoint.name}`] ?? true
         }
       >
-        {mainPoint.formattedValue}
+        {config[`value_format_${mainPoint.name}`] == ""
+          ? mainPoint.formattedValue
+          : tryFormatting(
+              config[`value_format_${mainPoint.name}`],
+              mainPoint.value,
+              mainPoint.formattedValue
+            )}
       </Main>
       <MainLabel>
         {label}

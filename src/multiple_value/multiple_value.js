@@ -204,13 +204,12 @@ class MultipleValue extends React.PureComponent {
 
     const dataSorted = sortArrayObjs(data,"group_number","group_item_number");
     const uniqueGroups = [...new Set(dataSorted.map((o) => o.group_number))];
-    
     return ( 
       <DataPointsWrapper
         layout={this.getLayout()}
         font={config['grouping_font']}
         // style={{fontSize: `${this.state.fontSize}em`}}
-        style={{fontSize: `larger`}}
+        style={ config.font_size_main == "" ? {fontSize: "larger"} : {fontSize: `${config.font_size_main}`}}
       >
       {uniqueGroups.map((group,i,{length}) => {
         let dataSortedSub = dataSorted.filter(dataPoint => dataPoint.group_number === group)
