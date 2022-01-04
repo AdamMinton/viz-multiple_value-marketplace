@@ -6,7 +6,6 @@ import { AnyStyledComponent } from "styled-components";
 const Percentage = styled.div.attrs({
   visibility: (props: any) => props.visibility,
 })`
-  font-size: 2em;
   font-weight: 90;
   color: ${(props) => props.color};
   align-items: center;
@@ -17,7 +16,6 @@ const Percentage = styled.div.attrs({
 const Difference = styled.div.attrs({
   visibility: (props: any) => props.visibility,
 })`
-  font-size: 2em;
   font-weight: 90;
   color: ${(props) => props.color};
   align-items: center;
@@ -34,7 +32,7 @@ const Comparison = styled.div.attrs({
   justify-content: center;
   flex-direction: column;
   display: ${(props) => (props.visibility ? "flex" : "none")};
-  padding: 1em;
+  line-height: 1.5em;
 `;
 
 export const ComparisonPoint: React.FC<{

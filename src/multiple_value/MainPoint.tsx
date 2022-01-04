@@ -10,19 +10,18 @@ const Point = styled.div.attrs({
   flex-direction: column;
   order: ${(props) => props.order};
   color: grey;
-  padding: 0.625em;
+  padding: 0.25em;
 `;
 
 // color: (props: any) => props.color, why is this not needed
 const Main = styled.div.attrs({
   visibility: (props: any) => props.visibility,
 })`
-  font-size: 3em;
   font-weight: 100;
   color: ${(props) => props.color};
   align-items: center;
   justify-content: center;
-  padding: 1em;
+  line-height: 1.5em;
   display: ${(props) => (props.visibility ? "flex" : "none")};
   a.drillable-link {
     color: ${(props) => props.color};
@@ -34,8 +33,9 @@ const Main = styled.div.attrs({
 `;
 
 const MainLabel = styled.div`
-  font-size: 1em;
+  font-size: 0.8em;
   font-weight: 90;
+  text-align: center;
 `;
 
 export const MainPoint: React.FC<{

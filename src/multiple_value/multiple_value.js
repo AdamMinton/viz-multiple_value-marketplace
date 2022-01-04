@@ -1,11 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-//import { ComparisonDataPoint } from './ComparisonDataPoint'
-//import { forEach, sortedLastIndex } from 'lodash'
 import { MainPoint } from './MainPoint'
-import { DifferencePoint } from './DifferencePoint'
-import { PercentagePoint } from './PercentagePoint'
 import { ComparisonPoint } from './ComparisonPoint'
 
 const DataPointsWrapper = styled.div`
@@ -13,8 +9,7 @@ const DataPointsWrapper = styled.div`
   display: flex;
   flex-direction: ${props => props.layout === 'horizontal' ? 'column' : 'row'};
   align-items: space-evenly;
-  margin: .6250em;
-  height: 100%;
+  height: calc(100% + 25px);;
 `
 
 const DataPointGroupGroup = styled.div`
@@ -26,7 +21,8 @@ const DataPointGroupGroup = styled.div`
 `
 
 const TileGroup = styled.div`
-  margin: .6250em;  
+  border: .6250em;  
+  box-sizing: border-box
   text-align: center;
   width: 100%;
   height: 100%;
@@ -40,6 +36,7 @@ const TileGroup = styled.div`
 
 const TileGroupTitle = styled.div`
   margin: .6250em;
+  box-sizing: border-box
   text-align: center;
   width: 100%;
   height: 100%;
@@ -77,6 +74,9 @@ const BorderTile = {
 
 const TileTitle = styled.div`
   font-weight: 100;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 0.9em;
   color: ${props => props.color};
   margin: 5px 0;
 `
@@ -151,7 +151,8 @@ class MultipleValue extends React.PureComponent {
   }
 
   calculateFontSize = () => {
-    const multiplier = this.state.groupingLayout === 'horizontal' ? 0.015 : 0.02;
+    //const multiplier = this.state.groupingLayout === 'horizontal' ? 0.015 : 0.02;
+    const multiplier = .03
     return Math.round(this.getWindowSize() * multiplier);
   }
 
@@ -172,6 +173,7 @@ class MultipleValue extends React.PureComponent {
     var font_check = CONFIG.font_size_main
     var font_size = (font_check !== "" && typeof font_check !== 'undefined' ? CONFIG.font_size_main : this.calculateFontSize());
     font_size = font_size / EM;
+    font_size = font_size < 1.2 ? 1.2 : font_size
     this.setState({
       fontSize: font_size,
       groupingLayout
@@ -215,7 +217,6 @@ class MultipleValue extends React.PureComponent {
           <>
           <DataPointGroupGroup 
             layout={this.getLayout()}
-            style={{fontSize: `${this.state.fontSize}em`}}
           >
           {dataSortedSub
             .map((dataPoint, index) => {
