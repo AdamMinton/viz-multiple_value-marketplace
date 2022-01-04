@@ -209,7 +209,8 @@ class MultipleValue extends React.PureComponent {
       <DataPointsWrapper
         layout={this.getLayout()}
         font={config['grouping_font']}
-        style={{fontSize: `${this.state.fontSize}em`}}
+        // style={{fontSize: `${this.state.fontSize}em`}}
+        style={{fontSize: `larger`}}
       >
       {uniqueGroups.map((group,i,{length}) => {
         let dataSortedSub = dataSorted.filter(dataPoint => dataPoint.group_number === group)
