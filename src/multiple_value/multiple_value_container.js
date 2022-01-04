@@ -361,7 +361,6 @@ looker.plugins.visualizations.add({
             values: [
               {'Show as Value': 'value'},
               {'Show as Value with Icon': 'icon'},
-              {'Show as Value with Bar': 'bar'},
             ],
             section: 'Comparison',
             default: 'value',
@@ -377,7 +376,6 @@ looker.plugins.visualizations.add({
             values: [
               {'Show as Value': 'value'},
               {'Show as Value with Icon': 'icon'},
-              {'Show as Value with Bar': 'bar'},
             ],
             section: 'Comparison',
             default: 'value',
