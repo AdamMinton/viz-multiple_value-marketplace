@@ -20,7 +20,7 @@ const baseOptions = {
       {'Vertical': 'vertical'},
       {'Horizontal': 'horizontal'}
     ],
-    default: 'auto',
+    default: 'horizontal',
     order: 0,
     display_size: 'half'
   },
@@ -29,7 +29,7 @@ const baseOptions = {
     label: `Dividers between values?`,
     default: false,
     section: 'Style',
-    order: 1,
+    order: 1
   },
   dividers_color: {
     type: 'string',
@@ -37,7 +37,7 @@ const baseOptions = {
     display: `color`,
     default: 'black',
     section: 'Style',
-    order: 2,
+    order: 2
   },
   font_size_main: {
     label: "Font Size",
@@ -46,7 +46,7 @@ const baseOptions = {
     default: "",
     order: 3,
     display_size: 'full',
-    placeholder: "16px",
+    placeholder: "16px"
   },
   large_number: {
     label: "Large Number",
@@ -54,7 +54,7 @@ const baseOptions = {
     section: 'Style',
     default: "false",
     order: 3,
-    display_size: 'full',
+    display_size: 'full'
   },
   symbol_negative: {
     label: "Symbol - Neg",
@@ -182,7 +182,7 @@ looker.plugins.visualizations.add({
           label: `${dataPoint.label} - Show Tile`,
           default: true,
           section: 'Style',
-          order: 100 * (index + 1) + 4,
+          order: 100 * (index + 1) + 4
         }
         options[`style_${dataPoint.name}`] = {
           type: `string`,
@@ -190,21 +190,21 @@ looker.plugins.visualizations.add({
           display: `color`,
           default: '#3A4245',
           section: 'Style',
-          order: 100 * (index + 1) + 5,
+          order: 100 * (index + 1) + 5
         }
         options[`show_title_${dataPoint.name}`] = {
           type: 'boolean',
           label: `${dataPoint.label} - Show Title`,
           default: true,
           section: 'Style',
-          order: 100 * (index + 1) + 6,
+          order: 100 * (index + 1) + 6
         }
         options[`title_override_${dataPoint.name}`] = {
           type: 'string',
           label: `${dataPoint.label} - Title`,
           section: 'Style',
           placeholder: dataPoint.label,
-          order: 100 * (index + 1) + 7,
+          order: 100 * (index + 1) + 7
         }
         options[`title_placement_${dataPoint.name}`] = {
           type: 'string',
@@ -216,7 +216,7 @@ looker.plugins.visualizations.add({
             {'Below number': 'below'},
           ],
           default: 'above',
-          order: 100 * (index + 1) + 8,
+          order: 100 * (index + 1) + 8
         }
         options[`value_format_${dataPoint.name}`] = {
           type: 'string',
@@ -230,7 +230,7 @@ looker.plugins.visualizations.add({
           display: 'select',
           values: [
             {'Individual Tiles': 'Tile'},
-            {'None': 'None'},
+            {'None': 'None'}
           ],
           label: `${dataPoint.label} - Border`,
           section: 'Style',
@@ -295,7 +295,7 @@ looker.plugins.visualizations.add({
           label: `Compare To`,
           values: fields_to_select,
           section: 'Comparison',
-          order: 100 * (index + 1) + 1,
+          order: 100 * (index + 1) + 1
         }
         options[`show_comparison_original_${dataPoint.name}`] = {
           type: 'boolean',
@@ -337,7 +337,7 @@ looker.plugins.visualizations.add({
             values: [
               {'Original - Comparison': 'original'},
               {'Comparison - Original': 'comparison'},
-              {'Display Only': 'no_calculation'},
+              {'Display Only': 'no_calculation'}
             ],
             section: 'Comparison',
             default: 'original',
@@ -353,7 +353,7 @@ looker.plugins.visualizations.add({
             values: [
               {'Percent Change from Original': 'change'},
               {'Percent of Comparison': 'original'},
-              {'Display Only': 'no_calculation'},
+              {'Display Only': 'no_calculation'}
             ],
             section: 'Comparison',
             default: 'change',
@@ -368,7 +368,7 @@ looker.plugins.visualizations.add({
             label: `Difference # - Display`,
             values: fields_to_select,
             section: 'Comparison',
-            order: 100 * (index + 1) + 7,
+            order: 100 * (index + 1) + 7
           }
         }
         if (config[`show_comparison_difference_${dataPoint.name}`] === true) {
@@ -378,7 +378,7 @@ looker.plugins.visualizations.add({
             label: `Difference # - Style`,
             values: [
               {'Show as Value': 'value'},
-              {'Show as Value with Icon': 'icon'},
+              {'Show as Value with Icon': 'icon'}
             ],
             section: 'Comparison',
             default: 'value',
@@ -393,7 +393,7 @@ looker.plugins.visualizations.add({
             label: `Difference % - Display`,
             values: fields_to_select,
             section: 'Comparison',
-            order: 100 * (index + 1) + 7,
+            order: 100 * (index + 1) + 7
           }
         }
         if (config[`show_comparison_difference_percentage_${dataPoint.name}`] === true) {
@@ -403,7 +403,7 @@ looker.plugins.visualizations.add({
             label: `Difference % - Style`,
             values: [
               {'Show as Value': 'value'},
-              {'Show as Value with Icon': 'icon'},
+              {'Show as Value with Icon': 'icon'}
             ],
             section: 'Comparison',
             default: 'value',
@@ -416,7 +416,7 @@ looker.plugins.visualizations.add({
           label: `Positive Values are Bad`,
           section: 'Comparison',
           default: false,
-          order: 100 * (index + 1) + 10,
+          order: 100 * (index + 1) + 10
         }
         options[`comparison_value_label_${dataPoint.name}`] = {
           type: 'string',
@@ -440,11 +440,11 @@ looker.plugins.visualizations.add({
           label: `Stacking`,
           values: [
             {'Stack Vertically': 'vertical'},
-            {'Stack Horizontally': 'horizontal'},
+            {'Stack Horizontally': 'horizontal'}
           ],
           section: 'Comparison',
           default: 'vertical',
-          order: 100 * (index + 1) + 14,
+          order: 100 * (index + 1) + 14
         }
         if (config[`show_comparison_original_${dataPoint.name}`] === true) {
           options[`order_comparison_original_${dataPoint.name}`] = {
@@ -488,25 +488,6 @@ looker.plugins.visualizations.add({
       currentConfig = Object.assign({}, config)
     }
 
-    // let valuesToComparisonsMap = {}
-    // let lastDataPointIndex = -1
-    //INFO: The code here was removing and determining the value to compare, going to change this
-    // const fullValues = dataPoints.filter((dataPoint, index) => {
-    //   if (config[`show_comparison_${dataPoint.name}`] !== true) {
-    //     lastDataPointIndex++
-    //     return true
-    //   } else {
-    //     valuesToComparisonsMap[lastDataPointIndex] = index
-    //   }
-    //   return false
-    // }).map((fullValue, index) => {
-    //   const comparisonIndex = valuesToComparisonsMap[index]
-    //   if (comparisonIndex) {
-    //     fullValue.comparison = dataPoints[comparisonIndex]
-    //   }
-    //   return fullValue;
-    // })
-
     //Adds the comparisonPoint for when comparison has been enabled
     const fullValues = dataPoints.map((dataPoint,index) => {
       if (config[`show_comparison_${dataPoint.name}`] == true) {
@@ -538,8 +519,6 @@ looker.plugins.visualizations.add({
       }
       return dataPoint
     })
-
-    //console.log(dataPoints);
 
     this.chart = ReactDOM.render(
       <MultipleValue

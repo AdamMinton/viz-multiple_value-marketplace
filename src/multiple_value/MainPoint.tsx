@@ -1,7 +1,6 @@
 import React, { PureComponent, useState } from "react";
 import styled from "styled-components";
 import SSF from "ssf";
-import { AnyStyledComponent } from "styled-components";
 import numeral from "numeral";
 
 const Point = styled.div.attrs({
