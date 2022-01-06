@@ -239,47 +239,18 @@ looker.plugins.visualizations.add({
         }
         options[`group_number_${dataPoint.name}`] = {
           type: 'number',
-          label: `Group #`,
+          label: `${dataPoint.label} - Group #`,
           section: 'Grouping',
           default: null,
-          order: 100 * (index + 1) + 9,
-          display_size: 'half'
+          order: 100 * (index + 1) + 9
         }
         options[`group_item_number_${dataPoint.name}`] = {
           type: 'number',
-          label: `Item #`,
+          label: `${dataPoint.label} - Item #`,
           section: 'Grouping',
           default: null,
-          order: 100 * (index + 1) + 9,
-          display_size: 'half'
+          order: 100 * (index + 1) + 9
         }
-        //BUG: Consider moving group names to the bottom and have them been unique on the group names set
-        options[`group_name_${dataPoint.name}`] = {
-          type: 'string',
-          label: `${dataPoint.label} - Group Name`,
-          section: 'Grouping',
-          default: null,
-          order: 100 * (index + 1) + 7
-        }
-        if (checkURL(config[`group_name_${dataPoint.name}`])) {
-          options[`image_height_${dataPoint.name}`] = {
-            type: `number`,
-            label: `Image Height`,
-            section: `Grouping`,
-            default: null,
-            order: 100 * (index + 1) + 8,
-            display_size: 'half'
-          }
-          options[`image_width_${dataPoint.name}`] = {
-            type: `number`,
-            label: `Image Width`,
-            section: `Grouping`,
-            default: null,
-            order: 100 * (index + 1) + 8,
-            display_size: 'half'
-          }
-        }
-      //}
       // Comparison
       options[`show_comparison_${dataPoint.name}`] = {
         type: 'boolean',
@@ -479,12 +450,50 @@ looker.plugins.visualizations.add({
       }
     })
   
+    // Looping through the group number properties and getting a unique list
+    let groupNumbers = []
+    for (const property in config) {
+      if(property.includes("group_number_")) {
+        groupNumbers.push(`${config[property]}`);
+      }
+    }
+    groupNumbers = [...new Set(groupNumbers)];
+
+    const optionsNew = Object.assign({},options) 
+    groupNumbers.forEach((groupNumber,index) => {
+      optionsNew[`group_name_${groupNumber}`] = {
+        type: 'string',
+        label: `${groupNumber} - Group Name`,
+        section: 'Grouping',
+        default: null,
+        order: index
+      }
+      if (checkURL(config[`group_name_${groupNumber}`])) {
+        optionsNew[`image_height_${groupNumber}`] = {
+          type: `number`,
+          label: `Image Height`,
+          section: `Grouping`,
+          default: null,
+          order: index + .1,
+          display_size: 'half'
+        }
+        optionsNew[`image_width_${groupNumber}`] = {
+          type: `number`,
+          label: `Image Width`,
+          section: `Grouping`,
+          default: null,
+          order: index + .2,
+          display_size: 'half'
+        }
+      }
+    })
+
     if (
-      !isEqual(currentOptions, options) ||
+      !isEqual(currentOptions, optionsNew) ||
       !isEqual(currentConfig, config)
     ) {
-      this.trigger('registerOptions', options)
-      currentOptions = Object.assign({}, options)
+      this.trigger('registerOptions', optionsNew)
+      currentOptions = Object.assign({}, optionsNew)
       currentConfig = Object.assign({}, config)
     }
 

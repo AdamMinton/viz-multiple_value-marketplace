@@ -35,7 +35,6 @@ const TileGroup = styled.div`
 `
 
 const TileGroupTitle = styled.div`
-  margin: .6250em;
   box-sizing: border-box
   text-align: center;
   width: 100%;
@@ -200,11 +199,11 @@ class MultipleValue extends React.PureComponent {
               return (
                 <>
                 {/* This is for the group labels */}
-                {number === 0 && config[`group_name_${dataPoint.name}`] ? 
+                {number === 0 && config[`group_name_${dataPoint.group_number}`] ? 
                 <TileGroupTitle 
                   style={{fontWeight:'bold'}}
                   visibility={true}> 
-                  {checkURL(config[`group_name_${dataPoint.name}`]) ? <img src={config[`group_name_${dataPoint.name}`]} style={{width:config[`image_width_${dataPoint.name}`]+'px',height:config[`image_height_${dataPoint.name}`]+'px'}}></img> : <h2>{config[`group_name_${dataPoint.name}`]}</h2>}
+                  {checkURL(config[`group_name_${dataPoint.group_number}`]) ? <img src={config[`group_name_${dataPoint.group_number}`]} style={{width:config[`image_width_${dataPoint.group_number}`]+'px',height:config[`image_height_${dataPoint.group_number}`]+'px'}}></img> : <h2>{config[`group_name_${dataPoint.group_number}`]}</h2>}
                 </TileGroupTitle>
                 : '' }
                 {/* This is for the datapoints */}
