@@ -53,6 +53,7 @@ const Tile = styled.div`
   flex-shrink: ${props => props.layout === 'horizontal' ? 'auto' : 0 };
   flex-direction: ${props => props.titlePlacement === 'above' ? 'column' : 'column-reverse'};
   flex: 1;
+  margin: 5px;
 `
 
 const BorderNone = {
