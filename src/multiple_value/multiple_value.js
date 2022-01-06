@@ -9,7 +9,7 @@ const DataPointsWrapper = styled.div`
   display: flex;
   flex-direction: ${props => props.layout === 'horizontal' ? 'column' : 'row'};
   align-items: space-evenly;
-  height: calc(100% + 25px);;
+  height: calc(100% + 25px);
 `
 
 const DataPointGroupGroup = styled.div`
@@ -17,7 +17,7 @@ const DataPointGroupGroup = styled.div`
   flex-direction: ${props => props.layout === 'horizontal' ? 'row' : 'column'};
   align-items: flex-start;
   width: 100%;
-  height: 100%
+  height: 100%;
 `
 
 const TileGroup = styled.div`
@@ -46,12 +46,6 @@ const TileGroupTitle = styled.div`
   align-items: center;
   justify-content: center;
   display: ${props => props.visibility ? 'flex' : 'none'};
-`
-//BUG: Need to fix it's positioning to observe margins and color
-const HoriztonalDivider = styled.hr`
-  border-bottom-width: thick; 
-  border-bottom-style: solid;
-  width: 100%;
 `
 
 const Tile = styled.div`
@@ -86,28 +80,6 @@ const TileArrangement = styled.div`
   flex-direction: ${props => props.direction === 'horizontal' ? 'row' : 'column'};
   justify-content: center;
 `
-
-const UpArrow = styled.div.attrs()`
-  pos: ${props => props.pos}
-  display: inline-block;
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-bottom: 10px solid ${(props) => (props.pos ? "red" : "green")};
-  margin-right: 5px;
-`;
-
-const DownArrow = styled.div.attrs()`
-  pos: ${props => props.pos}  
-  display: inline-block;
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 10px solid ${(props) => (props.pos ? "green" : "red")};
-  margin-right: 5px;
-`;
 
 function checkURL(url) {
   url = url ?? ''
@@ -217,6 +189,7 @@ class MultipleValue extends React.PureComponent {
           <>
           <DataPointGroupGroup 
             layout={this.getLayout()}
+            style={length - 1 !== i && config.dividers && config.orientation === 'vertical' ? {borderRightColor:`${config.dividers_color}`,borderRightWidth: `thick`,borderRightStyle: `solid`} : length - 1 !== i && config.dividers && config.orientation === 'horizontal' ? {borderBottomColor:`${config.dividers_color}`,borderBottomWidth: `thick`,borderBottomStyle: `solid`}: {borderBottomStyle: ``} }
           >
           {dataSortedSub
             .map((dataPoint, index) => {
@@ -239,7 +212,6 @@ class MultipleValue extends React.PureComponent {
                   comparisonPlacement={compDataPoint && config[`comparison_label_placement_${compDataPoint.name}`]} 
                   key={`group_${dataPoint.name}`} 
                   layout={this.getLayout()}
-                  style={length - 1 !== i && config.dividers && config.orientation === 'vertical' ? {borderRightColor:`${config.dividers_color}`,borderRightWidth: `thick`,borderRightStyle: `solid`} : {borderRight: ``} }
                   visibility={config[`show_${dataPoint.name}`]}
                 > 
                   <Tile 
@@ -288,7 +260,6 @@ class MultipleValue extends React.PureComponent {
             }) 
           }
           </DataPointGroupGroup>
-          {length - 1 !== i && config.dividers && config.orientation === 'horizontal' ? <HoriztonalDivider style={{borderTopColor:`${config.dividers_color}`}} /> : ''}
           </>
         )
       })
