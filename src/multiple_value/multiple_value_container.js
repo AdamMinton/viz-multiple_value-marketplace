@@ -241,7 +241,7 @@ looker.plugins.visualizations.add({
           type: 'number',
           label: `${dataPoint.label} - Group #`,
           section: 'Grouping',
-          default: null,
+          default: 1,
           order: 100 * (index + 1) + 9
         }
         options[`group_item_number_${dataPoint.name}`] = {
@@ -465,7 +465,7 @@ looker.plugins.visualizations.add({
         type: 'string',
         label: `${groupNumber} - Group Name`,
         section: 'Grouping',
-        default: 1,
+        default: null,
         order: index
       }
       if (checkURL(config[`group_name_${groupNumber}`])) {
