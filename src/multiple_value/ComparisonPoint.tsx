@@ -162,7 +162,7 @@ export const ComparisonPoint: React.FC<{
           config[`color_zero`],
           config[`color_positive`],
           config[`pos_is_bad_${mainPoint.name}`],
-          progressPerc
+          percentage
         )}
         visibility={
           config[`show_comparison_difference_percentage_${mainPoint.name}`] ??
