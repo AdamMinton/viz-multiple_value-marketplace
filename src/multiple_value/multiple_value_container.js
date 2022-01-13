@@ -465,7 +465,7 @@ looker.plugins.visualizations.add({
         type: 'string',
         label: `${groupNumber} - Group Name`,
         section: 'Grouping',
-        default: null,
+        default: 1,
         order: index
       }
       if (checkURL(config[`group_name_${groupNumber}`])) {
