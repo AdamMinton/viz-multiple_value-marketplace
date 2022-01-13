@@ -92,20 +92,20 @@ class MultipleValue extends React.PureComponent {
 
     this.state = {}
     this.state.groupingLayout = 'horizontal';
-    this.state.fontSize = this.calculateFontSize();
+    // this.state.fontSize = this.calculateFontSize();
   }
 
-  componentDidMount() {
-    window.addEventListener('resize', this.recalculateSizing);
-  }
+  // componentDidMount() {
+  //   window.addEventListener('resize', this.recalculateSizing);
+  // }
 
-  componentDidUpdate() {
-    this.recalculateSizing();
-  }
+  // componentDidUpdate() {
+  //   this.recalculateSizing();
+  // }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.recalculateSizing);
-  }
+  // componentWillUnmount() {
+  //   window.removeEventListener('resize', this.recalculateSizing);
+  // }
 
   getLayout = () => {
     let CONFIG = this.props.config
@@ -122,11 +122,11 @@ class MultipleValue extends React.PureComponent {
     return Math.max(window.innerWidth, window.innerHeight);
   }
 
-  calculateFontSize = () => {
-    //const multiplier = this.state.groupingLayout === 'horizontal' ? 0.015 : 0.02;
-    const multiplier = .03
-    return Math.round(this.getWindowSize() * multiplier);
-  }
+  // calculateFontSize = () => {
+  //   //const multiplier = this.state.groupingLayout === 'horizontal' ? 0.015 : 0.02;
+  //   const multiplier = .03
+  //   return Math.round(this.getWindowSize() * multiplier);
+  // }
 
   handleClick = (cell, event) => {
     cell.link !== undefined ? LookerCharts.Utils.openDrillMenu({
@@ -138,19 +138,19 @@ class MultipleValue extends React.PureComponent {
     });
   }
 
-  recalculateSizing = () => {
-    const EM = 16;
-    const groupingLayout = window.innerWidth >= 768 ? 'horizontal' : 'vertical';
-    let CONFIG = this.props.config;
-    var font_check = CONFIG.font_size_main
-    var font_size = (font_check !== "" && typeof font_check !== 'undefined' ? CONFIG.font_size_main : this.calculateFontSize());
-    font_size = font_size / EM;
-    font_size = font_size < 1.2 ? 1.2 : font_size
-    this.setState({
-      fontSize: font_size,
-      groupingLayout
-    })
-  }
+  // recalculateSizing = () => {
+  //   const EM = 16;
+  //   const groupingLayout = window.innerWidth >= 768 ? 'horizontal' : 'vertical';
+  //   let CONFIG = this.props.config;
+  //   var font_check = CONFIG.font_size_main
+  //   var font_size = (font_check !== "" && typeof font_check !== 'undefined' ? CONFIG.font_size_main : this.calculateFontSize());
+  //   font_size = font_size / EM;
+  //   font_size = font_size < 1.2 ? 1.2 : font_size
+  //   this.setState({
+  //     fontSize: font_size,
+  //     groupingLayout
+  //   })
+  // }
 
   render() {
     const {config, data} = this.props;
