@@ -214,7 +214,7 @@ class MultipleValue extends React.PureComponent {
           <TileGroupTitle 
           style={{fontWeight:'bold'}}
           visibility={true}> 
-          {checkURL(groupItem['value']) ? <img src={groupItem['value']} style={{width:config[`item_image_width_${groupItem['number']}`]+'px',height:config[`image_height_${groupItem['number']}`]+'px'}}></img> : <h2>{groupItem['value']}</h2>}
+          {checkURL(groupItem['value']) ? <img src={groupItem['value']} style={{width:config[`item_image_width_${groupItem['number']}`]+'px',height:config[`item_image_height_${groupItem['number']}`]+'px'}}></img> : <h2>{groupItem['value']}</h2>}
         </TileGroupTitle>
           )
         })} 
