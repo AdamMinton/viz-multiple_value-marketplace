@@ -174,8 +174,30 @@ class MultipleValue extends React.PureComponent {
       return sort1;
     };
 
+    let groupItems = []
+    for (const property in config) {
+      if(property.includes("group_item_name_") && config[property]) {
+        let groupItemObject = {}
+        groupItemObject['config'] = `${property}`
+        groupItemObject['number'] = property.replace(/\D/g, '');
+        groupItemObject['value'] = `${config[property]}`
+        groupItems.push(groupItemObject); 
+      }
+    }
+
+    let groupNames = []
+    for (const property in config) {
+      if(property.includes("group_name_") && config[property] ) {
+        groupNames.push(`${config[property]}`);
+      }
+    }
+    groupNames = [...new Set(groupNames)];
+    
+    groupNames.length > 0 && groupItems.length > 0 ? groupItems.unshift({config: 0, number: 0, value: ""}) : null;
+  
     const dataSorted = sortArrayObjs(data,"group_number","group_item_number");
     const uniqueGroups = [...new Set(dataSorted.map((o) => o.group_number))];
+    console.log(groupItems);
     return ( 
       <DataPointsWrapper
         layout={this.getLayout()}
@@ -183,6 +205,21 @@ class MultipleValue extends React.PureComponent {
         // style={{fontSize: `${this.state.fontSize}em`}}
         style={ config.font_size_main == "" ? {fontSize: "larger"} : {fontSize: `${config.font_size_main}`}}
       >
+      { groupItems.length > 0 ?
+      <DataPointGroupGroup 
+        layout={this.getLayout()}
+      >
+        {groupItems.map((groupItem,i) => {
+          return(
+          <TileGroupTitle 
+          style={{fontWeight:'bold'}}
+          visibility={true}> 
+          {checkURL(groupItem['value']) ? <img src={groupItem['value']} style={{width:config[`item_image_width_${groupItem['number']}`]+'px',height:config[`image_height_${groupItem['number']}`]+'px'}}></img> : <h2>{groupItem['value']}</h2>}
+        </TileGroupTitle>
+          )
+        })} 
+        </DataPointGroupGroup>
+        : null }
       {uniqueGroups.map((group,i,{length}) => {
         let dataSortedSub = dataSorted.filter(dataPoint => dataPoint.group_number === group)
         return(

@@ -459,6 +459,15 @@ looker.plugins.visualizations.add({
     }
     groupNumbers = [...new Set(groupNumbers)];
 
+    // Looping through the group item number properties and getting a unique list
+    let groupItemNumbers = []
+    for (const property in config) {
+      if(property.includes("group_item_number_")) {
+        groupItemNumbers.push(`${config[property]}`);
+      }
+    }
+    groupItemNumbers = [...new Set(groupItemNumbers)];
+
     const optionsNew = Object.assign({},options) 
     groupNumbers.forEach((groupNumber,index) => {
       optionsNew[`group_name_${groupNumber}`] = {
@@ -487,13 +496,42 @@ looker.plugins.visualizations.add({
         }
       }
     })
+  
+    const optionsNewNew = Object.assign({},optionsNew) 
+    groupItemNumbers.forEach((groupItemNumber,index) => {
+      optionsNewNew[`group_item_name_${groupItemNumber}`] = {
+        type: 'string',
+        label: `${groupItemNumber} - Item Name`,
+        section: 'Grouping',
+        default: null,
+        order: 10 * (index + 1)
+      }
+      if (checkURL(config[`group_item_name_${groupItemNumber}`])) {
+        optionsNewNew[`item_image_height_${groupItemNumber}`] = {
+          type: `number`,
+          label: `Image Height`,
+          section: `Grouping`,
+          default: null,
+          order: 10 * (index + 1) + .1,
+          display_size: 'half'
+        }
+        optionsNewNew[`item_image_width_${groupItemNumber}`] = {
+          type: `number`,
+          label: `Image Width`,
+          section: `Grouping`,
+          default: null,
+          order: 10 * (index + 1) + .2,
+          display_size: 'half'
+        }
+      }
+    })
 
     if (
-      !isEqual(currentOptions, optionsNew) ||
+      !isEqual(currentOptions, optionsNewNew) ||
       !isEqual(currentConfig, config)
     ) {
-      this.trigger('registerOptions', optionsNew)
-      currentOptions = Object.assign({}, optionsNew)
+      this.trigger('registerOptions', optionsNewNew)
+      currentOptions = Object.assign({}, optionsNewNew)
       currentConfig = Object.assign({}, config)
     }
 
