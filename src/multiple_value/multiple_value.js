@@ -45,6 +45,7 @@ const TileGroupTitle = styled.div`
   align-items: center;
   justify-content: center;
   display: ${props => props.visibility ? 'flex' : 'none'};
+  order: ${(props) => props.order};
 `
 
 const Tile = styled.div`
@@ -213,6 +214,7 @@ class MultipleValue extends React.PureComponent {
           return(
           <TileGroupTitle 
           style={{fontWeight:'bold'}}
+          order={groupItem.number}
           visibility={true}> 
           {checkURL(groupItem['value']) ? <img src={groupItem['value']} style={{width:config[`item_image_width_${groupItem['number']}`]+'px',height:config[`item_image_height_${groupItem['number']}`]+'px'}}></img> : <h2>{groupItem['value']}</h2>}
         </TileGroupTitle>

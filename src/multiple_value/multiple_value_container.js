@@ -205,7 +205,7 @@ looker.plugins.visualizations.add({
     // });
 
     //console.log(dataPoints)
-    console.log(dataPoints)
+    //console.log(dataPoints)
     const fields_to_select = dataPoints.map(dataPoint => {
       const b = {}
       //console.log(dataPoint)
