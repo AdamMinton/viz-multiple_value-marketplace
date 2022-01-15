@@ -197,7 +197,7 @@ class MultipleValue extends React.PureComponent {
   
     const dataSorted = sortArrayObjs(data,"group_number","group_item_number");
     const uniqueGroups = [...new Set(dataSorted.map((o) => o.group_number))];
-    console.log(groupItems);
+
     return ( 
       <DataPointsWrapper
         layout={this.getLayout()}

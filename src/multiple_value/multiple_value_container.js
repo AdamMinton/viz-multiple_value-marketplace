@@ -134,6 +134,42 @@ looker.plugins.visualizations.add({
       queryResponse.fields.measures,
       queryResponse.fields.table_calculations
     )
+    
+    // console.log(config)
+    // console.log(queryResponse)
+    // console.log(data);
+
+    const newDimensions = [].concat(queryResponse.fields.dimension_like)
+    const newMeasures = [].concat(queryResponse.fields.measure_like)
+    let rows = []
+    let rowObj = []
+    let rowDimensions = []
+    let rowDimensionsObj = []
+
+    let dataPoints = data.map(row => {
+      newMeasures.forEach(function(measure) {
+        rowObj = []
+        rowDimensionsObj = []
+        rowObj.push(measure.name)
+        rowDimensionsObj.push(measure.label_short)
+        newDimensions.forEach(function(dimension) {
+          rowObj.push(row[dimension.name].value)
+          rowDimensionsObj.push(row[dimension.name].value)
+        })
+        rowDimensions.push(rowDimensionsObj)
+        rows.push({
+          name: rowObj.join("-"),
+          //label: measure.label_short || measure.label,
+          label: rowDimensionsObj.join("-"),
+          value: row[measure.name].value,
+          link: row[measure.name].links,
+          valueFormat: config[`value_format`],
+          formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(row[measure.name]) : SSF.format(config[`value_format_${measure.name}`], row[measure.name].value),
+        })
+      })
+    });
+    dataPoints = rows
+    //console.log(rows);
 
     if(data.length < 1) {
       this.addError({title: "No Results"})
@@ -155,22 +191,25 @@ looker.plugins.visualizations.add({
       return;
     }
 
-    let firstRow = data[0];
+    // let firstRow = data[0];
 
-    const dataPoints = measures.map(measure => {
-      return ({
-        name: measure.name,
-        label: measure.label_short || measure.label,
-        value: firstRow[measure.name].value,
-        link: firstRow[measure.name].links,
-        valueFormat: config[`value_format`],
-        formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(firstRow[measure.name]) : SSF.format(config[`value_format_${measure.name}`], firstRow[measure.name].value),
-      })
-    });
+    // const dataPoints = measures.map(measure => {
+    //   return ({
+    //     name: measure.name,
+    //     label: measure.label_short || measure.label,
+    //     value: firstRow[measure.name].value,
+    //     link: firstRow[measure.name].links,
+    //     valueFormat: config[`value_format`],
+    //     formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(firstRow[measure.name]) : SSF.format(config[`value_format_${measure.name}`], firstRow[measure.name].value),
+    //   })
+    // });
 
-    const fields_to_select = measures.map(measure => {
+    //console.log(dataPoints)
+    console.log(dataPoints)
+    const fields_to_select = dataPoints.map(dataPoint => {
       const b = {}
-      b[measure.label] = measure.name
+      console.log(dataPoint)
+      //b[dataPoint.label] = dataPoint.name
       return b
     })
 
