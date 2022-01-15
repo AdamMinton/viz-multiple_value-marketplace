@@ -208,8 +208,8 @@ looker.plugins.visualizations.add({
     console.log(dataPoints)
     const fields_to_select = dataPoints.map(dataPoint => {
       const b = {}
-      console.log(dataPoint)
-      //b[dataPoint.label] = dataPoint.name
+      //console.log(dataPoint)
+      b[dataPoint.label] = dataPoint.name
       return b
     })
 
