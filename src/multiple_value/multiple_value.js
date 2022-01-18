@@ -32,6 +32,7 @@ const TileGroup = styled.div`
   align-items: center;
   justify-content: center;
   display: ${props => props.visibility ? 'flex' : 'none'};
+  order: ${(props) => props.order};
 `
 
 const TileGroupTitle = styled.div`
@@ -163,18 +164,6 @@ class MultipleValue extends React.PureComponent {
       })
     })
 
-    const sortArrayObjs = function(arr,prop1,prop2) {
-      let sort1 = [...arr].sort((a,b) => {
-        if (a[prop1] === b[prop1]) {
-          if (a[prop2] === b[prop2]) return 0;
-          return (a[prop2] < b[prop2]) ? -1 : 1;
-        } else {
-          return (a[prop1] < b[prop1]) ? -1 : 1;
-        }
-      });
-      return sort1;
-    };
-
     let groupItems = []
     for (const property in config) {
       if(property.includes("group_item_name_") && config[property]) {
@@ -193,11 +182,8 @@ class MultipleValue extends React.PureComponent {
       }
     }
     groupNames = [...new Set(groupNames)];
-    
     groupNames.length > 0 && groupItems.length > 0 ? groupItems.unshift({config: 0, number: 0, value: ""}) : null;
-  
-    const dataSorted = sortArrayObjs(data,"group_number","group_item_number");
-    const uniqueGroups = [...new Set(dataSorted.map((o) => o.group_number))];
+    const uniqueGroups = [...new Set(data.map((o) => o.group_number))];
 
     return ( 
       <DataPointsWrapper
@@ -223,14 +209,14 @@ class MultipleValue extends React.PureComponent {
         </DataPointGroupGroup>
         : null }
       {uniqueGroups.map((group,i,{length}) => {
-        let dataSortedSub = dataSorted.filter(dataPoint => dataPoint.group_number === group)
+        let dataSub = data.filter(dataPoint => dataPoint.group_number === group)
         return(
           <>
           <DataPointGroupGroup 
             layout={this.getLayout()}
             style={length - 1 !== i && config.dividers && config.orientation === 'vertical' ? {borderRightColor:`${config.dividers_color}`,borderRightWidth: `thick`,borderRightStyle: `solid`} : length - 1 !== i && config.dividers && config.orientation === 'horizontal' ? {borderBottomColor:`${config.dividers_color}`,borderBottomWidth: `thick`,borderBottomStyle: `solid`}: {borderBottomStyle: ``} }
           >
-          {dataSortedSub
+          {dataSub
             .map((dataPoint, index) => {
               const compDataPoint = dataPoint.comparisonPoint
               const diffDataPoint = dataPoint.differencePoint
@@ -252,18 +238,19 @@ class MultipleValue extends React.PureComponent {
                   key={`group_${dataPoint.name}`} 
                   layout={this.getLayout()}
                   visibility={config[`show_${dataPoint.name}`]}
+                  order={config[`group_item_number_${dataPoint.name}`]}
                 > 
                   <Tile 
                     titlePlacement={config[`title_placement_${dataPoint.name}`]} 
                     style={config[`border_${dataPoint.name}`] === 'None' ? BorderNone : BorderTile}
                   >
-                    {config[`show_title_${dataPoint.name}`] === false ? null : (
+                    {config[`title_override_${dataPoint.name}`] ? (
                       <TileTitle 
                       color={config[`style_${dataPoint.name}`]}
                       >
                         {config[`title_override_${dataPoint.name}`] || dataPoint.label}
                       </TileTitle>
-                    )}
+                    ) : null }
                     <TileArrangement
                       direction={config[`comparison_style_${dataPoint.name}`]}> 
                       {(<MainPoint 

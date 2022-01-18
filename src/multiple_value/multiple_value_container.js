@@ -129,29 +129,40 @@ looker.plugins.visualizations.add({
   updateAsync: function(data, element, config, queryResponse, details, done) {
     this.clearErrors();
 
+    let dataAugmented = data;
     const measures = [].concat(
       queryResponse.fields.dimensions,
       queryResponse.fields.measures,
       queryResponse.fields.table_calculations
     )
     
-    // console.log(config)
-    // console.log(queryResponse)
-    // console.log(data);
-
     const newDimensions = [].concat(queryResponse.fields.dimension_like)
     const newMeasures = [].concat(queryResponse.fields.measure_like)
+
+    let newRow = {}
+
+    if (queryResponse.totals_data) {
+      newRow = {}
+      newDimensions.forEach(function(dimension) {
+        newRow[dimension.name] = {"value": "Totals"}
+        newMeasures.forEach(function(measure) {
+          newRow[measure.name] = queryResponse.totals_data[measure.name]
+        })
+      })
+      dataAugmented.push(newRow)
+    }
+    
     let rows = []
     let rowObj = []
     let rowDimensions = []
     let rowDimensionsObj = []
 
-    let dataPoints = data.map(row => {
+    let dataPoints = dataAugmented.map(row => {
       newMeasures.forEach(function(measure) {
         rowObj = []
         rowDimensionsObj = []
         rowObj.push(measure.name)
-        rowDimensionsObj.push(measure.label_short)
+        rowDimensionsObj.push(measure.label_short ?? measure.label)
         newDimensions.forEach(function(dimension) {
           rowObj.push(row[dimension.name].value)
           rowDimensionsObj.push(row[dimension.name].value)
@@ -169,9 +180,8 @@ looker.plugins.visualizations.add({
       })
     });
     dataPoints = rows
-    //console.log(rows);
 
-    if(data.length < 1) {
+    if(dataAugmented.length < 1) {
       this.addError({title: "No Results"})
       done();
     }
@@ -204,8 +214,6 @@ looker.plugins.visualizations.add({
     //   })
     // });
 
-    //console.log(dataPoints)
-    //console.log(dataPoints)
     const fields_to_select = dataPoints.map(dataPoint => {
       const b = {}
       //console.log(dataPoint)
@@ -230,13 +238,6 @@ looker.plugins.visualizations.add({
           default: '#3A4245',
           section: 'Style',
           order: 100 * (index + 1) + 5
-        }
-        options[`show_title_${dataPoint.name}`] = {
-          type: 'boolean',
-          label: `${dataPoint.label} - Show Title`,
-          default: true,
-          section: 'Style',
-          order: 100 * (index + 1) + 6
         }
         options[`title_override_${dataPoint.name}`] = {
           type: 'string',
@@ -276,214 +277,218 @@ looker.plugins.visualizations.add({
           default: "None",
           order: 100 * (index + 1) + 10
         }
-        options[`group_number_${dataPoint.name}`] = {
-          type: 'number',
-          label: `${dataPoint.label} - Group #`,
-          section: 'Grouping',
-          default: 1,
-          order: 100 * (index + 1) + 9
-        }
-        options[`group_item_number_${dataPoint.name}`] = {
-          type: 'number',
-          label: `${dataPoint.label} - Item #`,
-          section: 'Grouping',
-          default: null,
-          order: 100 * (index + 1) + 9
+        if (config[`show_${dataPoint.name}`] === true) {
+          options[`group_number_${dataPoint.name}`] = {
+            type: 'number',
+            label: `${dataPoint.label} - Group #`,
+            section: 'Grouping',
+            default: 1,
+            order: 100 * (index + 1) + 9
+          }
+          options[`group_item_number_${dataPoint.name}`] = {
+            type: 'number',
+            label: `${dataPoint.label} - Item #`,
+            section: 'Grouping',
+            default: null,
+            order: 100 * (index + 1) + 9
+          }
         }
       // Comparison
-      options[`show_comparison_${dataPoint.name}`] = {
-        type: 'boolean',
-        label: `${dataPoint.label} - Show a comparison`,
-        section: 'Comparison',
-        default: false,
-        order: 100 * (index + 1),
-      }
-      if (config[`show_comparison_${dataPoint.name}`] === true) {
-        options[`field_to_compare_${dataPoint.name}`] = {
-          type: 'string',
-          display: 'select',
-          label: `Compare To`,
-          values: fields_to_select,
-          section: 'Comparison',
-          order: 100 * (index + 1) + 1
-        }
-        options[`show_comparison_original_${dataPoint.name}`] = {
+      if (config[`show_${dataPoint.name}`] === true) {
+        options[`show_comparison_${dataPoint.name}`] = {
           type: 'boolean',
-          label: `Original`,
-          section: 'Comparison',
-          default: true,
-          order: 100 * (index + 1) + 2,
-          display_size: 'half'
-        }
-        options[`show_comparison_value_${dataPoint.name}`] = {
-          type: 'boolean',
-          label: `Comparison`,
-          section: 'Comparison',
-          default: true,
-          order: 100 * (index + 1) + 3,
-          display_size: 'half'
-        }
-        options[`show_comparison_difference_${dataPoint.name}`] = {
-          type: 'boolean',
-          label: `Difference #`,
+          label: `${dataPoint.label} - Show a comparison`,
           section: 'Comparison',
           default: false,
-          order: 100 * (index + 1) + 4,
-          display_size: 'half'
+          order: 100 * (index + 1),
         }
-        options[`show_comparison_difference_percentage_${dataPoint.name}`] = {
-          type: 'boolean',
-          label: `Difference %`,
-          section: 'Comparison',
-          default: false,
-          order: 100 * (index + 1) + 5,
-          display_size: 'half'
-        }
-        if (config[`show_comparison_difference_${dataPoint.name}`] === true) {
-          options[`difference_comparison_style_${dataPoint.name}`] = {
+        if (config[`show_comparison_${dataPoint.name}`] === true) {
+          options[`field_to_compare_${dataPoint.name}`] = {
             type: 'string',
             display: 'select',
-            label: `Difference # - Calc`,
-            values: [
-              {'Original - Comparison': 'original'},
-              {'Comparison - Original': 'comparison'},
-              {'Display Only': 'no_calculation'}
-            ],
-            section: 'Comparison',
-            default: 'original',
-            order: 100 * (index + 1) + 6,
-            display_size: 'half'
-          }
-        }
-        if (config[`show_comparison_difference_percentage_${dataPoint.name}`] === true) {
-          options[`difference_percentage_comparison_style_${dataPoint.name}`] = {
-            type: 'string',
-            display: 'select',
-            label: `Difference % - Calc`,
-            values: [
-              {'Percent Change from Original': 'change'},
-              {'Percent of Comparison': 'original'},
-              {'Display Only': 'no_calculation'}
-            ],
-            section: 'Comparison',
-            default: 'change',
-            order: 100 * (index + 1) + 6,
-            display_size: 'half'
-          }
-        }
-        if (config[`difference_comparison_style_${dataPoint.name}`] === 'no_calculation') {
-          options[`difference_comparison_display_${dataPoint.name}`] = {
-            type: 'string',
-            display: 'select',
-            label: `Difference # - Display`,
+            label: `Compare To`,
             values: fields_to_select,
             section: 'Comparison',
-            order: 100 * (index + 1) + 7
+            order: 100 * (index + 1) + 1
           }
-        }
-        if (config[`show_comparison_difference_${dataPoint.name}`] === true) {
-          options[`style_comparison_difference_${dataPoint.name}`] = {
-            type: 'string',
-            display: 'select',
-            label: `Difference # - Style`,
-            values: [
-              {'Show as Value': 'value'},
-              {'Show as Value with Icon': 'icon'}
-            ],
+          options[`show_comparison_original_${dataPoint.name}`] = {
+            type: 'boolean',
+            label: `Original`,
             section: 'Comparison',
-            default: 'value',
-            order: 100 * (index + 1) + 8,
+            default: true,
+            order: 100 * (index + 1) + 2,
             display_size: 'half'
           }
-        }
-        if (config[`difference_percentage_comparison_style_${dataPoint.name}`] === 'no_calculation') {
-          options[`difference_percentage_comparison_display_${dataPoint.name}`] = {
-            type: 'string',
-            display: 'select',
-            label: `Difference % - Display`,
-            values: fields_to_select,
+          options[`show_comparison_value_${dataPoint.name}`] = {
+            type: 'boolean',
+            label: `Comparison`,
             section: 'Comparison',
-            order: 100 * (index + 1) + 7
-          }
-        }
-        if (config[`show_comparison_difference_percentage_${dataPoint.name}`] === true) {
-          options[`style_comparison_difference_percentage_${dataPoint.name}`] = {
-            type: 'string',
-            display: 'select',
-            label: `Difference % - Style`,
-            values: [
-              {'Show as Value': 'value'},
-              {'Show as Value with Icon': 'icon'}
-            ],
-            section: 'Comparison',
-            default: 'value',
-            order: 100 * (index + 1) + 8,
+            default: true,
+            order: 100 * (index + 1) + 3,
             display_size: 'half'
           }
-        }
-        options[`pos_is_bad_${dataPoint.name}`] = {
-          type: 'boolean',
-          label: `Positive Values are Bad`,
-          section: 'Comparison',
-          default: false,
-          order: 100 * (index + 1) + 10
-        }
-        options[`comparison_value_label_${dataPoint.name}`] = {
-          type: 'string',
-          label: `Original - Label`,
-          placeholder: dataPoint.label,
-          section: 'Comparison',
-          order: 100 * (index + 1) + 11,
-          display_size: 'half'
-        }
-        options[`comparison_difference_label_${dataPoint.name}`] = {
-          type: 'string',
-          label: `Comparison - Label`,
-          placeholder: dataPoint.label,
-          section: 'Comparison',
-          order: 100 * (index + 1) + 12,
-          display_size: 'half'
-        }
-        options[`comparison_style_${dataPoint.name}`] = {
-          type: 'string',
-          display: 'select',
-          label: `Stacking`,
-          values: [
-            {'Stack Vertically': 'vertical'},
-            {'Stack Horizontally': 'horizontal'}
-          ],
-          section: 'Comparison',
-          default: 'vertical',
-          order: 100 * (index + 1) + 14
-        }
-        if (config[`show_comparison_original_${dataPoint.name}`] === true) {
-          options[`order_comparison_original_${dataPoint.name}`] = {
-            type: 'number',
-            label: `Order - Original`,
+          options[`show_comparison_difference_${dataPoint.name}`] = {
+            type: 'boolean',
+            label: `Difference #`,
             section: 'Comparison',
-            default: 1,
-            order: 100 * (index + 1) + 15,
-            display_size: 'third'
+            default: false,
+            order: 100 * (index + 1) + 4,
+            display_size: 'half'
           }
-        }
-        if (config[`show_comparison_value_${dataPoint.name}`] === true) {
-          options[`order_comparison_value_${dataPoint.name}`] = {
-            type: 'number',
-            label: `Order - Comparison`,
+          options[`show_comparison_difference_percentage_${dataPoint.name}`] = {
+            type: 'boolean',
+            label: `Difference %`,
             section: 'Comparison',
-            default: 2,
-            order: 100 * (index + 1) + 16,
-            display_size: 'third'
+            default: false,
+            order: 100 * (index + 1) + 5,
+            display_size: 'half'
           }
-        }
-        if (config[`show_comparison_difference_${dataPoint.name}`] === true || config[`show_comparison_difference_percentage_${dataPoint.name}`] === true) {
-          options[`order_comparison_difference_${dataPoint.name}`] = {
-            type: 'number',
-            label: `Order - Difference`,
+          if (config[`show_comparison_difference_${dataPoint.name}`] === true) {
+            options[`difference_comparison_style_${dataPoint.name}`] = {
+              type: 'string',
+              display: 'select',
+              label: `Difference # - Calc`,
+              values: [
+                {'Original - Comparison': 'original'},
+                {'Comparison - Original': 'comparison'},
+                {'Display Only': 'no_calculation'}
+              ],
+              section: 'Comparison',
+              default: 'original',
+              order: 100 * (index + 1) + 6,
+              display_size: 'half'
+            }
+          }
+          if (config[`show_comparison_difference_percentage_${dataPoint.name}`] === true) {
+            options[`difference_percentage_comparison_style_${dataPoint.name}`] = {
+              type: 'string',
+              display: 'select',
+              label: `Difference % - Calc`,
+              values: [
+                {'Percent Change from Original': 'change'},
+                {'Percent of Comparison': 'original'},
+                {'Display Only': 'no_calculation'}
+              ],
+              section: 'Comparison',
+              default: 'change',
+              order: 100 * (index + 1) + 6,
+              display_size: 'half'
+            }
+          }
+          if (config[`difference_comparison_style_${dataPoint.name}`] === 'no_calculation') {
+            options[`difference_comparison_display_${dataPoint.name}`] = {
+              type: 'string',
+              display: 'select',
+              label: `Difference # - Display`,
+              values: fields_to_select,
+              section: 'Comparison',
+              order: 100 * (index + 1) + 7
+            }
+          }
+          if (config[`show_comparison_difference_${dataPoint.name}`] === true) {
+            options[`style_comparison_difference_${dataPoint.name}`] = {
+              type: 'string',
+              display: 'select',
+              label: `Difference # - Style`,
+              values: [
+                {'Show as Value': 'value'},
+                {'Show as Value with Icon': 'icon'}
+              ],
+              section: 'Comparison',
+              default: 'value',
+              order: 100 * (index + 1) + 8,
+              display_size: 'half'
+            }
+          }
+          if (config[`difference_percentage_comparison_style_${dataPoint.name}`] === 'no_calculation') {
+            options[`difference_percentage_comparison_display_${dataPoint.name}`] = {
+              type: 'string',
+              display: 'select',
+              label: `Difference % - Display`,
+              values: fields_to_select,
+              section: 'Comparison',
+              order: 100 * (index + 1) + 7
+            }
+          }
+          if (config[`show_comparison_difference_percentage_${dataPoint.name}`] === true) {
+            options[`style_comparison_difference_percentage_${dataPoint.name}`] = {
+              type: 'string',
+              display: 'select',
+              label: `Difference % - Style`,
+              values: [
+                {'Show as Value': 'value'},
+                {'Show as Value with Icon': 'icon'}
+              ],
+              section: 'Comparison',
+              default: 'value',
+              order: 100 * (index + 1) + 8,
+              display_size: 'half'
+            }
+          }
+          options[`pos_is_bad_${dataPoint.name}`] = {
+            type: 'boolean',
+            label: `Positive Values are Bad`,
             section: 'Comparison',
-            default: 3,
-            order: 100 * (index + 1) + 17,
-            display_size: 'third'
+            default: false,
+            order: 100 * (index + 1) + 10
+          }
+          options[`comparison_value_label_${dataPoint.name}`] = {
+            type: 'string',
+            label: `Original - Label`,
+            placeholder: dataPoint.label,
+            section: 'Comparison',
+            order: 100 * (index + 1) + 11,
+            display_size: 'half'
+          }
+          options[`comparison_difference_label_${dataPoint.name}`] = {
+            type: 'string',
+            label: `Comparison - Label`,
+            placeholder: dataPoint.label,
+            section: 'Comparison',
+            order: 100 * (index + 1) + 12,
+            display_size: 'half'
+          }
+          options[`comparison_style_${dataPoint.name}`] = {
+            type: 'string',
+            display: 'select',
+            label: `Stacking`,
+            values: [
+              {'Stack Vertically': 'vertical'},
+              {'Stack Horizontally': 'horizontal'}
+            ],
+            section: 'Comparison',
+            default: 'vertical',
+            order: 100 * (index + 1) + 14
+          }
+          if (config[`show_comparison_original_${dataPoint.name}`] === true) {
+            options[`order_comparison_original_${dataPoint.name}`] = {
+              type: 'number',
+              label: `Order - Original`,
+              section: 'Comparison',
+              default: 1,
+              order: 100 * (index + 1) + 15,
+              display_size: 'third'
+            }
+          }
+          if (config[`show_comparison_value_${dataPoint.name}`] === true) {
+            options[`order_comparison_value_${dataPoint.name}`] = {
+              type: 'number',
+              label: `Order - Comparison`,
+              section: 'Comparison',
+              default: 2,
+              order: 100 * (index + 1) + 16,
+              display_size: 'third'
+            }
+          }
+          if (config[`show_comparison_difference_${dataPoint.name}`] === true || config[`show_comparison_difference_percentage_${dataPoint.name}`] === true) {
+            options[`order_comparison_difference_${dataPoint.name}`] = {
+              type: 'number',
+              label: `Order - Difference`,
+              section: 'Comparison',
+              default: 3,
+              order: 100 * (index + 1) + 17,
+              display_size: 'third'
+            }
           }
         }
       }
