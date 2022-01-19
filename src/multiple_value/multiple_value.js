@@ -35,7 +35,7 @@ const TileWrapper = styled.div`
   order: ${(props) => props.order};
 `
 
-const TileGroupTitle = styled.div`
+const TileRowTitle = styled.div`
   box-sizing: border-box
   text-align: center;
   width: 100%;
@@ -123,26 +123,26 @@ class MultipleValue extends React.PureComponent {
   render() {
     const {config, data} = this.props;
 
-    let groupItems = []
+    let columns = []
     for (const property in config) {
-      if(property.includes("group_item_name_") && config[property]) {
-        let groupItemObject = {}
-        groupItemObject['config'] = `${property}`
-        groupItemObject['number'] = property.replace(/\D/g, '');
-        groupItemObject['value'] = `${config[property]}`
-        groupItems.push(groupItemObject); 
+      if(property.includes("column_name_") && config[property]) {
+        let columnObject = {}
+        columnObject['config'] = `${property}`
+        columnObject['number'] = property.replace(/\D/g, '');
+        columnObject['value'] = `${config[property]}`
+        columns.push(columnObject); 
       }
     }
 
-    let groupNames = []
+    let rows = []
     for (const property in config) {
-      if(property.includes("group_name_") && config[property] ) {
-        groupNames.push(`${config[property]}`);
+      if(property.includes("row_name_") && config[property] ) {
+        rows.push(`${config[property]}`);
       }
     }
-    groupNames = [...new Set(groupNames)];
-    groupNames.length > 0 && groupItems.length > 0 ? groupItems.unshift({config: 0, number: 0, value: ""}) : null;
-    const uniqueGroups = [...new Set(data.map((o) => o.group_number))];
+    rows = [...new Set(rows)];
+    rows.length > 0 && columns.length > 0 ? columns.unshift({config: 0, number: 0, value: ""}) : null;
+    const uniqueRows = [...new Set(data.map((o) => o.row_number))];
 
     return ( 
       <Wrapper
@@ -150,24 +150,24 @@ class MultipleValue extends React.PureComponent {
         font={config['grouping_font']}
         style={ config.font_size_main == "" ? {fontSize: "larger"} : {fontSize: `${config.font_size_main}`}}
       >
-      { groupItems.length > 0 ?
+      { columns.length > 0 ?
       <Row 
         layout={this.getLayout()}
       >
-        {groupItems.map((groupItem,i) => {
+        {columns.map((column,i) => {
           return(
-          <TileGroupTitle 
+          <TileRowTitle 
           style={{fontWeight:'bold'}}
-          order={groupItem.number}
+          order={column.number}
           visibility={true}> 
-          {checkURL(groupItem['value']) ? <img src={groupItem['value']} style={{width:config[`item_image_width_${groupItem['number']}`]+'px',height:config[`item_image_height_${groupItem['number']}`]+'px'}}></img> : <h2>{groupItem['value']}</h2>}
-        </TileGroupTitle>
+          {checkURL(column['value']) ? <img src={column['value']} style={{width:config[`column_image_width_${column['number']}`]+'px',height:config[`column_image_height_${column['number']}`]+'px'}}></img> : <h2>{column['value']}</h2>}
+        </TileRowTitle>
           )
         })} 
         </Row>
         : null }
-      {uniqueGroups.map((group,i,{length}) => {
-        let dataSub = data.filter(dataPoint => dataPoint.group_number === group)
+      {uniqueRows.map((row,i,{length}) => {
+        let dataSub = data.filter(dataPoint => dataPoint.row_number === row)
         return(
           <>
           <Row 
@@ -180,20 +180,20 @@ class MultipleValue extends React.PureComponent {
               let number = index
               return (
                 <>
-                {/* This is for the group labels */}
-                {number === 0 && config[`group_name_${dataPoint.group_number}`] ? 
-                <TileGroupTitle 
+                {/* This is for the row labels */}
+                {number === 0 && config[`row_name_${dataPoint.row_number}`] ? 
+                <TileRowTitle 
                   style={{fontWeight:'bold'}}
                   visibility={true}> 
-                  {checkURL(config[`group_name_${dataPoint.group_number}`]) ? <img src={config[`group_name_${dataPoint.group_number}`]} style={{width:config[`image_width_${dataPoint.group_number}`]+'px',height:config[`image_height_${dataPoint.group_number}`]+'px'}}></img> : <h2>{config[`group_name_${dataPoint.group_number}`]}</h2>}
-                </TileGroupTitle>
+                  {checkURL(config[`row_name_${dataPoint.row_number}`]) ? <img src={config[`row_name_${dataPoint.row_number}`]} style={{width:config[`row_image_width_${dataPoint.row_number}`]+'px',height:config[`row_image_height_${dataPoint.row_number}`]+'px'}}></img> : <h2>{config[`row_name_${dataPoint.row_number}`]}</h2>}
+                </TileRowTitle>
                 : '' }
                 <TileWrapper 
                   comparisonPlacement={compDataPoint && config[`comparison_label_placement_${compDataPoint.name}`]} 
-                  key={`group_${dataPoint.name}`} 
+                  key={`row_${dataPoint.name}`} 
                   layout={this.getLayout()}
                   visibility={config[`show_${dataPoint.name}`]}
-                  order={config[`group_item_number_${dataPoint.name}`]}
+                  order={config[`column_number_${dataPoint.name}`]}
                 > 
                   <Tile 
                     titlePlacement={config[`title_placement_${dataPoint.name}`]} 

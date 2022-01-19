@@ -278,17 +278,17 @@ looker.plugins.visualizations.add({
           order: 100 * (index + 1) + 10
         }
         if (config[`show_${dataPoint.name}`] === true) {
-          options[`group_number_${dataPoint.name}`] = {
+          options[`row_number_${dataPoint.name}`] = {
             type: 'number',
-            label: `${dataPoint.label} - Group #`,
-            section: 'Grouping',
+            label: `${dataPoint.label} - Row #`,
+            section: 'Organization',
             default: 1,
             order: 100 * (index + 1) + 9
           }
-          options[`group_item_number_${dataPoint.name}`] = {
+          options[`column_number_${dataPoint.name}`] = {
             type: 'number',
-            label: `${dataPoint.label} - Item #`,
-            section: 'Grouping',
+            label: `${dataPoint.label} - Column #`,
+            section: 'Organization',
             default: null,
             order: 100 * (index + 1) + 9
           }
@@ -494,46 +494,46 @@ looker.plugins.visualizations.add({
       }
     })
   
-    // Looping through the group number properties and getting a unique list
-    let groupNumbers = []
+    // Looping through the row_number properties and getting a unique list
+    let rowNumbers = []
     for (const property in config) {
-      if(property.includes("group_number_")) {
-        groupNumbers.push(`${config[property]}`);
+      if(property.includes("row_number_")) {
+        rowNumbers.push(`${config[property]}`);
       }
     }
-    groupNumbers = [...new Set(groupNumbers)];
+    rowNumbers = [...new Set(rowNumbers)];
 
-    // Looping through the group item number properties and getting a unique list
-    let groupItemNumbers = []
+    // Looping through the column_number properties and getting a unique list
+    let columnNumbers = []
     for (const property in config) {
-      if(property.includes("group_item_number_")) {
-        groupItemNumbers.push(`${config[property]}`);
+      if(property.includes("column_number_")) {
+        columnNumbers.push(`${config[property]}`);
       }
     }
-    groupItemNumbers = [...new Set(groupItemNumbers)];
+    columnNumbers = [...new Set(columnNumbers)];
 
     const optionsNew = Object.assign({},options) 
-    groupNumbers.forEach((groupNumber,index) => {
-      optionsNew[`group_name_${groupNumber}`] = {
+    rowNumbers.forEach((rowNumber,index) => {
+      optionsNew[`row_name_${rowNumber}`] = {
         type: 'string',
-        label: `${groupNumber} - Group Name`,
-        section: 'Grouping',
+        label: `${rowNumber} - Row Name`,
+        section: 'Organization',
         default: null,
         order: index
       }
-      if (checkURL(config[`group_name_${groupNumber}`])) {
-        optionsNew[`image_height_${groupNumber}`] = {
+      if (checkURL(config[`row_name_${rowNumber}`])) {
+        optionsNew[`row_image_height_${rowNumber}`] = {
           type: `number`,
           label: `Image Height`,
-          section: `Grouping`,
+          section: `Organization`,
           default: null,
           order: index + .1,
           display_size: 'half'
         }
-        optionsNew[`image_width_${groupNumber}`] = {
+        optionsNew[`row_image_width_${rowNumber}`] = {
           type: `number`,
           label: `Image Width`,
-          section: `Grouping`,
+          section: `Organization`,
           default: null,
           order: index + .2,
           display_size: 'half'
@@ -542,27 +542,27 @@ looker.plugins.visualizations.add({
     })
   
     const optionsNewNew = Object.assign({},optionsNew) 
-    groupItemNumbers.forEach((groupItemNumber,index) => {
-      optionsNewNew[`group_item_name_${groupItemNumber}`] = {
+    columnNumbers.forEach((columnNumber,index) => {
+      optionsNewNew[`column_name_${columnNumber}`] = {
         type: 'string',
-        label: `${groupItemNumber} - Item Name`,
-        section: 'Grouping',
+        label: `${columnNumber} - Column Name`,
+        section: 'Organization',
         default: null,
         order: 10 * (index + 1)
       }
-      if (checkURL(config[`group_item_name_${groupItemNumber}`])) {
-        optionsNewNew[`item_image_height_${groupItemNumber}`] = {
+      if (checkURL(config[`column_name_${columnNumber}`])) {
+        optionsNewNew[`column_image_height_${columnNumber}`] = {
           type: `number`,
           label: `Image Height`,
-          section: `Grouping`,
+          section: `Organization`,
           default: null,
           order: 10 * (index + 1) + .1,
           display_size: 'half'
         }
-        optionsNewNew[`item_image_width_${groupItemNumber}`] = {
+        optionsNewNew[`column_image_width_${columnNumber}`] = {
           type: `number`,
           label: `Image Width`,
-          section: `Grouping`,
+          section: `Organization`,
           default: null,
           order: 10 * (index + 1) + .2,
           display_size: 'half'
@@ -608,9 +608,9 @@ looker.plugins.visualizations.add({
           }
         }
       }
-      //adding group_number and group_item_number
-      dataPoint.group_number = config[`group_number_${dataPoint.name}`]
-      dataPoint.group_item_number = config[`group_item_number_${dataPoint.name}`]
+      //adding row_number and column_number
+      dataPoint.row_number = config[`row_number_${dataPoint.name}`]
+      dataPoint.column_number = config[`column_number_${dataPoint.name}`]
       dataPoint.show = config[`show_${dataPoint.name}`]
       return dataPoint
     })
