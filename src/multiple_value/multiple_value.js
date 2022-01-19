@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { MainPoint } from './MainPoint'
-import { ComparisonPoint } from './ComparisonPoint'
+import { DataPoint } from './DataPoint'
+import { DifferencePoint } from './DifferencePoint'
 
-const DataPointsWrapper = styled.div`
+const Wrapper = styled.div`
   font-family: "Google Sans", "Roboto", "Noto Sans JP", "Noto Sans", "Noto Sans CJK KR", Helvetica, Arial, sans-serif;
   display: flex;
   flex-direction: ${props => props.layout === 'horizontal' ? 'column' : 'row'};
@@ -12,7 +12,7 @@ const DataPointsWrapper = styled.div`
   height: calc(100% + 25px);
 `
 
-const DataPointGroupGroup = styled.div`
+const Row = styled.div`
   display: flex;
   flex-direction: ${props => props.layout === 'horizontal' ? 'row' : 'column'};
   align-items: flex-start;
@@ -20,7 +20,7 @@ const DataPointGroupGroup = styled.div`
   height: 100%;
 `
 
-const TileGroup = styled.div`
+const TileWrapper = styled.div`
   border: .6250em;  
   box-sizing: border-box
   text-align: center;
@@ -145,13 +145,13 @@ class MultipleValue extends React.PureComponent {
     const uniqueGroups = [...new Set(data.map((o) => o.group_number))];
 
     return ( 
-      <DataPointsWrapper
+      <Wrapper
         layout={this.getLayout()}
         font={config['grouping_font']}
         style={ config.font_size_main == "" ? {fontSize: "larger"} : {fontSize: `${config.font_size_main}`}}
       >
       { groupItems.length > 0 ?
-      <DataPointGroupGroup 
+      <Row 
         layout={this.getLayout()}
       >
         {groupItems.map((groupItem,i) => {
@@ -164,20 +164,19 @@ class MultipleValue extends React.PureComponent {
         </TileGroupTitle>
           )
         })} 
-        </DataPointGroupGroup>
+        </Row>
         : null }
       {uniqueGroups.map((group,i,{length}) => {
         let dataSub = data.filter(dataPoint => dataPoint.group_number === group)
         return(
           <>
-          <DataPointGroupGroup 
+          <Row 
             layout={this.getLayout()}
             style={length - 1 !== i && config.dividers && config.orientation === 'vertical' ? {borderRightColor:`${config.dividers_color}`,borderRightWidth: `thick`,borderRightStyle: `solid`} : length - 1 !== i && config.dividers && config.orientation === 'horizontal' ? {borderBottomColor:`${config.dividers_color}`,borderBottomWidth: `thick`,borderBottomStyle: `solid`}: {borderBottomStyle: ``} }
           >
           {dataSub
             .map((dataPoint, index) => {
               const compDataPoint = dataPoint.comparisonPoint
-              const diffDataPoint = dataPoint.differencePoint
               let number = index
               return (
                 <>
@@ -189,7 +188,7 @@ class MultipleValue extends React.PureComponent {
                   {checkURL(config[`group_name_${dataPoint.group_number}`]) ? <img src={config[`group_name_${dataPoint.group_number}`]} style={{width:config[`image_width_${dataPoint.group_number}`]+'px',height:config[`image_height_${dataPoint.group_number}`]+'px'}}></img> : <h2>{config[`group_name_${dataPoint.group_number}`]}</h2>}
                 </TileGroupTitle>
                 : '' }
-                <TileGroup 
+                <TileWrapper 
                   comparisonPlacement={compDataPoint && config[`comparison_label_placement_${compDataPoint.name}`]} 
                   key={`group_${dataPoint.name}`} 
                   layout={this.getLayout()}
@@ -209,17 +208,17 @@ class MultipleValue extends React.PureComponent {
                     ) : null }
                     <TileArrangement
                       direction={config[`comparison_style_${dataPoint.name}`]}> 
-                      {(<MainPoint 
+                      {(<DataPoint 
                           config={config}
-                          mainPoint={dataPoint}
+                          data={dataPoint}
                           order={config[`order_comparison_original_${dataPoint.name}`]}
                           label={config[`comparison_value_label_${dataPoint.name}`]}
                           handleClick={this.handleClick}
                         />)} 
                       {compDataPoint && config[`show_comparison_value_${dataPoint.name}`] ? 
-                        (<MainPoint 
+                        (<DataPoint 
                           config={config}
-                          mainPoint={compDataPoint}
+                          data={compDataPoint}
                           order={config[`order_comparison_value_${dataPoint.name}`]}
                           label={config[`comparison_difference_label_${dataPoint.name}`]}
                           handleClick={this.handleClick}
@@ -227,26 +226,26 @@ class MultipleValue extends React.PureComponent {
                       : '' }
                       {compDataPoint && (config[`show_comparison_difference_${dataPoint.name}`]
                       || config[`show_comparison_difference_percentage_${dataPoint.name}`]) ? 
-                        (<ComparisonPoint
+                        (<DifferencePoint
                           config={config}
-                          mainPoint={dataPoint}
+                          data={dataPoint}
+                          comparison={compDataPoint}
                           order={config[`order_comparison_difference_${dataPoint.name}`]}
-                          comparisonPoint={compDataPoint}
                         />)
                       : '' }
                      </TileArrangement>
                   </Tile>
-                </TileGroup>
+                </TileWrapper>
                 </>
               )
             }) 
           }
-          </DataPointGroupGroup>
+          </Row>
           </>
         )
       })
       }
-      </DataPointsWrapper>
+      </Wrapper>
     )
 
   }

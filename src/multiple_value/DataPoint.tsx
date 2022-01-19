@@ -14,7 +14,6 @@ const Point = styled.div.attrs({
   justify-content: center;
 `;
 
-// color: (props: any) => props.color, why is this not needed
 const Main = styled.div.attrs({
   visibility: (props: any) => props.visibility,
 })`
@@ -33,7 +32,7 @@ const Main = styled.div.attrs({
   }
 `;
 
-const MainLabel = styled.div`
+const Label = styled.div`
   font-size: 0.8em;
   font-weight: 90;
   text-align: center;
@@ -55,38 +54,36 @@ function largeNumber(value: number) {
   return numeral(value).format("0.0a");
 }
 
-export const MainPoint: React.FC<{
+export const DataPoint: React.FC<{
   config: any;
-  mainPoint: any;
+  data: any;
   order: any;
   label: any;
   handleClick: (i: any, j: any) => {};
-}> = ({ config, mainPoint, order, label, handleClick }) => {
+}> = ({ config, data, order, label, handleClick }) => {
   return (
     <Point order={order}>
       <Main
-        color={config[`style_${mainPoint.name}`]}
+        color={config[`style_${data.name}`]}
         onClick={() => {
-          handleClick(mainPoint, event);
+          handleClick(data, event);
         }}
-        visibility={
-          config[`show_comparison_original_${mainPoint.name}`] ?? true
-        }
+        visibility={config[`show_comparison_original_${data.name}`] ?? true}
       >
-        {config[`value_format_${mainPoint.name}`] == ""
+        {config[`value_format_${data.name}`] == ""
           ? config.large_number
-            ? largeNumber(mainPoint.value)
-            : mainPoint.formattedValue
+            ? largeNumber(data.value)
+            : data.formattedValue
           : tryFormatting(
-              config[`value_format_${mainPoint.name}`],
-              mainPoint.value,
-              mainPoint.formattedValue
+              config[`value_format_${data.name}`],
+              data.value,
+              data.formattedValue
             )}
       </Main>
-      <MainLabel>
+      <Label>
         {label}
-        {/* {config[`comparison_value_label_${mainPoint.name}`]} */}
-      </MainLabel>
+        {/* {config[`comparison_value_label_${data.name}`]} */}
+      </Label>
     </Point>
   );
 };
