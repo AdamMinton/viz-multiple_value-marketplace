@@ -608,13 +608,19 @@ looker.plugins.visualizations.add({
           }
         }
       }
+      //adding group_number and group_item_number
+      dataPoint.group_number = config[`group_number_${dataPoint.name}`]
+      dataPoint.group_item_number = config[`group_item_number_${dataPoint.name}`]
+      dataPoint.show = config[`show_${dataPoint.name}`]
       return dataPoint
     })
+
+    let fullValuesFiltered = fullValues.filter(dataPoint => dataPoint.show === true) 
 
     this.chart = ReactDOM.render(
       <MultipleValue
         config={config}
-        data={fullValues}
+        data={fullValuesFiltered}
       />,
       element
     );
