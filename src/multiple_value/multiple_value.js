@@ -84,8 +84,12 @@ const TileArrangement = styled.div`
 `
 
 function checkURL(url) {
-  url = url ?? ''
-  return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+  try {
+    url = new URL(url);
+    return true
+  } catch (_) {
+    return false;  
+  }
 }
 
 class MultipleValue extends React.PureComponent {

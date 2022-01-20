@@ -5,8 +5,16 @@ import MultipleValue from './multiple_value'
 import SSF from "ssf";
 
 function checkURL(url) {
-  url = url ?? ''
-  return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
+
+  try {
+    url = new URL(url);
+    return true
+  } catch (_) {
+    return false;  
+  }
+
+  // url = url ?? ''
+  // return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
 }
 
 const baseOptions = {
@@ -109,6 +117,18 @@ const baseOptions = {
   },
 }
 
+const sortArrayObjs = function(arr,prop1,prop2) {
+  let sort1 = [...arr].sort((a,b) => {
+    if (a[prop1] === b[prop1]) {
+      if (a[prop2] === b[prop2]) return 0;
+      return (a[prop2] < b[prop2]) ? -1 : 1;
+    } else {
+      return (a[prop1] < b[prop1]) ? -1 : 1;
+    }
+  });
+  return sort1;
+};
+
 let currentOptions = {}
 let currentConfig = {}
 
@@ -128,16 +148,10 @@ looker.plugins.visualizations.add({
   },
   updateAsync: function(data, element, config, queryResponse, details, done) {
     this.clearErrors();
-
     let dataAugmented = data;
-    const measures = [].concat(
-      queryResponse.fields.dimensions,
-      queryResponse.fields.measures,
-      queryResponse.fields.table_calculations
-    )
     
     const newDimensions = [].concat(queryResponse.fields.dimension_like)
-    const newMeasures = [].concat(queryResponse.fields.measure_like)
+    const newMeasures = [].concat(queryResponse.fields.measure_like).concat(queryResponse.fields.supermeasure_like)
 
     let newRow = {}
 
@@ -157,8 +171,8 @@ looker.plugins.visualizations.add({
     let rowDimensions = []
     let rowDimensionsObj = []
 
-    let dataPoints = dataAugmented.map(row => {
-      newMeasures.forEach(function(measure) {
+    let dataPoints = dataAugmented.map((row,index) => {
+      newMeasures.forEach(function(measure,measureIndex) {
         rowObj = []
         rowDimensionsObj = []
         rowObj.push(measure.name)
@@ -170,12 +184,13 @@ looker.plugins.visualizations.add({
         rowDimensions.push(rowDimensionsObj)
         rows.push({
           name: rowObj.join("-"),
-          //label: measure.label_short || measure.label,
           label: rowDimensionsObj.join("-"),
           value: row[measure.name].value,
           link: row[measure.name].links,
           valueFormat: config[`value_format`],
           formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(row[measure.name]) : SSF.format(config[`value_format_${measure.name}`], row[measure.name].value),
+          row_number: index,
+          column_number: measureIndex
         })
       })
     });
@@ -186,18 +201,18 @@ looker.plugins.visualizations.add({
       done();
     }
 
-    if (measures.length == 0) {
+    if (newMeasures.length == 0) {
       this.addError({title: "No Measures", message: "This chart requires measures"});
       return;
     }
 
-    if (queryResponse.fields.pivots.length) {
-      this.addError({title: "Pivoting not allowed", message: "This visualization does not allow pivoting"});
-      return;
-    }
+    // if (queryResponse.fields.pivots.length) {
+    //   this.addError({title: "Pivoting not allowed", message: "This visualization does not allow pivoting"});
+    //   return;
+    // }
     
-    if (measures.length > 30) {
-      this.addError({title: "Maximum number of data points", message: "This visualization does not allow more than 30 data points to be selected"});
+    if (newMeasures.length > 30) {
+      this.addError({title: "Maximum number of measures", message: "This visualization does not allow more than 30 measures to be selected"});
       return;
     }
 
@@ -216,7 +231,6 @@ looker.plugins.visualizations.add({
 
     const fields_to_select = dataPoints.map(dataPoint => {
       const b = {}
-      //console.log(dataPoint)
       b[dataPoint.label] = dataPoint.name
       return b
     })
@@ -282,14 +296,14 @@ looker.plugins.visualizations.add({
             type: 'number',
             label: `${dataPoint.label} - Row #`,
             section: 'Organization',
-            default: 1,
+            default: dataPoint.row_number,
             order: 100 * (index + 1) + 9
           }
           options[`column_number_${dataPoint.name}`] = {
             type: 'number',
             label: `${dataPoint.label} - Column #`,
             section: 'Organization',
-            default: null,
+            default: dataPoint.column_number,
             order: 100 * (index + 1) + 9
           }
         }
@@ -616,6 +630,8 @@ looker.plugins.visualizations.add({
     })
 
     let fullValuesFiltered = fullValues.filter(dataPoint => dataPoint.show === true) 
+
+    fullValuesFiltered = sortArrayObjs(fullValuesFiltered,"row_number","column_number");
 
     this.chart = ReactDOM.render(
       <MultipleValue
