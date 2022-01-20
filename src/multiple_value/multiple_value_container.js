@@ -143,11 +143,7 @@ looker.plugins.visualizations.add({
     let dataAugmented = data;
     
     const newDimensions = [].concat(queryResponse.fields.dimension_like)
-    const newMeasures = [].concat(queryResponse.fields.measure_like)
-    
-    if(queryResponse.fields.supermeasure_like) {
-      newMeasures.concat(queryResponse.fields.supermeasure_like)
-    }
+    const newMeasures = [].concat(queryResponse.fields.measure_like).concat(queryResponse.fields.supermeasure_like).filter(n => n)
 
     let newRow = {}
 
