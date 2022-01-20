@@ -141,35 +141,72 @@ looker.plugins.visualizations.add({
   updateAsync: function(data, element, config, queryResponse, details, done) {
     this.clearErrors();
     let dataAugmented = data;
+
+    console.log(dataAugmented)
+    console.log(queryResponse)
     
-    const newDimensions = [].concat(queryResponse.fields.dimension_like)
-    const newMeasures = [].concat(queryResponse.fields.measure_like).concat(queryResponse.fields.supermeasure_like).filter(n => n)
+    const dimensions = [].concat(queryResponse.fields.dimension_like)
+    const measures_like = [].concat(queryResponse.fields.measure_like).filter(n => n)
+    const supermeasures = [].concat(queryResponse.fields.supermeasure_like).filter(n => n)
+    const measures = [].concat(measures_like).concat(supermeasures).filter(n => n)
+    const pivots = [].concat(queryResponse.pivots).filter(n => n)
 
+    //Handle Totals Rows
     let newRow = {}
-
     if (queryResponse.totals_data) {
       newRow = {}
-      newDimensions.forEach(function(dimension) {
+      dimensions.forEach(function(dimension) {
         newRow[dimension.name] = {"value": "Totals"}
-        newMeasures.forEach(function(measure) {
+        measures.forEach(function(measure) {
           newRow[measure.name] = queryResponse.totals_data[measure.name]
         })
       })
       dataAugmented.push(newRow)
     }
     
+    //Flatten the data
     let rows = []
     let rowObj = []
     let rowDimensions = []
     let rowDimensionsObj = []
-
     let dataPoints = dataAugmented.map((row,index) => {
-      newMeasures.forEach(function(measure,measureIndex) {
+      if(pivots.length > 0 ){
+      pivots.forEach(function(pivot,pivotIndex) {
+        measures.forEach(function(measure,measureIndex){
+          rowObj = []
+          rowDimensionsObj = []
+          rowObj.push(measure.name)
+          rowObj.push(pivot.key)
+          rowDimensionsObj.push(measure.label_short ?? measure.label)
+          dimensions.forEach(function(dimension) {
+            rowObj.push(row[dimension.name].value)
+            rowDimensionsObj.push(row[dimension.name].value)
+          })
+          rowDimensions.push(rowDimensionsObj)
+          console.log(row)
+          console.log(pivot)
+          console.log(`Measure.name is ${measure.name}`)
+          console.log(`Pivot.key is ${pivot.key}`)
+          console.log(row[measure.name][pivot.key])
+          rows.push({
+            name: rowObj.join("-"),
+            label: rowDimensionsObj.join("-"),
+            value: row[measure.name][pivot.key].value,
+            link: row[measure.name][pivot.key].links,
+            valueFormat: config[`value_format`],
+            formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(row[measure.name][pivot.key]) : SSF.format(config[`value_format_${measure.name}`], row[measure.name][pivot.key].value),
+            row_number: index,
+            column_number: measureIndex + pivotIndex
+          })
+        })
+      })
+    } else {
+      measures.forEach(function(measure,measureIndex) {
         rowObj = []
         rowDimensionsObj = []
         rowObj.push(measure.name)
         rowDimensionsObj.push(measure.label_short ?? measure.label)
-        newDimensions.forEach(function(dimension) {
+        dimensions.forEach(function(dimension) {
           rowObj.push(row[dimension.name].value)
           rowDimensionsObj.push(row[dimension.name].value)
         })
@@ -185,15 +222,18 @@ looker.plugins.visualizations.add({
           column_number: measureIndex
         })
       })
+    }
     });
     dataPoints = rows
+
+    console.log(dataPoints)
 
     if(dataAugmented.length < 1) {
       this.addError({title: "No Results"})
       done();
     }
 
-    if (newMeasures.length == 0) {
+    if (measures.length == 0) {
       this.addError({title: "No Measures", message: "This chart requires measures"});
       return;
     }
@@ -203,7 +243,7 @@ looker.plugins.visualizations.add({
     //   return;
     // }
     
-    if (newMeasures.length > 30) {
+    if (measures.length > 30) {
       this.addError({title: "Maximum number of measures", message: "This visualization does not allow more than 30 measures to be selected"});
       return;
     }
