@@ -56,14 +56,6 @@ const baseOptions = {
     display_size: 'full',
     placeholder: "16px"
   },
-  large_number: {
-    label: "Large Number",
-    type: 'boolean',
-    section: 'Style',
-    default: "false",
-    order: 3,
-    display_size: 'full'
-  },
   symbol_negative: {
     label: "Symbol - Neg",
     type: 'string',
@@ -151,7 +143,11 @@ looker.plugins.visualizations.add({
     let dataAugmented = data;
     
     const newDimensions = [].concat(queryResponse.fields.dimension_like)
-    const newMeasures = [].concat(queryResponse.fields.measure_like).concat(queryResponse.fields.supermeasure_like)
+    const newMeasures = [].concat(queryResponse.fields.measure_like)
+    
+    if(queryResponse.fields.supermeasure_like) {
+      newMeasures.concat(queryResponse.fields.supermeasure_like)
+    }
 
     let newRow = {}
 
@@ -272,13 +268,6 @@ looker.plugins.visualizations.add({
           default: 'above',
           order: 100 * (index + 1) + 8
         }
-        options[`value_format_${dataPoint.name}`] = {
-          type: 'string',
-          label: `${dataPoint.label} - Value Format`,
-          section: 'Style',
-          default: "",
-          order: 100 * (index + 1) + 9
-        }
         options[`border_${dataPoint.name}`] = {
           type: 'string',
           display: 'select',
@@ -289,7 +278,26 @@ looker.plugins.visualizations.add({
           label: `${dataPoint.label} - Border`,
           section: 'Style',
           default: "None",
+          order: 100 * (index + 1) + 9
+        }
+        options[`format_type_${dataPoint.name}`] = {
+          type: 'string',
+          label: `${dataPoint.label} - Format Type`,
+          section: 'Style',
+          display: 'select',
+          values: [
+            {'Spreadsheet': 'ssf'},
+            {'Numeral-JS': 'numeral'},
+          ],
+          default: "ssf",
           order: 100 * (index + 1) + 10
+        }
+        options[`value_format_${dataPoint.name}`] = {
+          type: 'string',
+          label: `${dataPoint.label} - Value Format`,
+          section: 'Style',
+          default: "",
+          order: 100 * (index + 1) + 11
         }
         if (config[`show_${dataPoint.name}`] === true) {
           options[`row_number_${dataPoint.name}`] = {

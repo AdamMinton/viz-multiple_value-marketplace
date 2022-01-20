@@ -38,20 +38,30 @@ const Label = styled.div`
   text-align: center;
 `;
 
-function tryFormatting(
+function formatSpreadsheet(
   formatString: string,
   value: number,
   defaultString: string
 ) {
   try {
+    console.log(SSF.format(formatString, value));
     return SSF.format(formatString, value);
   } catch (err) {
     return defaultString;
   }
 }
 
-function largeNumber(value: number) {
-  return numeral(value).format("0.0a");
+function formatNumeral(
+  formatString: string,
+  value: number,
+  defaultString: string
+) {
+  try {
+    return numeral(value).format(formatString);
+  } catch (err) {
+    return defaultString;
+  }
+  // return numeral(value).format("0.0a");
 }
 
 export const DataPoint: React.FC<{
@@ -61,6 +71,28 @@ export const DataPoint: React.FC<{
   label: any;
   handleClick: (i: any, j: any) => {};
 }> = ({ config, data, order, label, handleClick }) => {
+  //value formatting
+  let formattedValue = "";
+  if (config[`value_format_${data.name}`] != "") {
+    if (config[`format_type_${data.name}`] == "ssf") {
+      formattedValue = formatSpreadsheet(
+        config[`value_format_${data.name}`],
+        data.value,
+        data.formattedValue
+      );
+    } else if (config[`format_type_${data.name}`] == "numeral") {
+      formattedValue = formatNumeral(
+        config[`value_format_${data.name}`],
+        data.value,
+        data.formattedValue
+      );
+    } else {
+      formattedValue = data.formattedValue;
+    }
+  } else {
+    formattedValue = data.formattedValue;
+  }
+
   return (
     <Point order={order}>
       <Main
@@ -70,15 +102,7 @@ export const DataPoint: React.FC<{
         }}
         visibility={config[`show_comparison_original_${data.name}`] ?? true}
       >
-        {config[`value_format_${data.name}`] == ""
-          ? config.large_number
-            ? largeNumber(data.value)
-            : data.formattedValue
-          : tryFormatting(
-              config[`value_format_${data.name}`],
-              data.value,
-              data.formattedValue
-            )}
+        {formattedValue}
       </Main>
       <Label>
         {label}
