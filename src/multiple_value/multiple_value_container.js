@@ -30,7 +30,7 @@ const baseOptions = {
   },
   dividers: {
     type: 'boolean',
-    label: `Dividers between values?`,
+    label: `Row Dividers?`,
     default: false,
     section: 'Style',
     order: 1
