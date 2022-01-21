@@ -5,16 +5,12 @@ import MultipleValue from './multiple_value'
 import SSF from "ssf";
 
 function checkURL(url) {
-
   try {
     url = new URL(url);
     return true
   } catch (_) {
     return false;  
   }
-
-  // url = url ?? ''
-  // return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
 }
 
 const baseOptions = {
@@ -141,9 +137,6 @@ looker.plugins.visualizations.add({
   updateAsync: function(data, element, config, queryResponse, details, done) {
     this.clearErrors();
     let dataAugmented = data;
-
-    console.log(dataAugmented)
-    console.log(queryResponse)
     
     const dimensions = [].concat(queryResponse.fields.dimension_like)
     const measures_like = [].concat(queryResponse.fields.measure_like).filter(n => n)
@@ -151,7 +144,7 @@ looker.plugins.visualizations.add({
     const measures = [].concat(measures_like).concat(supermeasures).filter(n => n)
     const pivots = [].concat(queryResponse.pivots).filter(n => n)
 
-    //Handle Totals Rows
+    //Handle Column Totals Rows
     let newRow = {}
     if (queryResponse.totals_data) {
       newRow = {}
@@ -170,63 +163,57 @@ looker.plugins.visualizations.add({
     let rowDimensions = []
     let rowDimensionsObj = []
     let dataPoints = dataAugmented.map((row,index) => {
-      if(pivots.length > 0 ){
-      pivots.forEach(function(pivot,pivotIndex) {
-        measures.forEach(function(measure,measureIndex){
+      measures.forEach(function(measure,measureIndex){
+        if(measures_like.find(m => m.name === measure.name) && pivots.length > 0 ){
+          pivots.forEach(function(pivot,pivotIndex) {
+            rowObj = []
+            rowDimensionsObj = []
+            rowObj.push(measure.name)
+            let pivotKey = pivot[`key`]
+            let pivotLabel = pivotKey === '$$$_row_total_$$$' ? 'Row Total' : pivotKey
+            rowObj.push(pivotKey)
+            rowDimensionsObj.push(measure.label_short ?? measure.label)
+            rowDimensionsObj.push(pivotLabel)
+            dimensions.forEach(function(dimension) {
+              rowObj.push(row[dimension.name].value)
+              rowDimensionsObj.push(row[dimension.name].value)
+            })
+            rowDimensions.push(rowDimensionsObj)
+            rows.push({
+              name: rowObj.join("-"),
+              label: rowDimensionsObj.join("-"),
+              value: row[measure.name][pivotKey].value,
+              link: row[measure.name][pivotKey].links,
+              valueFormat: config[`value_format`],
+              formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(row[measure.name][pivotKey]) : SSF.format(config[`value_format_${measure.name}`], row[measure.name][pivotKey].value),
+              row_number: index,
+              column_number: measureIndex + pivotIndex
+            })
+          })
+        } else {
           rowObj = []
           rowDimensionsObj = []
           rowObj.push(measure.name)
-          rowObj.push(pivot.key)
           rowDimensionsObj.push(measure.label_short ?? measure.label)
           dimensions.forEach(function(dimension) {
             rowObj.push(row[dimension.name].value)
             rowDimensionsObj.push(row[dimension.name].value)
           })
           rowDimensions.push(rowDimensionsObj)
-          console.log(row)
-          console.log(pivot)
-          console.log(`Measure.name is ${measure.name}`)
-          console.log(`Pivot.key is ${pivot.key}`)
-          console.log(row[measure.name][pivot.key])
           rows.push({
             name: rowObj.join("-"),
             label: rowDimensionsObj.join("-"),
-            value: row[measure.name][pivot.key].value,
-            link: row[measure.name][pivot.key].links,
+            value: row[measure.name].value,
+            link: row[measure.name].links,
             valueFormat: config[`value_format`],
-            formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(row[measure.name][pivot.key]) : SSF.format(config[`value_format_${measure.name}`], row[measure.name][pivot.key].value),
+            formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(row[measure.name]) : SSF.format(config[`value_format_${measure.name}`], row[measure.name].value),
             row_number: index,
-            column_number: measureIndex + pivotIndex
+            column_number: measureIndex
           })
-        })
+        }
       })
-    } else {
-      measures.forEach(function(measure,measureIndex) {
-        rowObj = []
-        rowDimensionsObj = []
-        rowObj.push(measure.name)
-        rowDimensionsObj.push(measure.label_short ?? measure.label)
-        dimensions.forEach(function(dimension) {
-          rowObj.push(row[dimension.name].value)
-          rowDimensionsObj.push(row[dimension.name].value)
-        })
-        rowDimensions.push(rowDimensionsObj)
-        rows.push({
-          name: rowObj.join("-"),
-          label: rowDimensionsObj.join("-"),
-          value: row[measure.name].value,
-          link: row[measure.name].links,
-          valueFormat: config[`value_format`],
-          formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(row[measure.name]) : SSF.format(config[`value_format_${measure.name}`], row[measure.name].value),
-          row_number: index,
-          column_number: measureIndex
-        })
-      })
-    }
     });
     dataPoints = rows
-
-    console.log(dataPoints)
 
     if(dataAugmented.length < 1) {
       this.addError({title: "No Results"})
@@ -238,28 +225,15 @@ looker.plugins.visualizations.add({
       return;
     }
 
-    // if (queryResponse.fields.pivots.length) {
-    //   this.addError({title: "Pivoting not allowed", message: "This visualization does not allow pivoting"});
-    //   return;
-    // }
-    
     if (measures.length > 30) {
       this.addError({title: "Maximum number of measures", message: "This visualization does not allow more than 30 measures to be selected"});
       return;
     }
 
-    // let firstRow = data[0];
-
-    // const dataPoints = measures.map(measure => {
-    //   return ({
-    //     name: measure.name,
-    //     label: measure.label_short || measure.label,
-    //     value: firstRow[measure.name].value,
-    //     link: firstRow[measure.name].links,
-    //     valueFormat: config[`value_format`],
-    //     formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(firstRow[measure.name]) : SSF.format(config[`value_format_${measure.name}`], firstRow[measure.name].value),
-    //   })
-    // });
+    if (queryResponse.fields.pivots.length > 1) {
+      this.addError({title: "Only One Pivot Allowed", message: "This visualization does not allow multiple pivots"});
+      return;
+    }
 
     const fields_to_select = dataPoints.map(dataPoint => {
       const b = {}
@@ -269,7 +243,6 @@ looker.plugins.visualizations.add({
 
     const options = Object.assign({}, baseOptions)
     dataPoints.forEach((dataPoint, index) => {
-      //if (config[`show_comparison_${dataPoint.name}`] !== true) {
         options[`show_${dataPoint.name}`] = {
           type: `boolean`,
           label: `${dataPoint.label} - Show Tile`,
