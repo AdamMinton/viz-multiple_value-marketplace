@@ -1,7 +1,6 @@
 import React, { PureComponent, useState } from "react";
 import styled from "styled-components";
 import SSF from "ssf";
-import numeral from "numeral";
 
 const Percentage = styled.div.attrs({
   visibility: (props: any) => props.visibility,
@@ -41,27 +40,48 @@ function Color(
   color_zero: string,
   color_pos: string,
   pos_is_bad: boolean,
-  comparison_number: number
+  comparison_number: number,
+  evaluation_number: number
 ) {
   let color = color_zero;
-  if (pos_is_bad) {
-    if (comparison_number < 0) {
-      color = color_pos;
-    } else if ((comparison_number = 0)) {
-      color = color_zero;
-    } else {
-      color = color_neg;
-    }
+  if (comparison_number < evaluation_number) {
+    color = pos_is_bad ? color_pos : color_neg;
+  } else if (comparison_number === evaluation_number) {
+    color = color_zero;
   } else {
-    if (comparison_number < 0) {
-      color = color_neg;
-    } else if ((comparison_number = 0)) {
-      color = color_zero;
-    } else {
-      color = color_pos;
-    }
+    color = pos_is_bad ? color_neg : color_pos;
   }
   return color;
+}
+
+function Icon(
+  icon_neg: string,
+  icon_zero: string,
+  icon_pos: string,
+  comparison_number: number,
+  evaluation_number: number
+) {
+  let icon = icon_zero;
+  if (comparison_number < evaluation_number) {
+    icon = icon_neg;
+  } else if (comparison_number === evaluation_number) {
+    icon = icon_zero;
+  } else {
+    icon = icon_pos;
+  }
+  return icon;
+}
+
+function EvaluationPercentageNumber(type: string, evaluation: number) {
+  let evaluation_number = 0;
+  if (type === "original") {
+    evaluation_number = 1;
+  } else if (type === "change") {
+    evaluation_number = 0;
+  } else {
+    evaluation_number = evaluation;
+  }
+  return evaluation_number;
 }
 
 function tryFormatting(
@@ -76,10 +96,6 @@ function tryFormatting(
   }
 }
 
-function largeNumber(value: number) {
-  return numeral(value).format("0.0a");
-}
-
 export const DifferencePoint: React.FC<{
   config: any;
   order: any;
@@ -89,38 +105,82 @@ export const DifferencePoint: React.FC<{
   // Difference
   let diff;
   let diffFormatted;
-  if (data.differencePoint) {
+  let diffColor;
+  let diffIcon;
+
+  if (config[`difference_comparison_style_${data.name}`] === "original") {
+    diff = data.value - comparison.value;
+    diffFormatted = tryFormatting("#,##0;-#,##0;0", diff, "N/A");
+  } else if (
+    config[`difference_comparison_style_${data.name}`] === "comparison"
+  ) {
+    diff = comparison.value - data.value;
+    diffFormatted = tryFormatting("#,##0;-#,##0;0", diff, "N/A");
+  } else if (data.differencePoint) {
     diff = data.differencePoint.value;
     diffFormatted = data.differencePoint.formattedValue;
-  } else {
-    if (config[`difference_comparison_style_${data.name}`] === "original") {
-      diff = data.value - comparison.value;
-    } else {
-      diff = comparison.value - data.value;
-    }
-    diffFormatted = tryFormatting("#,##0;-#,##0;0", diff, "N/A");
   }
 
+  diffColor = Color(
+    config[`color_negative`],
+    config[`color_zero`],
+    config[`color_positive`],
+    config[`pos_is_bad_${data.name}`],
+    diff,
+    0
+  );
+
+  diffIcon = Icon(
+    config[`symbol_negative`],
+    config[`symbol_zero`],
+    config[`symbol_positive`],
+    diff,
+    0
+  );
+
   // Percentage
-  let progressPerc;
   let percentage;
   let percentageFormatted;
-  if (data.differencePercentagePoint) {
+  let evaluationNumber;
+  let color;
+  let icon;
+
+  if (
+    config[`difference_percentage_comparison_style_${data.name}`] === "original"
+  ) {
+    percentage = data.value / comparison.value;
+    percentageFormatted = tryFormatting("#,##0%", percentage, "N/A");
+  } else if (
+    config[`difference_percentage_comparison_style_${data.name}`] === "change"
+  ) {
+    percentage = data.value / comparison.value - 1;
+    percentageFormatted = tryFormatting("#,##0%", percentage, "N/A");
+  } else if (data.differencePercentagePoint) {
     percentage = data.differencePercentagePoint.value;
     percentageFormatted = data.differencePercentagePoint.formattedValue;
-  } else {
-    if (
-      config[`difference_percentage_comparison_style_${data.name}`] ===
-      "original"
-    ) {
-      percentage = data.value / comparison.value;
-      progressPerc = percentage - 1;
-    } else {
-      progressPerc = data.value / comparison.value - 1;
-      percentage = progressPerc;
-    }
-    percentageFormatted = tryFormatting("#,##0%", percentage, "N/A");
   }
+
+  evaluationNumber = EvaluationPercentageNumber(
+    config[`difference_percentage_comparison_style_${data.name}`],
+    config[`difference_percentage_comparison_evaluation_${data.name}`]
+  );
+
+  color = Color(
+    config[`color_negative`],
+    config[`color_zero`],
+    config[`color_positive`],
+    config[`pos_is_bad_${data.name}`],
+    percentage,
+    evaluationNumber
+  );
+
+  icon = Icon(
+    config[`symbol_negative`],
+    config[`symbol_zero`],
+    config[`symbol_positive`],
+    percentage,
+    evaluationNumber
+  );
 
   return (
     <Comparison
@@ -132,47 +192,23 @@ export const DifferencePoint: React.FC<{
       }
     >
       <Difference
-        color={Color(
-          config[`color_negative`],
-          config[`color_zero`],
-          config[`color_positive`],
-          config[`pos_is_bad_${data.name}`],
-          diff
-        )}
+        color={diffColor}
         visibility={config[`show_comparison_difference_${data.name}`] ?? true}
       >
         {config[`style_comparison_difference_${data.name}`] === "icon"
-          ? diff < 0
-            ? `${config.symbol_negative}`
-            : diff === 0
-            ? `${config.symbol_zero}`
-            : diff > 0
-            ? `${config.symbol_positive}`
-            : ""
+          ? diffIcon
           : ""}
-        {config.large_number ? largeNumber(diff) : diffFormatted}
+        {diffFormatted}
       </Difference>
       <Percentage
-        color={Color(
-          config[`color_negative`],
-          config[`color_zero`],
-          config[`color_positive`],
-          config[`pos_is_bad_${data.name}`],
-          percentage
-        )}
+        color={color}
         visibility={
           config[`show_comparison_difference_percentage_${data.name}`] ?? true
         }
       >
         {config[`style_comparison_difference_percentage_${data.name}`] ===
         "icon"
-          ? progressPerc < 0
-            ? `${config.symbol_negative}`
-            : progressPerc === 0
-            ? `${config.symbol_zero}`
-            : progressPerc > 0
-            ? `${config.symbol_positive}`
-            : ""
+          ? icon
           : ""}
         {percentageFormatted}
       </Percentage>

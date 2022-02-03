@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import isEqual from 'lodash/isEqual'
 import MultipleValue from './multiple_value'
 import SSF from "ssf";
+import numeral from "numeral";
 
 function checkURL(url) {
   try {
@@ -10,6 +11,50 @@ function checkURL(url) {
     return true
   } catch (_) {
     return false;  
+  }
+}
+
+function formatValue(formatType, valueFormat,value) {
+  let formattedValue;
+  if (valueFormat != "") {
+    if (formatType == "ssf") {
+      formattedValue = formatSpreadsheet(
+        valueFormat,
+        value
+      );
+    } else if (formatType == "numeral") {
+      formattedValue = formatNumeral(
+        valueFormat,
+        value
+      );
+    } else {
+      formattedValue = value;
+    }
+  } else {
+    formattedValue = value;
+  }
+  return formattedValue
+}
+
+function formatSpreadsheet(
+  formatString,
+  value,
+) {
+  try {
+    return SSF.format(formatString, value);
+  } catch (err) {
+    return value;
+  }
+}
+
+function formatNumeral(
+  formatString,
+  value
+) {
+  try {
+    return numeral(value).format(formatString);
+  } catch (err) {
+    return value;
   }
 }
 
@@ -185,7 +230,7 @@ looker.plugins.visualizations.add({
               value: row[measure.name][pivotKey].value,
               link: row[measure.name][pivotKey].links,
               valueFormat: config[`value_format`],
-              formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(row[measure.name][pivotKey]) : SSF.format(config[`value_format_${measure.name}`], row[measure.name][pivotKey].value),
+              formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(row[measure.name][pivotKey]) : formatValue(config[`format_type_${measure.name}`],config[`value_format_${measure.name}`],row[measure.name][pivotKey].value),
               row_number: index,
               column_number: measureIndex + pivotIndex
             })
@@ -206,7 +251,7 @@ looker.plugins.visualizations.add({
             value: row[measure.name].value,
             link: row[measure.name].links,
             valueFormat: config[`value_format`],
-            formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(row[measure.name]) : SSF.format(config[`value_format_${measure.name}`], row[measure.name].value),
+            formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(row[measure.name]) : formatValue(config[`format_type_${measure.name}`],config[`value_format_${measure.name}`],row[measure.name].value),
             row_number: index,
             column_number: measureIndex
           })
@@ -437,6 +482,14 @@ looker.plugins.visualizations.add({
               display: 'select',
               label: `Difference % - Display`,
               values: fields_to_select,
+              section: 'Comparison',
+              order: 100 * (index + 1) + 7
+            }
+          }
+          if (config[`difference_percentage_comparison_style_${dataPoint.name}`] === 'no_calculation') {
+            options[`difference_percentage_comparison_evaluation_${dataPoint.name}`] = {
+              type: 'number',
+              label: `Difference % - Evaluate Against`,
               section: 'Comparison',
               order: 100 * (index + 1) + 7
             }
