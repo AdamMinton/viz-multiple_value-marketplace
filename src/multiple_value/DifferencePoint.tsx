@@ -165,6 +165,11 @@ export const DifferencePoint: React.FC<{
     config[`difference_percentage_comparison_evaluation_${data.name}`]
   );
 
+  if (!isFinite(percentage)) {
+    percentage = evaluationNumber;
+    percentageFormatted = "0%";
+  }
+
   color = Color(
     config[`color_negative`],
     config[`color_zero`],
