@@ -14,9 +14,9 @@ function checkURL(url) {
   }
 }
 
-function formatValue(formatType, valueFormat,value) {
+function formatValue(formatType, valueFormat,value,originalFormatValue) {
   let formattedValue;
-  if (valueFormat != "") {
+  if (valueFormat != "" && valueFormat != null && formatType != "" && formatType != null) {
     if (formatType == "ssf") {
       formattedValue = formatSpreadsheet(
         valueFormat,
@@ -28,10 +28,10 @@ function formatValue(formatType, valueFormat,value) {
         value
       );
     } else {
-      formattedValue = value;
+      formattedValue = originalFormatValue;
     }
   } else {
-    formattedValue = value;
+    formattedValue = originalFormatValue;
   }
   return formattedValue
 }
@@ -201,12 +201,12 @@ looker.plugins.visualizations.add({
       })
       dataAugmented.push(newRow)
     }
-    
     //Flatten the data
     let rows = []
     let rowObj = []
     let rowDimensions = []
     let rowDimensionsObj = []
+    const rowLen = dataAugmented.length - 1;
     let dataPoints = dataAugmented.map((row,index) => {
       measures.forEach(function(measure,measureIndex){
         if(measures_like.find(m => m.name === measure.name) && pivots.length > 0 ){
@@ -215,6 +215,7 @@ looker.plugins.visualizations.add({
             rowDimensionsObj = []
             rowObj.push(measure.name)
             let pivotKey = pivot[`key`]
+            let rowTotal = pivotKey === '$$$_row_total_$$$' ? true : false
             let pivotLabel = pivotKey === '$$$_row_total_$$$' ? 'Row Total' : pivotKey
             rowObj.push(pivotKey)
             rowDimensionsObj.push(measure.label_short ?? measure.label)
@@ -229,10 +230,12 @@ looker.plugins.visualizations.add({
               label: rowDimensionsObj.join("-"),
               value: row[measure.name][pivotKey].value,
               link: row[measure.name][pivotKey].links,
-              valueFormat: config[`value_format`],
-              formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(row[measure.name][pivotKey]) : formatValue(config[`format_type_${measure.name}`],config[`value_format_${measure.name}`],row[measure.name][pivotKey].value),
+              valueFormat: measure.value_format.replaceAll("\\", ''),
+              formattedValue: LookerCharts.Utils.textForCell(row[measure.name][pivotKey]),
               row_number: index,
-              column_number: measureIndex + pivotIndex
+              column_number: measureIndex + pivotIndex,
+              column_total: false,
+              row_total: rowTotal
             })
           })
         } else {
@@ -250,10 +253,12 @@ looker.plugins.visualizations.add({
             label: rowDimensionsObj.join("-"),
             value: row[measure.name].value,
             link: row[measure.name].links,
-            valueFormat: config[`value_format`],
-            formattedValue: config[`value_format_${measure.name}`] === "" || config[`value_format_${measure.name}`] === undefined ? LookerCharts.Utils.textForCell(row[measure.name]) : formatValue(config[`format_type_${measure.name}`],config[`value_format_${measure.name}`],row[measure.name].value),
+            valueFormat: measure.value_format.replaceAll('\\', ''),
+            formattedValue: rowLen === index ? formatSpreadsheet(measure.value_format.replaceAll('\\', ''),row[measure.name].value) : LookerCharts.Utils.textForCell(row[measure.name]),
             row_number: index,
-            column_number: measureIndex
+            column_number: measureIndex,
+            column_total: rowLen === index ? true : false,
+            row_total: false
           })
         }
       })
@@ -665,6 +670,7 @@ looker.plugins.visualizations.add({
 
     //Adds the comparisonPoint for when comparison has been enabled
     const fullValues = dataPoints.map((dataPoint,index) => {
+
       if (config[`show_comparison_${dataPoint.name}`] == true) {
         let found = false
         for (let i = 0 ; i < dataPoints.length && !found; i++) {
@@ -696,6 +702,10 @@ looker.plugins.visualizations.add({
       dataPoint.row_number = config[`row_number_${dataPoint.name}`]
       dataPoint.column_number = config[`column_number_${dataPoint.name}`]
       dataPoint.show = config[`show_${dataPoint.name}`]
+      
+      //formatting
+     dataPoint.formattedValue = formatValue(config[`format_type_${dataPoint.name}`] ?? dataPoint.valueFormat,config[`value_format_${dataPoint.name}`],dataPoint.value,dataPoint.formattedValue)
+
       return dataPoint
     })
 
