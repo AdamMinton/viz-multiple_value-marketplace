@@ -42,7 +42,7 @@ const TileRowTitle = styled.div`
   height: 100%;
   display: flex;
   flex-shrink: auto;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   display: ${props => props.visibility ? 'flex' : 'none'};
@@ -190,6 +190,7 @@ class MultipleValue extends React.PureComponent {
                   style={{fontWeight:'bold'}}
                   visibility={true}> 
                   {checkURL(config[`row_name_${dataPoint.row_number}`]) ? <img src={config[`row_name_${dataPoint.row_number}`]} style={{width:config[`row_image_width_${dataPoint.row_number}`]+'px',height:config[`row_image_height_${dataPoint.row_number}`]+'px'}}></img> : <div>{config[`row_name_${dataPoint.row_number}`]}</div>}
+                  {<div>{config[`row_label_${dataPoint.row_number}`]}</div>}
                 </TileRowTitle>
                 : '' }
                 <TileWrapper 

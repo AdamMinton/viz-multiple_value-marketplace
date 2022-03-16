@@ -624,13 +624,20 @@ looker.plugins.visualizations.add({
         default: null,
         order: index
       }
+      optionsNew[`row_label_${rowNumber}`] = {
+        type: 'string',
+        label: `${rowNumber} - Row Label`,
+        section: 'Organization',
+        default: null,
+        order: index + .1
+      }
       if (checkURL(config[`row_name_${rowNumber}`])) {
         optionsNew[`row_image_height_${rowNumber}`] = {
           type: `number`,
           label: `Image Height`,
           section: `Organization`,
           default: null,
-          order: index + .1,
+          order: index + .2,
           display_size: 'half'
         }
         optionsNew[`row_image_width_${rowNumber}`] = {
@@ -638,7 +645,7 @@ looker.plugins.visualizations.add({
           label: `Image Width`,
           section: `Organization`,
           default: null,
-          order: index + .2,
+          order: index + .3,
           display_size: 'half'
         }
       }
