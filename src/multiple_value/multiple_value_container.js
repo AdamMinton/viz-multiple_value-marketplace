@@ -293,16 +293,23 @@ looker.plugins.visualizations.add({
 
     const options = Object.assign({}, baseOptions)
     dataPoints.forEach((dataPoint, index) => {
+        options[`divider_style_${dataPoint.name}`] = {
+          section: 'Style',
+          type: "string",
+          label: `${dataPoint.label}`,
+          display: "divider",
+          order: 100 * (index + 1) + 3,
+        }
         options[`show_${dataPoint.name}`] = {
           type: `boolean`,
-          label: `${dataPoint.label} - Show Tile`,
+          label: `Show Tile`,
           default: true,
           section: 'Style',
           order: 100 * (index + 1) + 4
         }
         options[`style_${dataPoint.name}`] = {
           type: `string`,
-          label: `${dataPoint.label} - Color`,
+          label: `Color`,
           display: `color`,
           default: '#3A4245',
           section: 'Style',
@@ -310,14 +317,14 @@ looker.plugins.visualizations.add({
         }
         options[`title_override_${dataPoint.name}`] = {
           type: 'string',
-          label: `${dataPoint.label} - Title`,
+          label: `Title`,
           section: 'Style',
           placeholder: dataPoint.label,
           order: 100 * (index + 1) + 7
         }
         options[`title_placement_${dataPoint.name}`] = {
           type: 'string',
-          label: `${dataPoint.label} - Title Placement`,
+          label: `Title Placement`,
           section: 'Style',
           display: 'select',
           values: [
@@ -334,14 +341,14 @@ looker.plugins.visualizations.add({
             {'Individual Tiles': 'Tile'},
             {'None': 'None'}
           ],
-          label: `${dataPoint.label} - Border`,
+          label: `Border`,
           section: 'Style',
           default: "None",
           order: 100 * (index + 1) + 9
         }
         options[`format_type_${dataPoint.name}`] = {
           type: 'string',
-          label: `${dataPoint.label} - Format Type`,
+          label: `Format Type`,
           section: 'Style',
           display: 'select',
           values: [
@@ -353,22 +360,29 @@ looker.plugins.visualizations.add({
         }
         options[`value_format_${dataPoint.name}`] = {
           type: 'string',
-          label: `${dataPoint.label} - Value Format`,
+          label: `Value Format`,
           section: 'Style',
           default: "",
           order: 100 * (index + 1) + 11
         }
         if (config[`show_${dataPoint.name}`] === true) {
+          options[`divider_organization_${dataPoint.name}`] = {
+            section: 'Organization',
+            type: "string",
+            label: `${dataPoint.label}`,
+            display: "divider",
+            order: 100 * (index + 1) + 8,
+          }
           options[`row_number_${dataPoint.name}`] = {
             type: 'number',
-            label: `${dataPoint.label} - Row #`,
+            label: `Row #`,
             section: 'Organization',
             default: dataPoint.row_number,
             order: 100 * (index + 1) + 9
           }
           options[`column_number_${dataPoint.name}`] = {
             type: 'number',
-            label: `${dataPoint.label} - Column #`,
+            label: `Column #`,
             section: 'Organization',
             default: dataPoint.column_number,
             order: 100 * (index + 1) + 9
