@@ -164,7 +164,7 @@ class MultipleValue extends React.PureComponent {
           style={{fontWeight:'bold'}}
           order={column.number}
           visibility={true}> 
-          {checkURL(column['value']) ? <img src={column['value']} style={{width:config[`column_image_width_${column['number']}`]+'px',height:config[`column_image_height_${column['number']}`]+'px'}}></img> : <h2>{column['value']}</h2>}
+          {checkURL(column['value']) ? <img src={column['value']} style={{width:config[`column_image_width_${column['number']}`]+'px',height:config[`column_image_height_${column['number']}`]+'px'}}></img> : <div>{column['value']}</div>}
         </TileRowTitle>
           )
         })} 
@@ -189,7 +189,7 @@ class MultipleValue extends React.PureComponent {
                 <TileRowTitle 
                   style={{fontWeight:'bold'}}
                   visibility={true}> 
-                  {checkURL(config[`row_name_${dataPoint.row_number}`]) ? <img src={config[`row_name_${dataPoint.row_number}`]} style={{width:config[`row_image_width_${dataPoint.row_number}`]+'px',height:config[`row_image_height_${dataPoint.row_number}`]+'px'}}></img> : <h2>{config[`row_name_${dataPoint.row_number}`]}</h2>}
+                  {checkURL(config[`row_name_${dataPoint.row_number}`]) ? <img src={config[`row_name_${dataPoint.row_number}`]} style={{width:config[`row_image_width_${dataPoint.row_number}`]+'px',height:config[`row_image_height_${dataPoint.row_number}`]+'px'}}></img> : <div>{config[`row_name_${dataPoint.row_number}`]}</div>}
                 </TileRowTitle>
                 : '' }
                 <TileWrapper 
